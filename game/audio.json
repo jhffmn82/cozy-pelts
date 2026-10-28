@@ -343,6 +343,14 @@
   "kind": "voice",
   "secs": 1.27
  },
+ "cleared_3": {
+  "kind": "voice",
+  "secs": 2.76
+ },
+ "cleared_4": {
+  "kind": "voice",
+  "secs": 1.79
+ },
  "mama": {
   "kind": "voice",
   "secs": 1.33
@@ -370,6 +378,138 @@
  "ow_3": {
   "kind": "voice",
   "secs": 1.51
+ },
+ "r_platinum": {
+  "kind": "voice",
+  "secs": 4.12
+ },
+ "r_emerald": {
+  "kind": "voice",
+  "secs": 5.05
+ },
+ "r_sapphire": {
+  "kind": "voice",
+  "secs": 3.56
+ },
+ "r_ruby": {
+  "kind": "voice",
+  "secs": 5.1
+ },
+ "r_diamond": {
+  "kind": "voice",
+  "secs": 5.2
+ },
+ "r_rainbow": {
+  "kind": "voice",
+  "secs": 4.57
+ },
+ "r_cosmic": {
+  "kind": "voice",
+  "secs": 5.25
+ },
+ "r_holy": {
+  "kind": "voice",
+  "secs": 5.35
+ },
+ "decoyup": {
+  "kind": "voice",
+  "secs": 3.16
+ },
+ "rareko_1": {
+  "kind": "voice",
+  "secs": 1.54
+ },
+ "rareko_2": {
+  "kind": "voice",
+  "secs": 1.64
+ },
+ "rareko_3": {
+  "kind": "voice",
+  "secs": 3.12
+ },
+ "whathave": {
+  "kind": "voice",
+  "secs": 2.43
+ },
+ "apoc2": {
+  "kind": "voice",
+  "secs": 5.53
+ },
+ "wave_1": {
+  "kind": "voice",
+  "secs": 2.31
+ },
+ "wave_2": {
+  "kind": "voice",
+  "secs": 2.24
+ },
+ "wave_3": {
+  "kind": "voice",
+  "secs": 3.89
+ },
+ "wave_4": {
+  "kind": "voice",
+  "secs": 2.81
+ },
+ "m_frog": {
+  "kind": "voice",
+  "secs": 4.29
+ },
+ "m_bat": {
+  "kind": "voice",
+  "secs": 2.8
+ },
+ "m_bloat": {
+  "kind": "voice",
+  "secs": 2.35
+ },
+ "m_kraken": {
+  "kind": "voice",
+  "secs": 2.71
+ },
+ "lowhp": {
+  "kind": "voice",
+  "secs": 2.21
+ },
+ "mamadown": {
+  "kind": "voice",
+  "secs": 3.05
+ },
+ "thulu2": {
+  "kind": "voice",
+  "secs": 1.87
+ },
+ "thulu3": {
+  "kind": "voice",
+  "secs": 2.74
+ },
+ "kill_1": {
+  "kind": "voice",
+  "secs": 1.4
+ },
+ "kill_2": {
+  "kind": "voice",
+  "secs": 1.15
+ },
+ "kill_3": {
+  "kind": "voice",
+  "secs": 1.49
+ },
+ "kill_4": {
+  "kind": "voice",
+  "secs": 2.75
+ },
+ "buyharpoon": {
+  "kind": "voice",
+  "secs": 1.62
+ },
+ "buyflamer": {
+  "kind": "voice",
+  "secs": 3.61
+ },
+ "buydrone": {
+  "kind": "voice",
+  "secs": 1.29
  },
  "sold_1": {
   "kind": "voice",

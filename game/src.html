@@ -88,7 +88,7 @@ body {
 #sledBtn.full .fill { background: rgba(244, 198, 79, .8); }
 #sledBtn:disabled { cursor: default; color: var(--ink-soft); }
 #sledBtn:not(:disabled):hover { background: #fff3df; }
-#fishBtn:focus-visible, #sledBtn:focus-visible, #waveBtn:focus-visible, #fireBtn:focus-visible, #weaponBar button:focus-visible, #againBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#fishBtn:focus-visible, #sledBtn:focus-visible, #waveBtn:focus-visible, #fireBtn:focus-visible, #jumpBtn:focus-visible, #weaponBar button:focus-visible, #againBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 #toast {
   position: absolute; left: 50%; top: 11cqw; transform: translateX(-50%); pointer-events: none;
   padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); white-space: nowrap;
@@ -225,6 +225,23 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
   border: .8cqw solid #5d1119; box-shadow: 0 0 0 .5cqw #10170c, 0 .8cqw 0 #3a0a10;
 }
 #fireBtn.on { transform: translateY(.6cqw); box-shadow: 0 0 0 .5cqw #10170c, 0 .2cqw 0 #3a0a10, 0 0 3cqw rgba(255, 138, 92, .8); }
+#jumpBtn {
+  position: absolute; right: 22cqw; bottom: 3cqw; width: 13cqw; height: 13cqw; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none;
+  font: 700 3.2cqw var(--font); letter-spacing: .06em; color: #fffaf3; text-shadow: 0 .4cqw 0 #1d2a6a;
+  background: radial-gradient(circle at 38% 32%, #8fd0ff, #3f6fd8 55%, #24408f);
+  border: .8cqw solid #1d2a6a; box-shadow: 0 0 0 .5cqw #10170c, 0 .8cqw 0 #121c48;
+}
+#jumpBtn.on { transform: translateY(.6cqw); box-shadow: 0 0 0 .5cqw #10170c, 0 .2cqw 0 #121c48; }
+#howto {
+  position: absolute; left: 50%; top: 22cqw; transform: translateX(-50%); pointer-events: none; text-align: center;
+  display: grid; gap: .8cqw; padding: 1.6cqw 3cqw; width: max-content; max-width: 84cqw;
+  background: #2f4226; color: #e4ffd6; border: .6cqw solid #4f7a35; border-radius: 1.4cqw; box-shadow: 0 0 0 .4cqw #10170c;
+  font-size: 3.1cqw; line-height: 1.35; transition: opacity .5s; opacity: 0;
+}
+#howto.show { opacity: 1; }
+#howto b { color: #b6ff7a; letter-spacing: .1em; font-size: 3.4cqw; }
+#howto kbd { font: 700 2.8cqw var(--font); padding: 0 .9cqw; border: .3cqw solid #7bd84a; border-radius: .6cqw; background: #1d2817; color: #fffaf3; }
 #waveBtn {
   position: absolute; right: 2cqw; top: 2cqw; height: 6.4cqw; padding: 0 2.4cqw; cursor: pointer;
   font: 600 3.3cqw var(--font); color: #e4ffd6; background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw;
@@ -255,7 +272,7 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
     <canvas id="view" width="256" height="231" aria-label="The ice floes. Tap a seal to bonk it, or tap the ice to walk there."></canvas>
     <div class="hud">
       <div class="badge" id="dayBadge"><img id="dayIcon" alt=""><span id="dayText">DAY 1</span></div>
-      <div class="badge" id="rateBadge"><img id="rateIcon" alt=""><span id="rateText">0 pelts / min</span></div>
+      <div class="badge" id="rateBadge"><img id="rateIcon" alt=""><span id="rateText">0 coins / min</span></div>
       <div class="badge" id="heartsBadge" hidden aria-label="Hearts"></div>
     </div>
     <div id="combo" hidden><div id="comboText">COMBO x1.0</div><div class="bar"><i id="comboBar"></i></div></div>
@@ -264,6 +281,8 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
     <div id="weaponBar" hidden></div>
     <button id="waveBtn" type="button" hidden>Wave 1</button>
     <button id="fireBtn" type="button" hidden aria-label="Fire at the nearest mutant (hold)">FIRE</button>
+    <button id="jumpBtn" type="button" hidden aria-label="Jump">JUMP</button>
+    <div id="howto" aria-live="polite"><b>HOW TO FIGHT</b><span id="howtoText"></span></div>
     <div id="toast" role="status" aria-live="polite"></div>
     <div id="banner" hidden><b>YOU HAVE STARTED THE</b><strong>SEALOCALYPSE</strong></div>
     <div id="over" hidden>
@@ -321,6 +340,7 @@ const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const lerp = (a, b, t) => a + (b - a) * t;
 const ease = t => t * t * (3 - 2 * t);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TOUCH = matchMedia('(any-pointer: coarse)').matches;
 function fmt(n) {
   n = Math.floor(n);
   if (n < 100000) return n.toLocaleString('en-US');
@@ -451,8 +471,8 @@ const UPG = [
     name: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].name, icon: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].icon,
     ds: () => S.lv.club < CLUBS.length - 1 ? CLUBS[S.lv.club + 1].ds : 'Hits for 8, and skewers the one behind.' },
   { id: 'decoy', base: 100, grow: 2.8, max: 8, name: () => 'Seal Decoy', icon: () => 'i_decoy',
-    tag: () => S.lv.decoy ? `Lv ${S.lv.decoy} · x${lure().toFixed(2)}` : 'Lv 0',
-    ds: () => `+30% seals and goldens. Says it's safe here. It isn't.` },
+    tag: () => `Lv ${S.lv.decoy}`,
+    ds: () => S.lv.decoy < RARE.length - 1 ? `+30% seals and rares, and ${TYPES[RARE[S.lv.decoy + 1]].name} seals start turning up.` : `Every kind believes it's safe here. They're wrong.` },
   { id: 'bucket', base: 120, grow: 2.4, max: 6, name: () => 'Fish Bucket', icon: () => 'i_bucket',
     ds: () => S.lv.bucket < 6 ? `Room for ${maxSeals() + 1} seals, and a fish every ${fishCooldown(S.lv.bucket + 1)} s. Free lunch.`
       : `${maxSeals()} seals, and a fish every ${fishCooldown()} s. The ice is full.` },
@@ -467,13 +487,32 @@ const UPG = [
                'A second drone. The seals have started looking up.', 'A third drone. The sky is full of seals.',
                'Three drones, one chipper, no questions.'][S.lv.drones] },
 ];
+// Every seal gives a bundle of pelts of its own grade, and the trader pays by grade. Gold is the first rare kind;
+// each level of the decoy brings in the next one up and makes all of them commoner.
 const TYPES = {
-  pup: { hp: 3, speed: 12, value: 8, pitch: 1.15, stay: [24, 40] },
-  grey: { hp: 6, speed: 15, value: 25, pitch: .78, stay: [20, 32] },
-  gold: { hp: 4, speed: 24, value: 150, pitch: 1.4, stay: [11, 15], skittish: true },
+  pup:      { name: 'white', hp: 3, speed: 12, pelts: 8, price: 1, pitch: 1.15, stay: [24, 40] },
+  grey:     { name: 'grey', hp: 6, speed: 15, pelts: 12, price: 2, pitch: .78, stay: [20, 32] },
+  gold:     { name: 'golden', hp: 4, speed: 24, pelts: 8, price: 20, pitch: 1.4, glow: '#fff2b0' },
+  platinum: { name: 'platinum', hp: 5, speed: 25, pelts: 8, price: 45, pitch: 1.45, tint: '#e4ecff', glow: '#ffffff' },
+  emerald:  { name: 'emerald', hp: 5, speed: 26, pelts: 8, price: 100, pitch: 1.5, tint: '#45e08c', glow: '#b6ffd2' },
+  sapphire: { name: 'sapphire', hp: 6, speed: 27, pelts: 8, price: 220, pitch: 1.55, tint: '#4a86ff', glow: '#c2d8ff' },
+  ruby:     { name: 'ruby', hp: 6, speed: 28, pelts: 8, price: 480, pitch: 1.6, tint: '#ff4060', glow: '#ffc4ce' },
+  diamond:  { name: 'diamond', hp: 7, speed: 29, pelts: 8, price: 1000, pitch: 1.65, tint: '#c4faff', glow: '#ffffff' },
+  rainbow:  { name: 'rainbow', hp: 7, speed: 30, pelts: 8, price: 2200, pitch: 1.7, tint: 'rainbow', glow: 'rainbow' },
+  cosmic:   { name: 'cosmic', hp: 8, speed: 31, pelts: 8, price: 5000, pitch: .6, tint: '#4c2c90', glow: '#fff6b0' },
+  holy:     { name: 'holy', hp: 9, speed: 32, pelts: 8, price: 11000, pitch: 1.8, tint: '#fff6cc', glow: '#ffe680', halo: true },
 };
+const RARE = ['gold', 'platinum', 'emerald', 'sapphire', 'ruby', 'diamond', 'rainbow', 'cosmic', 'holy'];
+for (const k of RARE) Object.assign(TYPES[k], { rare: true, skittish: true, stay: [11, 16] });
+const sealWorth = k => TYPES[k].pelts * TYPES[k].price;
+const rareKinds = () => RARE.slice(0, Math.min(RARE.length, 1 + S.lv.decoy));
+function rareOdds(rushy) {               // each rarer kind about half again rarer than the one below it
+  const base = (rushy ? .18 : .07) * lure(), ps = rareKinds().map((k, i) => base * Math.pow(.6, i));
+  const sum = ps.reduce((a, b) => a + b, 0), k = sum > .6 ? .6 / sum : 1;
+  return ps.map(p => p * k);
+}
 function fresh() {
-  return { v: 2, coins: 0, load: 0, heap: 0, total: 0, lv: { club: 0, decoy: 0, bucket: 0, sled: 0, dogs: 0, drones: 0, harpoon: 0, flamer: 0, gundrone: 0, hearts: 0, parka: 0 },
+  return { v: 2, coins: 0, sledB: [], heapB: [], seen: {}, total: 0, lv: { club: 0, decoy: 0, bucket: 0, sled: 0, dogs: 0, drones: 0, harpoon: 0, flamer: 0, gundrone: 0, hearts: 0, parka: 0 },
     factory: 0, apoc: 0, wave: 0, hp: 6, weapon: 'club', over: 0,
     day: 1, dayT: .04, fishCd: 8, gullCd: 70, tut: 0,
     stats: { bonks: 0, kos: 0, escaped: 0, golden: 0, best: 1, trips: 0, chipped: 0, slurped: 0 }, sound: { music: true, sfx: true, voice: true }, t: Date.now() };
@@ -527,15 +566,15 @@ function spr(ctx, name, fi, x, y, flip, src) {
     ctx.restore();
   } else ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, x + m.ox, y + m.oy, m.w, m.h);
 }
-function sprK(ctx, name, fi, x, y, flip, k) {   // scaled about the anchor, for things far up the hill or swelling
-  if (k === 1) return spr(ctx, name, fi, x, y, flip);
+function sprK(ctx, name, fi, x, y, flip, k, src) {   // scaled about the anchor, for things far up the hill or swelling
+  if (k === 1) return spr(ctx, name, fi, x, y, flip, src);
   const m = A[name]; if (!m) return;
   const n = m.f.length, f = m.f[(((fi | 0) % n) + n) % n];
   const w = Math.max(1, Math.round(m.w * k)), h = Math.max(1, Math.round(m.h * k));
   const ox = Math.round(m.ox * k), oy = Math.round(m.oy * k);
   x = Math.round(x); y = Math.round(y);
-  if (flip) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); ctx.drawImage(atlas, f[0], f[1], m.w, m.h, ox, oy, w, h); ctx.restore(); }
-  else ctx.drawImage(atlas, f[0], f[1], m.w, m.h, x + ox, y + oy, w, h);
+  if (flip) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, ox, oy, w, h); ctx.restore(); }
+  else ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, x + ox, y + oy, w, h);
 }
 function iconURL(name) {
   const m = A[name]; const c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
@@ -800,12 +839,45 @@ function toast(msg, ms = 2600) {
   const el = $('#toast'); el.textContent = msg; el.classList.add('show');
   clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), ms);
 }
-function harvest(n) {                     // a bundle reaches the sled; what will not fit waits in a heap on the ice
+// pelts on the sled and on the ice are kept as bundles of one grade each: [count, kind]
+const pCount = B => B.reduce((a, b) => a + b[0], 0);
+const pValue = B => B.reduce((a, b) => a + b[0] * TYPES[b[1]].price, 0);
+function pAdd(B, n, kind) { if (n <= 0) return; const l = B[B.length - 1]; if (l && l[1] === kind) l[0] += n; else B.push([n, kind]); }
+function pMove(from, to, k) { while (k > 0 && from.length) { const b = from[0], m = Math.min(k, b[0]); pAdd(to, m, b[1]); b[0] -= m; k -= m; if (!b[0]) from.shift(); } }
+function pKinds(B, slots) {               // which grade sits in each of a pile's slots
+  const n = pCount(B), out = [];
+  for (let i = 0; i < slots; i++) { let at = Math.floor((i + .5) / slots * n); for (const b of B) { if (at < b[0]) { out.push(b[1]); break; } at -= b[0]; } }
+  return out;
+}
+const sledN = () => pCount(S.sledB), heapN = () => pCount(S.heapB);
+function harvest(n, kind) {               // a bundle reaches the sled; what will not fit waits in a heap on the ice
   n = Math.round(n); if (n <= 0) return;
-  S.total += n; income.push([now, n]);
-  const room = sled.st === 'home' ? Math.max(0, sledCap() - S.load) : 0, k = Math.min(room, n);
-  S.load += k; S.heap += n - k;
+  const v = n * TYPES[kind].price; S.total += v; income.push([now, v]);
+  const room = sled.st === 'home' ? Math.max(0, sledCap() - sledN()) : 0, k = Math.min(room, n);
+  pAdd(S.sledB, k, kind); pAdd(S.heapB, n - k, kind);
   dirtyPanel = true;
+}
+const tintCache = {};
+function tintedFrame(name, fi, color) {   // one frame of the atlas, coloured, kept for next time
+  const key = name + '|' + fi + '|' + color;
+  if (tintCache[key]) return tintCache[key];
+  const m = A[name], n = m.f.length, f = m.f[(((fi | 0) % n) + n) % n], c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
+  const x = c.getContext('2d');
+  x.drawImage(atlas, f[0], f[1], m.w, m.h, 0, 0, m.w, m.h);
+  x.globalCompositeOperation = 'source-atop'; x.globalAlpha = .55; x.fillStyle = color; x.fillRect(0, 0, m.w, m.h);
+  x.globalAlpha = .14; x.fillStyle = '#ffffff'; x.fillRect(0, 0, m.w, m.h);   // a touch of shine, still only on the sprite
+  return tintCache[key] = c;
+}
+const kindTint = k => TYPES[k].tint === 'rainbow' ? `hsl(${(Math.floor(now * 5) % 8) * 45},95%,62%)` : TYPES[k].tint;
+const kindGlow = k => TYPES[k].glow === 'rainbow' ? `hsl(${Math.floor(Math.random() * 360)},95%,75%)` : TYPES[k].glow;
+function sprKind(ctx, name, fi, x, y, flip, kind, k = 1) {   // a sprite in the colours of a seal's grade
+  if (kind === 'grey' || kind === 'gold' || kind === 'mut') return sprK(ctx, name, fi, x, y, flip, k, kind === 'grey' ? atlasGrey : kind === 'gold' ? atlasGold : atlasToxic);
+  if (!TYPES[kind] || !TYPES[kind].tint) return sprK(ctx, name, fi, x, y, flip, k);
+  const m = A[name], c = tintedFrame(name, fi, kindTint(kind));
+  const w = Math.round(m.w * k), h = Math.round(m.h * k), ox = Math.round(m.ox * k), oy = Math.round(m.oy * k);
+  x = Math.round(x); y = Math.round(y);
+  if (flip) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); ctx.drawImage(c, ox, oy, w, h); ctx.restore(); }
+  else ctx.drawImage(c, x + ox, y + oy, w, h);
 }
 function earn(n, x, y) {
   S.coins += n; dirtyPanel = true;
@@ -814,10 +886,14 @@ function earn(n, x, y) {
 
 // ---------------------------------------------------------------- seals
 function rollType(rushy) {
-  const r = Math.random();
-  if (r < Math.min(.5, (rushy ? .1 : .03) * lure())) return 'gold';
+  const ps = rareOdds(rushy); let r = Math.random();
+  for (let i = ps.length - 1; i >= 0; i--) { if (r < ps[i]) return RARE[i]; r -= ps[i]; }
   if (r < .2 + .03 * S.lv.bucket) return 'grey';
   return 'pup';
+}
+function avgSealWorth() {                    // what an average seal is worth right now, for the away-from-camp estimate
+  const ps = rareOdds(false), rest = 1 - ps.reduce((a, b) => a + b, 0), grey = Math.min(rest, .2 + .03 * S.lv.bucket);
+  return ps.reduce((a, p, i) => a + p * sealWorth(RARE[i]), 0) + grey * sealWorth('grey') + (rest - grey) * sealWorth('pup');
 }
 function pickFloe() {
   const list = FLOES.filter(f => f.seals && exitsOf[f.id].length);
@@ -843,10 +919,16 @@ function spawnSeal(rushy) {
     dir: ex.lx < sx ? -1 : 1, state: 'surface', t: 0, at: Math.random() * 5, dur: 0, next: rnd(1.5, 3),
     stay: rnd(T.stay[0], T.stay[1]), marks: [], flash: 0, alpha: 0, hurtOnce: false, tx: 0, ty: 0 };
   seals.push(s);
-  if (type === 'gold' && now - goldSaid > 20) { goldSaid = now; toast('A golden seal surfaced!'); Snd.chime(); Snd.voice('goldseal', 2); }
+  if (T.rare) announceRare(type);
   return true;
 }
 const byDecoy = (x, y) => S.lv.decoy > 0 && Math.hypot(DECOY.x - x, (DECOY.y - y) * 1.5) < 32;
+function announceRare(type) {             // the first of each kind always gets a word; after that, now and then
+  const first = !S.seen[type]; S.seen[type] = 1;
+  if (!first && now - goldSaid < 20) return;
+  goldSaid = now; toast(`${first ? 'Your first ' : 'A '}${TYPES[type].name} seal${first ? '!' : ' surfaced!'} Its pelts sell for ${TYPES[type].price} each.`, 3200);
+  Snd.chime(); Snd.voice(type === 'gold' ? 'goldseal' : 'r_' + type, 2);
+}
 function setState(s, st, extra) { s.state = st; s.t = 0; if (extra) Object.assign(s, extra); }
 const ON_ICE = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1, hurt: 1, flee: 1, leave: 1, startle: 1 };
 const LOUNGING = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1 };   // what a drone can pick off
@@ -966,8 +1048,7 @@ function updateSeal(s, dt) {
       if (s.t > 1.35 && !s.bundled) {
         s.bundled = true; s.state = 'gone';
         addFx('fx_poof', s.x, s.y - 6); Snd.plop();
-        bundles.push({ x: s.x, y: s.y - 8, sx: s.x, sy: s.y - 8, t: 0, dur: .75, value: s.T.value * (s.koMult || 1), gold: s.type === 'gold',
-          label: s.sneakKo ? 'SNEAK +' : s.type === 'gold' ? 'GOLDEN +' : '+' });
+        bundles.push({ x: s.x, y: s.y - 8, sx: s.x, sy: s.y - 8, t: 0, dur: .75, n: Math.round(s.T.pelts * (s.koMult || 1)), kind: s.type, label: s.sneakKo ? 'SNEAK +' : '+' });
       }
       break;
     case 'hooked': break;                  // the drone carries it
@@ -978,7 +1059,7 @@ function updateSeal(s, dt) {
   }
   if (LOUNGING[s.state] && !s.claim) {
     s.stay -= dt;
-    if (s.type === 'gold' && hd < 46 && s.state !== 'nap') {   // skittish: edges away from the hunter
+    if (s.T.skittish && hd < 46 && s.state !== 'nap') {   // skittish: edges away from the hunter
       const k = (s.x < hunter.x ? -1 : 1) * 22 * dt;
       if (roomy(s.x + k, s.y, s.fi)) { s.x += k; s.dir = Math.sign(k); if (s.state !== 'scoot') setState(s, 'scoot', { tx: s.x + k * 8, ty: s.y }); }
       else if (s.stay > 3) s.stay = 2;
@@ -1011,13 +1092,13 @@ function hitSeal(s) {
   }
   if (s.hp <= 0) {
     setState(s, 'ko', { koMult: comboMult() * (sneak ? 2 : 1), sneakKo: sneak });
-    S.stats.kos++; if (s.type === 'gold') S.stats.golden++;
+    S.stats.kos++; if (s.T.rare) S.stats.golden++;
     setTimeout(() => Snd.squeal(s.T.pitch * .95, .75, .34, true), 90);
     bleed(s.x, s.y - 6, 26, 1.3);
     addFx('fx_blood', s.x - 6, s.y - 8, { fps: 12 });
     pools.push({ x: s.x, y: s.y + 1, t: 0 });
     if (s.type !== 'pup') hunter.cheer = .75;
-    if (s.type === 'gold') quip('goldko', 1, true); else quip('ko', .35);
+    if (s.type === 'gold') quip('goldko', 1, true); else if (s.T.rare) quip('rareko', 1, true); else quip('ko', .35);
   } else setState(s, 'hurt');
 }
 function sealFrame(s) {
@@ -1048,21 +1129,24 @@ function sealBox(s) {
 }
 function drawSeal(s) {
   const [name, fi] = sealFrame(s);
-  const src = s.type === 'grey' ? atlasGrey : s.type === 'gold' ? atlasGold : atlas;
   const flip = s.dir > 0;
   if (s.alpha < 1) g.globalAlpha = s.alpha;
   if (s.marks.length || s.flash > 0) {
     tg.clearRect(0, 0, 80, 80);
-    spr(tg, name, fi, 40, 66, flip, src);
+    sprKind(tg, name, fi, 40, 66, flip, s.type);
     tg.globalCompositeOperation = 'source-atop';
     tg.fillStyle = '#c51d35';
     for (const [mx, my, sz] of s.marks) tg.fillRect(40 + (flip ? -mx : mx), 66 + my, sz, sz);
     if (s.flash > 0) { tg.fillStyle = 'rgba(255,255,255,.85)'; tg.fillRect(0, 0, 80, 80); }
     tg.globalCompositeOperation = 'source-over';
     g.drawImage(tmp, Math.round(s.x) - 40, Math.round(s.y) - 66);
-  } else spr(g, name, fi, s.x, s.y, flip, src);
+  } else sprKind(g, name, fi, s.x, s.y, flip, s.type);
   g.globalAlpha = 1;
-  if (s.type === 'gold' && Math.random() < .25 && s.state !== 'gone') sparkles.push({ x: s.x + rnd(-14, 14), y: s.y - rnd(2, 20), t: 0, life: .5, c: '#fff2b0' });
+  if (s.T.rare && Math.random() < .25 + .04 * RARE.indexOf(s.type) && s.state !== 'gone') sparkles.push({ x: s.x + rnd(-14, 14), y: s.y - rnd(2, 20), t: 0, life: .5, c: kindGlow(s.type), plus: RARE.indexOf(s.type) > 4 });
+  if (s.T.halo && s.state !== 'gone') {   // a holy seal's halo, bobbing over its head
+    g.strokeStyle = '#ffe680'; g.lineWidth = 1; g.globalAlpha = .9;
+    g.beginPath(); g.ellipse(Math.round(s.x + s.dir * -6), Math.round(s.y - 30 + Math.sin(now * 3) * 1.5), 6, 2, 0, 0, Math.PI * 2); g.stroke(); g.globalAlpha = 1;
+  }
   if (s.hurtOnce && s.hp > 0 && ON_ICE[s.state]) {
     const w = 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - 30);
     g.fillStyle = 'rgba(60,25,40,.75)'; g.fillRect(x - 1, y - 1, w + 2, 4);
@@ -1097,8 +1181,22 @@ function inReach(s) {
   const dx = s.x - hunter.x, dy = s.y - hunter.y;
   return Math.abs(dy) <= 7 && Math.abs(dx) >= 12 && Math.abs(dx) <= 38 && hunter.z === 0;
 }
+function jump() {                         // up, a somersault, and down; ground attacks pass underneath
+  if (!S.apoc || apoc.dead || hunter.jump || hunter.swing >= 0 || apoc.st === 'intro') return;
+  hunter.jump = { t: 0, dur: .62 }; hunter.path = null; hunter.target = null;
+  Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2);
+}
 function updateHunter(dt) {
   hunter.at += dt; hunter.cheer = Math.max(0, hunter.cheer - dt);
+  if (hunter.jump) {
+    const j = hunter.jump; j.t += dt;
+    hunter.z = Math.sin(Math.PI * Math.min(1, j.t / j.dur)) * 26;
+    if (j.t >= j.dur) {                    // down again, on the ice; a jump over water lands on the nearest floe
+      hunter.jump = null; hunter.z = 0;
+      if (!onIce(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestIce(hunter.x, hunter.y);
+      addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop();
+    }
+  }
   const tgt = hunter.target;
   if (tgt && !clubbable(tgt)) { hunter.target = null; hunter.pending = 0; }
   if (hunter.swing >= 0) {
@@ -1133,11 +1231,16 @@ function updateHunter(dt) {
     if (Math.abs(p.tx - p.ax) > 1) hunter.dir = p.tx > p.ax ? 1 : -1;
     const gp = p.gaps.find(([a, b]) => p.s >= a && p.s <= b);
     hunter.z = gp ? Math.sin(Math.PI * (p.s - gp[0]) / Math.max(1, gp[1] - gp[0])) * Math.min(18, (gp[1] - gp[0]) * .55 + 4) : 0;
+    if (hunter.jump) hunter.z = Math.max(hunter.z, Math.sin(Math.PI * hunter.jump.t / hunter.jump.dur) * 26);
     if (p.s >= p.len) { hunter.path = null; hunter.z = 0; if (p.gaps.length) { addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); } }
   }
 }
 const CLUB_ART = ['', '_salmon', '_bone', '_anchor', '_tusk'];
 function hunterFrame() {
+  if (hunter.jump) {                       // tucked up for the spin
+    const gun = S.apoc && S.weapon !== 'club' && A['hunter_idle_' + S.weapon];
+    return [gun ? 'hunter_idle_' + S.weapon : A['hunter_walk' + (CLUB_ART[S.lv.club] || '')] ? 'hunter_walk' + (CLUB_ART[S.lv.club] || '') : 'hunter_walk', gun ? 0 : 3];
+  }
   const gun = S.apoc && S.weapon !== 'club' && A['hunter_idle_' + S.weapon];   // holding the harpoon gun or the flamethrower
   const w = gun ? '_' + S.weapon : CLUB_ART[S.lv.club] || '', has = n => A[n + w] ? n + w : n;
   if (gun) {
@@ -1156,9 +1259,16 @@ function hunterFrame() {
   return [has('hunter_idle'), Math.floor(hunter.at * 6) % 9];
 }
 function drawHunter() {
-  if (S.apoc && apoc.inv > 0 && Math.floor(now * 18) % 2) return;   // blinking after a hit
+  if (S.apoc && apoc.inv > 0 && !hunter.jump && Math.floor(now * 18) % 2) return;   // blinking after a hit
   const [name, fi] = hunterFrame();
   if (hunter.z > 0) { g.fillStyle = 'rgba(40,50,110,.28)'; g.fillRect(Math.round(hunter.x) - 8, Math.round(hunter.y) - 1, 16, 2); }
+  if (hunter.jump) {
+    const p = Math.min(1, hunter.jump.t / hunter.jump.dur), cx = Math.round(hunter.x), cy = Math.round(hunter.y - hunter.z - 28);
+    g.save(); g.translate(cx, cy); g.rotate(hunter.dir * p * Math.PI * 4);
+    spr(g, name, fi, 0, 28, hunter.dir < 0);
+    g.restore();
+    return;
+  }
   spr(g, name, fi, hunter.x - (hunter.recoil > 0 ? hunter.dir * 2 : 0), hunter.y - hunter.z, hunter.dir < 0);   // a kick back on each shot
 }
 
@@ -1175,21 +1285,23 @@ function updateGull(dt) {
     case 'perch':
       gull.dir = -1;
       S.gullCd -= dt;
-      if (S.gullCd <= 0 && ((sled.st === 'home' && S.load >= 20) || S.heap >= 20)) { gull.state = 'swoop'; gull.t = 0; toast('The gull is going for your sled!'); Snd.squawk(); Snd.voice('gull', 2); }
+      if (S.gullCd <= 0 && ((sled.st === 'home' && sledN() >= 20) || heapN() >= 20)) { gull.state = 'swoop'; gull.t = 0; toast('The gull is going for your sled!'); Snd.squawk(); Snd.voice('gull', 2); }
       break;
     case 'swoop': if (fly(SLED.x + 6, SLED.y - 22, 70)) { gull.state = 'grab'; gull.t = 0; } break;
     case 'grab':
       if (gull.t > .5) {                   // off the sled if it is here, else off the heap
-        const fromSled = sled.st === 'home' && S.load > 0, have = fromSled ? S.load : S.heap;
+        const B = sled.st === 'home' && sledN() > 0 ? S.sledB : S.heapB, have = pCount(B);
         const n = Math.min(have, Math.max(5, Math.floor(have * .15)));
-        if (fromSled) S.load -= n; else S.heap -= n;
+        B.sort((a, b) => TYPES[b[1]].price - TYPES[a[1]].price);   // the shiniest first, naturally
+        gull.carryB = []; pMove(B, gull.carryB, n);
         gull.carry = n; gull.state = 'escape'; gull.t = 0; gull.tx = -30; gull.ty = rnd(50, 90); dirtyPanel = true;
         if (!n) gull.state = 'shooed';
       }
       break;
     case 'escape':
       if (fly(gull.tx, gull.ty, 34)) {
-        toast(`The gull stole ${fmt(gull.carry)} pelts.`); Snd.voice('stolen', 2);
+        const v = pValue(gull.carryB || []);
+        toast(`The gull stole ${fmt(gull.carry)} pelts${v > gull.carry ? `, worth ${fmt(v)} coins` : ''}.`); Snd.voice('stolen', 2);
         gull.state = 'away'; gull.t = 0; gull.carry = 0; S.gullCd = rnd(60, 110);
       }
       break;
@@ -1206,7 +1318,7 @@ function shooGull() {
   if (gull.state === 'swoop' || gull.state === 'grab' || gull.state === 'escape') {
     quip('shoo', 1, true);
     if (gull.carry) {
-      bundles.push({ x: gull.x, y: gull.y, sx: gull.x, sy: gull.y, t: 0, dur: .7, value: gull.carry, back: true, label: 'saved +' });
+      bundles.push({ x: gull.x, y: gull.y, sx: gull.x, sy: gull.y, t: 0, dur: .7, n: gull.carry, B: gull.carryB, kind: (gull.carryB[0] || [0, 'pup'])[1], back: true, label: 'saved +' });
       toast('Saved the bundle!');
     } else say('shoo!', gull.x, gull.y - 14, { size: 6 });
     gull.carry = 0; gull.state = 'shooed'; gull.tx = 300; gull.ty = 20; gull.t = 0;
@@ -1221,7 +1333,7 @@ function drawGull() {
   if (gull.state === 'away') return;
   if (gull.state === 'perch') { const fi = gull.at < 1.4 ? Math.floor(gull.at * 6) % 9 : 0; spr(g, 'gull_idle', fi, gull.x, gull.y, false); return; }
   spr(g, 'gull_fly', Math.floor(gull.at * 13) % 9, gull.x, gull.y, gull.dir > 0);
-  if (gull.carry) spr(g, 'pelt', 0, gull.x - gull.dir * 2, gull.y + 10, false);
+  if (gull.carry) sprKind(g, 'pelt', 0, gull.x - gull.dir * 2, gull.y + 10, false, (gull.carryB[0] || [0, 'pup'])[1]);
 }
 const PILE = [[-18, -14], [-6, -15], [6, -16], [18, -17], [-12, -19], [0, -20], [12, -21], [-6, -24], [6, -25], [0, -29], [-18, -20], [18, -23]];
 const HEAP = [[-30, 8], [-18, 9], [-24, 4], [-36, 4], [-12, 6], [-30, 0], [-20, -1], [-42, 9], [-26, -4], [-36, -2]];
@@ -1241,8 +1353,8 @@ const farK = y => 1 - .45 * clamp((SLED.y - y) / (SLED.y - ROAD[ROAD.length - 1]
 const dogs = () => 1 + S.lv.dogs;
 const dogGap = i => 46 + 15 * i;
 function sendSled(auto) {
-  if (sled.st !== 'home' || S.load < 1) return false;
-  sled.st = 'up'; sled.t = 0; sled.cargo = S.load; S.load = 0; sled.warned = false; dirtyPanel = true;
+  if (sled.st !== 'home' || sledN() < 1) return false;
+  sled.st = 'up'; sled.t = 0; sled.cargoB = S.sledB; S.sledB = []; sled.cargo = pCount(sled.cargoB); sled.warned = false; dirtyPanel = true;
   Snd.play('mush', { vol: .8 }); Snd.bark();
   if (!auto) quip('mush', .7, true);
   if (S.tut < 3 && !S.tipSent) S.tipSent = true;
@@ -1253,12 +1365,12 @@ function updateSled(dt) {
   const sp = sledSpeed();
   switch (sled.st) {
     case 'home':
-      if (S.heap > 0 && S.load < sledCap()) { const k = Math.min(S.heap, sledCap() - S.load); S.load += k; S.heap -= k; dirtyPanel = true; }
-      if (S.load >= sledCap()) {
+      if (heapN() > 0 && sledN() < sledCap()) { pMove(S.heapB, S.sledB, sledCap() - sledN()); dirtyPanel = true; }
+      if (sledN() >= sledCap()) {
         if (S.lv.dogs >= 2) sendSled(true);
         else if (!sled.warned) { sled.warned = true; toast('The sled is full. Send it up to the hut.'); Snd.voice('full', 2); }
       }
-      if (!S.tipSled && S.load >= 24) { S.tipSled = true; toast('Tap the sled to send the pelts up to the hut.', 3400); }
+      if (!S.tipSled && sledN() >= 24) { S.tipSled = true; toast('Tap the sled to send the pelts up to the hut.', 3400); }
       break;
     case 'up':
       sled.d = Math.min(ROAD_LEN, sled.d + sp * dt);
@@ -1267,7 +1379,7 @@ function updateSled(dt) {
     case 'sell':
       if (sled.t > .5 && sled.cargo) {
         const [hx, hy] = ROAD[ROAD.length - 1];
-        earn(sled.cargo, hx, hy - 12); S.stats.trips++; sled.sold = sled.cargo; sled.cargo = 0;
+        earn(pValue(sled.cargoB), hx, hy - 12); S.stats.trips++; sled.sold = sled.cargo; sled.cargo = 0; sled.cargoB = [];
         Snd.play('coins', { vol: .9 }); if (Math.random() < .35) Snd.voice('sold', 1);
         hunter.cheer = .75;
         if (S.stats.trips === 1) toast('Sold! Spend the coins in the ledger.', 3000);
@@ -1303,14 +1415,14 @@ function drawSled() {
   g.globalAlpha = a;
   const flip = sled.st === 'down' && p[2] > 0 || sled.st === 'up' && p[2] < 0;
   sprK(g, 'sled', 0, p[0], p[1], flip, k);
-  const load = sled.st === 'home' || sled.st === 'turn' ? S.load : sled.cargo, cap = sledCap();
-  const n = load > 0 ? Math.max(1, Math.ceil(PILE.length * Math.min(1, load / cap))) : 0;
-  for (let i = 0; i < n; i++) sprK(g, 'pelt', 0, p[0] + PILE[i][0] * k * (flip ? -1 : 1), p[1] + PILE[i][1] * k, i % 2 === 1, k);
+  const B = sled.st === 'home' || sled.st === 'turn' ? S.sledB : sled.cargoB || [], load = pCount(B), cap = sledCap();
+  const n = load > 0 ? Math.max(1, Math.ceil(PILE.length * Math.min(1, load / cap))) : 0, kinds = pKinds(B, n);
+  for (let i = 0; i < n; i++) sprKind(g, 'pelt', 0, p[0] + PILE[i][0] * k * (flip ? -1 : 1), p[1] + PILE[i][1] * k, i % 2 === 1, kinds[i], k);
   g.globalAlpha = 1;
 }
 function drawHeap() {
-  const n = S.heap > 0 ? Math.min(HEAP.length, Math.ceil(S.heap / Math.max(8, sledCap() / 8))) : 0;
-  for (let i = 0; i < n; i++) spr(g, 'pelt', 0, SLED.x + HEAP[i][0], SLED.y + HEAP[i][1], i % 2 === 0);
+  const h = heapN(), n = h > 0 ? Math.min(HEAP.length, Math.ceil(h / Math.max(8, sledCap() / 8))) : 0, kinds = pKinds(S.heapB, n);
+  for (let i = 0; i < n; i++) sprKind(g, 'pelt', 0, SLED.x + HEAP[i][0], SLED.y + HEAP[i][1], i % 2 === 0, kinds[i]);
 }
 function drawDog(i) {
   const [x, y, face, run, a] = dogPos(i); if (a <= 0) return;
@@ -1423,7 +1535,7 @@ function updateChipper(dt) {
     }
     if (chipper.grind <= 0) {
       const type = chipper.cur; chipper.cur = null; S.stats.chipped++;
-      bundles.push({ x: SPOUT[0], y: SPOUT[1], sx: SPOUT[0], sy: SPOUT[1], t: 0, dur: 1, value: TYPES[type].value, gold: type === 'gold', label: type === 'gold' ? 'GOLDEN +' : '+' });
+      bundles.push({ x: SPOUT[0], y: SPOUT[1], sx: SPOUT[0], sy: SPOUT[1], t: 0, dur: 1, n: TYPES[type].pelts, kind: type, label: '+' });
       Snd.plop();
     }
   } else if (chipper.queue.length) {
@@ -1557,7 +1669,8 @@ function updateContraption(dt) {
   }
 }
 function slurped(type) {                  // out of the chute it comes, as money
-  const v = type === 'mut' ? 30 + 5 * S.wave : TYPES[type].value;
+  const v = type === 'mut' ? 30 + 5 * S.wave : sealWorth(type);
+  if (type !== 'mut' && TYPES[type].rare) { S.stats.golden++; if (!S.seen[type]) announceRare(type); }
   S.coins += v; S.total += v; income.push([now, v]); tube.acc += v; dirtyPanel = true;
   tube.shake = .14; S.stats.slurped++;
   for (let i = 0; i < 2; i++) coinFx.push({ x: CHUTE[0], y: CHUTE[1] + 2, z: 4, vx: rnd(4, 26), vz: rnd(40, 70), t: 0 });
@@ -1582,7 +1695,8 @@ function drawContraption() {
       g.globalAlpha = k; sprK(g, 'seal_swim', 1, lerp(p.x, tube.nx, 1 - k), lerp(p.y, tube.ny - 8, 1 - k), false, k); g.globalAlpha = 1;
     } else {
       g.globalAlpha = Math.min(1, p.t / .5);
-      spr(g, 'seal_swim', [0, 1, 2, 1][Math.floor(p.at * 4) % 4], p.x, p.y, p.x > tube.nx, p.type === 'gold' ? atlasGold : p.type === 'grey' ? atlasGrey : p.type === 'mut' ? atlasToxic : atlas);
+      sprKind(g, 'seal_swim', [0, 1, 2, 1][Math.floor(p.at * 4) % 4], p.x, p.y, p.x > tube.nx, p.type);
+      if (p.type !== 'mut' && TYPES[p.type].rare && Math.random() < .2) sparkles.push({ x: p.x + rnd(-8, 8), y: p.y - rnd(2, 10), t: 0, life: .5, c: kindGlow(p.type) });
       g.globalAlpha = 1;
     }
   }
@@ -1634,8 +1748,8 @@ const bg2 = bigTmp.getContext('2d');
 function apocCost(u) { return u.price ? u.price() : Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id])); }
 function startApocalypse() {
   S.apoc = 1; S.wave = 0; S.hp = maxHp(); S.weapon = 'club';
-  const sold = S.load + S.heap + sled.cargo;   // the sled's last load goes for whatever the trader will pay
-  if (sold) { S.coins += sold; S.load = S.heap = sled.cargo = 0; }
+  const sold = pValue(S.sledB) + pValue(S.heapB) + pValue(sled.cargoB || []);   // the sled's last load goes for whatever the trader will pay
+  if (sold) { S.coins += sold; S.sledB = []; S.heapB = []; sled.cargoB = []; sled.cargo = 0; }
   apoc.st = 'intro'; apoc.t = 0; apoc.banner = 0; shake = 1.2;
   for (const s of seals) if (s.state !== 'gone') { addFx('fx_toxic', s.x, s.y - 8); addFx('fx_splash', s.x, s.y); }
   seals = []; bundles = []; S.tipShop = true; S.tipSled = true; $('#toast').classList.remove('show');
@@ -1659,11 +1773,17 @@ function rosterFor(w) {
   if (w === 5 || w === 10) out.splice(2, 0, 'mama');
   return out;
 }
+function showHowTo(ms) {                  // the controls, for whichever device this is
+  $('#howtoText').innerHTML = TOUCH
+    ? 'Tap the ice to move · hold <kbd>FIRE</kbd> to shoot the nearest mutant · <kbd>JUMP</kbd> to spin over trouble'
+    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest';
+  const el = $('#howto'); el.classList.add('show'); clearTimeout(showHowTo.t); showHowTo.t = setTimeout(() => el.classList.remove('show'), ms);
+}
 function startWave() {
   S.wave++; S.inWave = 1; apoc.queue = rosterFor(S.wave); apoc.st = 'wave'; apoc.t = 0; apoc.spawnT = 1;
   toast(S.wave === LAST_WAVE ? 'SEALTHULU RISES' : `Wave ${S.wave}`, 2400);
   Snd.play('horn', { vol: .8 });
-  if (S.wave === LAST_WAVE) Snd.voice('thulu', 3); else if (S.wave === 5 || S.wave === 10) setTimeout(() => Snd.voice('mama', 3), 2500);
+  if (S.wave === LAST_WAVE) Snd.voice('thulu', 3); else if (S.wave === 5 || S.wave === 10) setTimeout(() => Snd.voice('mama', 3), 2500); else if (S.wave > 1) setTimeout(() => Snd.voice('wave', 2), 600);
   dirtyPanel = true;
 }
 function spawnMutant(kind) {
@@ -1682,6 +1802,7 @@ function spawnMutant(kind) {
     addFx('fx_splash', e.wx, e.wy + 2, { fps: 16 });
   }
   mutants.push(m);
+  if (!S.seen['m_' + kind] && ['frog', 'bat', 'bloat', 'kraken'].includes(kind)) { S.seen['m_' + kind] = 1; setTimeout(() => Snd.voice('m_' + kind, 2), 900); }   // a word about each kind, the first time
   return true;
 }
 function krakenSpot() {                    // a bit of open water near where the hunter stands
@@ -1696,6 +1817,7 @@ function hurtHunter(n, x, y) {
   bleed(hunter.x, hunter.y - 14, 8);
   if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * 8, hunter.y + (hunter.y - y) / d * 4); hunter.x = px; hunter.y = py; hunter.path = null; }
   if (S.hp <= .01) die();
+  else if (S.hp <= 2 && apoc.lowSaid !== S.wave) { apoc.lowSaid = S.wave; Snd.voice('lowhp', 2); }
 }
 function hitMutant(m, n, opts = {}) {
   if (m.dead || (m.kind === 'kraken' && m.st === 'under')) return false;
@@ -1714,13 +1836,14 @@ function killMutant(m) {
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
   for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
   if (m.kind === 'bloat') blast(m.x, m.y, 26, false);
-  if (m.kind === 'mama') { shake = .8; toast('Big Mama is down.'); for (let i = 0; i < 6; i++) setTimeout(() => addFx('fx_toxic', m.x + rnd(-24, 24), m.y - rnd(0, 50)), i * 120); }
+  if (!m.T.boss && Math.random() < .18) quip('kill', 1);
+  if (m.kind === 'mama') { shake = .8; toast('Big Mama is down.'); Snd.voice('mamadown', 3); for (let i = 0; i < 6; i++) setTimeout(() => addFx('fx_toxic', m.x + rnd(-24, 24), m.y - rnd(0, 50)), i * 120); }
   if (m.kind === 'thulu') win();
 }
 function blast(x, y, r, hurtsHunter) {   // a bloater going off: it hurts everything close, mutants included
   addFx('fx_toxic', x, y - 10, { fps: 14 }); addFx('fx_toxic', x + rnd(-8, 8), y - 18, { fps: 12 });
   Snd.play('pop', { vol: .9 }); shake = .3;
-  if (hurtsHunter && Math.hypot(hunter.x - x, hunter.y - y) < r) hurtHunter(2, x, y);
+  if (hurtsHunter && hunter.z < 10 && Math.hypot(hunter.x - x, hunter.y - y) < r) hurtHunter(2, x, y);
   for (const o of mutants) if (!o.dead && o.kind !== 'bloat' && Math.hypot(o.x - x, o.y - y) < r + 6) hitMutant(o, 8, { quiet: true });
   for (let i = 0; i < 14; i++) drops.push({ x, y, z: 8, vx: rnd(-60, 60), vy: rnd(-25, 25), vz: rnd(20, 80), c: '#7bd84a', s: 2, any: true });
 }
@@ -1777,7 +1900,7 @@ function updateMutant(m, dt) {
         if (m.t > 3.2) { m.st = 'under'; m.t = 0; const p = krakenSpot(); if (p) [m.x, m.y] = p; }
       } else if (m.st === 'wind') {
         m.flash = Math.sin(m.t * 25) > 0 ? .05 : 0;
-        if (m.t > .5) { addFx('fx_splash', m.aim[0], m.aim[1], { fps: 18 }); if (Math.hypot(hx - m.aim[0], hy - m.aim[1]) < 18) hurtHunter(2, m.x, m.y); m.st = 'up'; m.t = 1; m.cd = 1.4; }
+        if (m.t > .5) { addFx('fx_splash', m.aim[0], m.aim[1], { fps: 18 }); if (hunter.z < 6 && Math.hypot(hx - m.aim[0], hy - m.aim[1]) < 18) hurtHunter(2, m.x, m.y); m.st = 'up'; m.t = 1; m.cd = 1.4; }
       }
       break;
     }
@@ -1795,6 +1918,7 @@ function updateThulu(m, dt, d) {          // the finale: three phases of bullets
   const hpf = m.hp / m.maxHp;
   if (m.st === 'in') { m.z = Math.max(34, m.z - 50 * dt); if (m.z <= 34) { m.st = 'go'; m.t = 0; m.cd = 1.5; } return; }
   m.phase = hpf > .66 ? 1 : hpf > .33 ? 2 : 3;
+  if (m.phase > (m.saidPhase || 1)) { m.saidPhase = m.phase; Snd.voice('thulu' + m.phase, 3); }
   m.ang += dt;
   if (m.st === 'go') {
     const tx = W / 2 + Math.sin(m.at * .45) * 64, ty = 156 + Math.sin(m.at * .7) * 10;   // centre stage, the whole of him in view
@@ -1810,7 +1934,7 @@ function updateThulu(m, dt, d) {          // the finale: three phases of bullets
     flyTo(m, clamp(hunter.x + 30 * Math.sign(m.x - hunter.x || 1), 30, W - 30), clamp(hunter.y, 150, 200), 60, dt);
     m.z = Math.max(4, m.z - 80 * dt);
     if (m.t > 2.8) { m.st = 'go'; m.t = 0; m.cd = 1; }
-    if (d < 22 && m.z < 10) hurtHunter(2, m.x, m.y);
+    if (d < 22 && m.z < 10 && hunter.z < 10) hurtHunter(2, m.x, m.y);
   }
 }
 function orb(x, y, a, sp) { if (orbs.length < 420) orbs.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 0 }); }
@@ -1833,7 +1957,7 @@ function updateShots(dt) {
     }
   }
   shots = shots.filter(s => !s.done);
-  const hbx = hunter.x, hby = hunter.y - 14;
+  const hbx = hunter.x, hby = hunter.y - 14 - hunter.z;   // his middle, wherever the jump has put it
   for (const o of orbs) {
     o.t += dt; o.x += o.vx * dt; o.y += o.vy * dt;
     if (Math.hypot(o.x - hbx, o.y - hby) < 6) { o.done = true; hurtHunter(1); }
@@ -1842,7 +1966,7 @@ function updateShots(dt) {
   orbs = orbs.filter(o => !o.done);
   for (const a of acids) {
     a.t += dt; a.tick -= dt;
-    if (a.tick <= 0 && Math.hypot(hunter.x - a.x, (hunter.y - a.y) * 1.6) < 11) { a.tick = .7; hurtHunter(1); }
+    if (a.tick <= 0 && hunter.z < 4 && Math.hypot(hunter.x - a.x, (hunter.y - a.y) * 1.6) < 11) { a.tick = .7; hurtHunter(1); }
   }
   acids = acids.filter(a => a.t < 4.5);
   for (const r of rings) {
@@ -1855,7 +1979,7 @@ function updateShots(dt) {
     t.t += dt;
     const out = t.t < .25 ? t.t / .25 : Math.max(0, 1 - (t.t - .25) / .3);
     t.px = lerp(t.x, t.tx, out); t.py = lerp(t.y, t.ty, out);
-    if (!t.hit && Math.hypot(hunter.x - t.px, hunter.y - 12 - t.py) < 8) { t.hit = true; hurtHunter(1, t.x, t.y); }
+    if (!t.hit && Math.hypot(hunter.x - t.px, hunter.y - 12 - hunter.z - t.py) < 8) { t.hit = true; hurtHunter(1, t.x, t.y); }
     if (t.m.dead) t.done = true;
   }
   tongues = tongues.filter(t => !t.done && t.t < .6);
@@ -1867,7 +1991,7 @@ function fireAt(x, y) {                   // the equipped gun, aimed at a point
   if (apoc.dead) return;
   const w = S.weapon;
   if (Math.abs(x - hunter.x) > 2) hunter.dir = x < hunter.x ? -1 : 1;
-  const ax = hunter.x + hunter.dir * 30, ay = hunter.y - 19;   // the muzzle, held at the hip
+  const ax = hunter.x + hunter.dir * (hunter.jump ? 8 : 30), ay = hunter.y - 19 - hunter.z;   // the muzzle, held at the hip
   const a = Math.atan2(y - ay, x - ax);
   if (w === 'harpoon' && apoc.fireCd <= 0) {
     const lv = S.lv.harpoon;
@@ -1912,7 +2036,10 @@ function mutantAt(x, y) {
 function updateApoc(dt) {
   apoc.t += dt; apoc.inv = Math.max(0, apoc.inv - dt); apoc.fireCd -= dt; apoc.flash = Math.max(0, apoc.flash - dt);
   hunter.recoil = Math.max(0, (hunter.recoil || 0) - dt);
-  if (apoc.st === 'intro') { if (apoc.t > 5) { apoc.st = 'break'; apoc.t = 0; toast('Tap the ice to move. Hold FIRE (or Space) to hit the nearest mutant.', 5000); } }
+  if (apoc.st === 'intro') {
+    if (!apoc.said && apoc.t > 4) { apoc.said = true; Snd.voice('whathave', 2); }
+    if (apoc.t > 5) { apoc.st = 'break'; apoc.t = 0; showHowTo(9000); setTimeout(() => Snd.voice('apoc2', 2), 1800); }
+  }
   else if (apoc.st === 'break') { if (apoc.t > 8 && !apoc.dead) startWave(); }
   else if (apoc.st === 'wave') {
     apoc.spawnT -= dt;
@@ -1931,11 +2058,13 @@ function updateApoc(dt) {
   const k = apoc.keys, kx = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0), ky = (k.s || k.arrowdown ? 1 : 0) - (k.w || k.arrowup ? 1 : 0);
   if ((kx || ky) && !apoc.dead && hunter.swing < 0) {
     const l = Math.hypot(kx, ky), nx = hunter.x + kx / l * RUN * dt, ny = hunter.y + ky / l * RUN * .8 * dt;
-    if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; } else if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;
+    const free = hunter.z > 4;             // in the air, water is no obstacle
+    if (free && nx > 6 && nx < W - 6 && ny > 96 && ny < H - 4) { hunter.x = nx; hunter.y = ny; }
+    else if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; } else if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;
     hunter.path = null; hunter.target = null; hunter.walking = .1; if (kx) hunter.dir = kx;
   }
   hunter.walking = Math.max(0, (hunter.walking || 0) - dt);
-  if ((apoc.fireHeld || apoc.keys[' ']) && !apoc.dead && apoc.st !== 'intro') autoFire();
+  if ((apoc.fireHeld || apoc.keys.j || apoc.keys.f || apoc.keys.enter) && !apoc.dead && apoc.st !== 'intro') autoFire();
   if (apoc.press && !apoc.hold && performance.now() - apoc.press.t > 220 && S.weapon !== 'club') { apoc.hold = [apoc.press.x, apoc.press.y]; hunter.path = null; }
   if (apoc.hold && !apoc.dead && S.weapon !== 'club') fireAt(apoc.hold[0], apoc.hold[1]);
   else if (apoc.burst && now < apoc.burst.until && S.weapon === 'flamer') fireAt(apoc.burst.x, apoc.burst.y);
@@ -2079,14 +2208,15 @@ function commonUpdate(dt) {
   // bundles fly onto the sled, or onto the heap beside where it stands
   for (const b of bundles) {
     b.t += dt; const p = Math.min(1, b.t / b.dur);
-    const home = sled.st === 'home' && S.load < sledCap();
+    const home = sled.st === 'home' && sledN() < sledCap();
     const tx = home ? SLED.x + rnd(-1, 1) : SLED.x - 24, ty = home ? SLED.y - 18 : SLED.y + 2;
     b.x = lerp(b.sx, tx, ease(p)); b.y = lerp(b.sy, ty, ease(p)) - Math.sin(Math.PI * p) * (b.dur > 1.2 ? 40 : 26);
     if (p >= 1 && !b.done) {
       b.done = true;
-      if (b.back) { S.heap += b.value; dirtyPanel = true; } else harvest(b.value);
-      say((b.label || '+') + fmt(b.value), tx, ty - 16, { color: b.label && b.label.length > 2 ? '#ffe08a' : '#fffaf3', size: b.value >= 20 ? 8 : 6 });
-      Snd.ding(b.gold ? 1.25 : 1); addFx('fx_sparkle', tx, ty - 2);
+      const T = TYPES[b.kind] || TYPES.pup;
+      if (b.back) { for (const x of b.B || []) pAdd(S.heapB, x[0], x[1]); dirtyPanel = true; } else harvest(b.n, b.kind);
+      say((b.label || '+') + fmt(b.n) + (T.rare ? ' ' + T.name.toUpperCase() : ''), tx, ty - 16, { color: T.rare ? kindGlow(b.kind) : b.label && b.label.length > 2 ? '#ffe08a' : '#fffaf3', size: T.rare ? 7 : 6, edge: T.rare ? '#3a2a10' : undefined });
+      Snd.ding(T.rare ? 1.25 : 1); addFx('fx_sparkle', tx, ty - 2);
     }
   }
   bundles = bundles.filter(b => !b.done);
@@ -2165,7 +2295,7 @@ function render() {
   list.push([roadAt(sled.d)[1], drawSled]);
   if (!S.apoc) for (let i = 0; i < dogs(); i++) list.push([dogPos(i)[1] + .1, () => drawDog(i)]);
   for (const m of mutants) list.push([m.y + (m.T.flies ? 80 : 0), () => drawMutant(m)]);
-  if (S.heap > 0) list.push([SLED.y + 6, drawHeap]);
+  if (heapN() > 0) list.push([SLED.y + 6, drawHeap]);
   if (S.lv.drones) list.push([CHIPPER.y, drawChipper]);
   if (S.lv.decoy) list.push([DECOY.y, () => spr(g, 'decoy', 0, DECOY.x, DECOY.y, false)]);
   if (S.factory) list.push([CONTRAPTION.y, drawContraption]);
@@ -2174,7 +2304,7 @@ function render() {
   for (const [, fn] of list) fn();
   for (const d of drops) { g.fillStyle = d.c; g.fillRect(Math.round(d.x), Math.round(d.y - d.z), d.s, d.s); }
   for (const f of fx) spr(g, f.name, Math.floor(f.t * f.fps), f.x, f.y, f.flip);
-  for (const b of bundles) spr(g, 'pelt', 0, b.x, b.y, false);
+  for (const b of bundles) sprKind(g, 'pelt', 0, b.x, b.y, false, b.kind || 'pup');
   for (const d of drones) drawDrone(d);
   if (S.apoc) drawApocAir();
   if (gull.state !== 'perch' && !S.apoc) drawGull();
@@ -2256,7 +2386,10 @@ function buy(u) {
     Snd.bark(); Snd.voice('husky', 2);
     toast(S.lv.dogs === 2 ? 'Three dogs. They set off on their own once the sled is full.' : 'Another husky joins the team.', 3200);
   } else if (u.id === 'club') { toast(`${CLUBS[S.lv.club].name} in hand.`); quip('bought', .6); }
-  else if (u.id === 'decoy' && S.lv.decoy === 1) { toast("A wooden seal on the ice. It tells the others it's safe up here.", 3600); addFx('fx_poof', DECOY.x, DECOY.y - 4); }
+  else if (u.id === 'decoy') {
+    if (S.lv.decoy === 1) addFx('fx_poof', DECOY.x, DECOY.y - 4);
+    toast(`Word gets around: ${TYPES[RARE[S.lv.decoy]].name} seals have started turning up.`, 3600); Snd.voice('decoyup', 2);
+  }
   else quip('bought', .5);
   if (S.tut < 3) S.tut = 3;
   dirtyPanel = true; save();
@@ -2299,7 +2432,8 @@ function buyApoc(u) {
   else {
     S.lv[u.id]++;
     if (u.id === 'hearts') S.hp = maxHp();
-    if ((u.id === 'harpoon' || u.id === 'flamer') && S.lv[u.id] === 1) { S.weapon = u.id; toast(`${u.name()} ready. Hold FIRE to shoot the nearest mutant, or hold on the scene to aim.`, 3800); }
+    if (S.lv[u.id] === 1 && { harpoon: 1, flamer: 1, gundrone: 1 }[u.id]) Snd.voice({ harpoon: 'buyharpoon', flamer: 'buyflamer', gundrone: 'buydrone' }[u.id], 2);
+    if ((u.id === 'harpoon' || u.id === 'flamer') && S.lv[u.id] === 1) { S.weapon = u.id; toast(TOUCH ? `${u.name()} ready. Hold FIRE to shoot the nearest mutant.` : `${u.name()} ready. Click to shoot where you point.`, 3800); }
   }
   const el = cardEls[u.id].b; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
   dirtyPanel = true; save();
@@ -2348,12 +2482,12 @@ function refreshPanel() {
   fb.disabled = c == null || S.coins < c;
   const cap = sledCap();
   $('#sledLine').textContent = ({
-    home: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`, turn: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`,
+    home: `On the sled: ${fmt(sledN())} / ${fmt(cap)} pelts, worth ${fmt(pValue(S.sledB))}`, turn: `On the sled: ${fmt(sledN())} / ${fmt(cap)} pelts, worth ${fmt(pValue(S.sledB))}`,
     up: `Hauling ${fmt(sled.cargo)} pelts to the hut`, sell: `The trader is counting ${fmt(sled.sold || 0)} pelts`,
     down: 'The sled is coming back',
-  })[sled.st] + (S.heap > 0 ? ` · ${fmt(S.heap)} on the ice` : '');
+  })[sled.st] + (heapN() > 0 ? ` · ${fmt(heapN())} on the ice` : '');
   const st = S.stats;
-  $('#stats').textContent = `Seals ${fmt(st.kos + st.chipped + st.slurped)} · Golden ${st.golden} · Got away ${st.escaped} · Trips ${st.trips} · Best combo x${st.best.toFixed(1)}`;
+  $('#stats').textContent = `Seals ${fmt(st.kos + st.chipped + st.slurped)} · Rare ${st.golden} · Got away ${st.escaped} · Trips ${st.trips} · Best combo x${st.best.toFixed(1)}`;
 }
 let hudLast = 0, heartsShown = '';
 function apocHud() {
@@ -2370,10 +2504,10 @@ function apocHud() {
 }
 function refreshHud() {
   const ap = !!S.apoc;
-  $('#heartsBadge').hidden = !ap; $('#rateBadge').hidden = ap; $('#fishBtn').hidden = ap; $('#sledBtn').hidden = ap; $('#weaponBar').hidden = !ap; $('#waveBtn').hidden = !ap; $('#fireBtn').hidden = !ap;
+  $('#heartsBadge').hidden = !ap; $('#rateBadge').hidden = ap; $('#fishBtn').hidden = ap; $('#sledBtn').hidden = ap; $('#weaponBar').hidden = !ap; $('#waveBtn').hidden = !ap; $('#fireBtn').hidden = !ap || !TOUCH; $('#jumpBtn').hidden = !ap || !TOUCH;
   if (ap) { apocHud(); const cb = $('#combo'); cb.hidden = true; return; }
   const perMin = income.reduce((a, [, n]) => a + n, 0) * 2;
-  $('#rateText').textContent = `${fmt(perMin)} pelts / min`;
+  $('#rateText').textContent = `${fmt(perMin)} coins / min`;
   $('#dayText').textContent = `DAY ${S.day}`;
   const isNight = night() > .5;
   if (refreshHud.night !== isNight) { refreshHud.night = isNight; $('#dayIcon').src = icons[isNight ? 'i_moon' : 'i_sun']; }
@@ -2387,10 +2521,11 @@ function refreshHud() {
   $('#fishCd').style.transform = `scaleX(${cd / fishCooldown()})`;
   $('#fishText').textContent = cd > 0 ? `Fish in ${Math.ceil(cd)} s` : 'Toss fish';
   const sb = $('#sledBtn'), cap = sledCap(), home = sled.st === 'home';
-  sb.disabled = !home || S.load < 1;
-  sb.classList.toggle('full', home && S.load >= cap);
-  $('#sledFill').style.transform = `scaleX(${home ? Math.min(1, S.load / cap) : sled.st === 'up' ? sled.d / ROAD_LEN : sled.st === 'down' ? sled.d / ROAD_LEN : 1})`;
-  $('#sledText').textContent = home ? (S.load ? `Send sled ${fmt(S.load)}/${fmt(cap)}` : 'Sled empty') : sled.st === 'sell' ? 'Selling...' : sled.st === 'up' ? 'Hauling up...' : 'Coming back...';
+  const ld = sledN();
+  sb.disabled = !home || ld < 1;
+  sb.classList.toggle('full', home && ld >= cap);
+  $('#sledFill').style.transform = `scaleX(${home ? Math.min(1, ld / cap) : sled.st === 'up' ? sled.d / ROAD_LEN : sled.st === 'down' ? sled.d / ROAD_LEN : 1})`;
+  $('#sledText').textContent = home ? (ld ? `Send sled ${fmt(ld)}/${fmt(cap)}` : 'Sled empty') : sled.st === 'sell' ? 'Selling...' : sled.st === 'up' ? 'Hauling up...' : 'Coming back...';
 }
 let icons = {}, halfHeart = '';
 
@@ -2434,7 +2569,7 @@ function tap(x, y) {
     else { hunter.target = hit; hunter.pending = 1; }
     return;
   }
-  if (sled.st === 'home' && S.load > 0 && x > SLED.x - 40 && x < SLED.x + 40 && y > SLED.y - 32 && y < SLED.y + 3) { sendSled(); return; }
+  if (sled.st === 'home' && sledN() > 0 && x > SLED.x - 40 && x < SLED.x + 40 && y > SLED.y - 32 && y < SLED.y + 3) { sendSled(); return; }
   hunter.target = null; hunter.pending = 0;
   const [tx, ty] = nearestIce(x, y);
   planPath(tx, ty);
@@ -2452,10 +2587,10 @@ function tossFish() {
 // ---------------------------------------------------------------- save
 function serialize() {                    // a sled still out on the road is saved as back at camp with its load
   S.t = Date.now(); const o = JSON.parse(JSON.stringify(S));
-  if (sled.st !== 'home' && sled.st !== 'turn') o.load += sled.cargo;
+  if (sled.st !== 'home' && sled.st !== 'turn') o.sledB = o.sledB.concat(sled.cargoB || []);
   return o;
 }
-const machineRate = () => (S.apoc ? 0 : S.lv.drones * 1.6) + (S.factory ? 18 / tierGap() : 0);   // coins a second, near enough
+const machineRate = () => ((S.apoc ? 0 : S.lv.drones / 9) + (S.factory ? 1 / tierGap() : 0)) * avgSealWorth();   // coins a second, near enough
 function save() { try { localStorage.setItem('cozy-pelts', JSON.stringify(serialize())); } catch (e) {} }
 function migrate(o) {                    // a save from before the sled run: every coin spent on gear that is gone comes back
   const spent = (base, grow, n) => { let t = 0; for (let i = 0; i < (n || 0); i++) t += Math.ceil(base * Math.pow(grow, i)); return t; };
@@ -2475,6 +2610,9 @@ function restore(data) {
   if (!d.v) d = migrate(d);
   const base = fresh();
   S = Object.assign(base, d, { lv: Object.assign(base.lv, d.lv), stats: Object.assign(base.stats, d.stats), sound: Object.assign(base.sound, d.sound) });
+  if (typeof S.load === 'number' || typeof S.heap === 'number') {   // plain pelts from before the grades: white ones
+    S.sledB = S.load > 0 ? [[S.load, 'pup']] : []; S.heapB = S.heap > 0 ? [[S.heap, 'pup']] : []; delete S.load; delete S.heap;
+  }
   if (S.pump) {                            // pump levels became the contraption's tiers
     let back = 0; for (let i = 0; i < S.pump; i++) back += Math.ceil(5000 * Math.pow(2.2, i));
     S.coins += back; delete S.pump;
@@ -2533,7 +2671,7 @@ async function start(data) {
   const away = restore(data);
   syncMachines(); pollute();
   buildPanel(icons);
-  if (S.apoc) { enterApocUI(); apoc.st = 'break'; apoc.t = 0; S.hp = Math.max(S.hp, 2); if (S.inWave) { S.wave--; S.inWave = 0; } }   // a wave cut short by a reload plays again
+  if (S.apoc) { enterApocUI(); apoc.st = 'break'; apoc.t = 0; S.hp = Math.max(S.hp, 2); if (S.inWave) { S.wave--; S.inWave = 0; } setTimeout(() => showHowTo(7000), 600); }   // a wave cut short by a reload plays again
   if (location.hash === '#sealocalypse' && !S.apoc) {   // a shortcut for trying the ending without an hour of seals
     S.factory = Math.max(S.factory, 2); S.coins = Math.max(S.coins, TIER_COST[2] + 4000); syncMachines(); pollute();
     setTimeout(() => toast('Test shortcut: the contraption is at tier 2, and you have the coins for tier 3.', 4200), 800);
@@ -2554,9 +2692,9 @@ async function start(data) {
     Object.assign(sled, { st: 'home', d: 0, t: 0, cargo: 0, warned: false }); chipper.queue = []; chipper.grind = 0;
     Object.assign(tube, { lumps: [], st: 'roam', prey: null }); preys = []; slicks = []; coinFx = [];
     mutants = []; shots = []; orbs = []; acids = []; rings = []; tongues = []; flames = []; drones.length = 0;
-    Object.assign(apoc, { st: 'calm', t: 0, queue: [], dead: false, hold: null, press: null, inv: 0, flash: 0 });
+    Object.assign(apoc, { st: 'calm', t: 0, queue: [], dead: false, hold: null, press: null, inv: 0, flash: 0, said: false, lowSaid: 0 });
     $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS';
-    $('#over').hidden = true; $('#banner').hidden = true; heartsShown = '';
+    $('#over').hidden = true; $('#banner').hidden = true; $('#howto').classList.remove('show'); heartsShown = ''; hunter.jump = null; hunter.z = 0;
     hunter.x = 112; hunter.y = 172; hunter.path = null; hunter.target = null;
     gull.state = 'perch'; gull.x = PERCH.x; gull.y = PERCH.y;
     buildPanel(icons); syncMachines(); Snd.hum(); save(); dirtyPanel = true; toast('A fresh camp on the ice.');
@@ -2568,10 +2706,13 @@ async function start(data) {
   });
   view.addEventListener('pointerdown', e => {
     e.preventDefault(); const [x, y] = worldPoint(e);
-    if (S.apoc) {                          // a press that is held, or a right click, keeps the gun going at the pointer
+    if (S.apoc) {
       apoc.press = { x, y, x0: x, y0: y, t: performance.now(), id: e.pointerId };
-      if (e.button === 2) { Snd.init(); apoc.hold = [x, y]; return; }
-      if (e.pointerType === 'mouse' && S.weapon !== 'club' && !mutantAt(x, y)) { Snd.init(); apoc.press.wait = true; return; }   // a click walks when it lifts; a hold fires
+      if (e.pointerType === 'mouse') {     // the mouse is the gun: left fires where it points, right walks there
+        Snd.init();
+        if (e.button === 2) { apoc.press = null; if (!apoc.dead && apoc.st !== 'intro') { hunter.target = null; hunter.pending = 0; const [tx, ty] = nearestIce(x, y); planPath(tx, ty); } return; }
+        if (S.weapon !== 'club') { apoc.hold = [x, y]; if (!apoc.dead && apoc.st !== 'intro') fireAt(x, y); return; }
+      }
       // on a touchscreen a tap on the ice walks at once: the other thumb is on FIRE
     }
     tap(x, y);
@@ -2590,8 +2731,12 @@ async function start(data) {
   fb.addEventListener('pointerdown', e => { e.preventDefault(); Snd.init(); try { fb.setPointerCapture(e.pointerId); } catch (_) {} apoc.fireHeld = true; fb.classList.add('on'); });
   fb.addEventListener('pointerup', fireOff); fb.addEventListener('pointercancel', fireOff); fb.addEventListener('lostpointercapture', fireOff);
   fb.addEventListener('contextmenu', e => e.preventDefault());
+  const jb = $('#jumpBtn');
+  jb.addEventListener('pointerdown', e => { e.preventDefault(); Snd.init(); jb.classList.add('on'); jump(); });
+  for (const t of ['pointerup', 'pointercancel', 'pointerleave']) jb.addEventListener(t, () => jb.classList.remove('on'));
+  jb.addEventListener('contextmenu', e => e.preventDefault());
   view.addEventListener('contextmenu', e => { if (S.apoc) e.preventDefault(); });
-  addEventListener('keyup', e => { delete apoc.keys[e.key.toLowerCase()]; });
+  addEventListener('keyup', e => { delete apoc.keys[e.key.toLowerCase()]; if (S.apoc && (e.key === ' ' || e.key === 'Enter')) e.preventDefault(); });
   addEventListener('blur', () => { apoc.keys = {}; apoc.hold = null; apoc.press = null; apoc.fireHeld = false; $('#fireBtn').classList.remove('on'); });
   addEventListener('keydown', e => {
     if (S.apoc) {
@@ -2599,7 +2744,8 @@ async function start(data) {
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { apoc.keys[k] = true; if (k.startsWith('arrow')) e.preventDefault(); }
       const pickW = { 1: 'club', 2: 'harpoon', 3: 'flamer' }[e.key];
       if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; }
-      if (e.key === ' ' && (e.target === document.body || e.target === $('#fireBtn'))) { e.preventDefault(); Snd.init(); apoc.keys[' '] = true; }   // held, like FIRE
+      if (e.key === ' ') { e.preventDefault(); Snd.init(); if (!e.repeat) jump(); }   // never a click on whatever button has focus
+      if (k === 'j' || k === 'f' || k === 'enter') { e.preventDefault(); Snd.init(); apoc.keys[k] = true; }   // held, like FIRE
       return;
     }
     if (e.key === 'f' || e.key === 'F') tossFish();
@@ -2639,8 +2785,8 @@ async function start(data) {
   layout();
   for (let i = 0; i < 2; i++) spawnSeal(false);
   for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
-  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, sled, drones, tube, chipper, apoc, mutants: () => mutants, orbs: () => orbs, spawnMutant, startWave, startApocalypse, hitMutant, fireAt, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
-    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
+  window.__cp = { get S() { return S; }, TYPES, Snd, seals: () => seals, hunter, gull, sled, drones, tube, chipper, apoc, mutants: () => mutants, orbs: () => orbs, spawnMutant, startWave, startApocalypse, hitMutant, fireAt, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
+    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), costOf: id => { const u = UPG.find(u => u.id === id); return S.lv[id] >= u.max ? 1e18 : cost(u); }, tierCost: () => TIER_COST[S.factory] ?? 1e18, jump, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
   last = performance.now();
   let faults = 0;
   const loop = t => {
