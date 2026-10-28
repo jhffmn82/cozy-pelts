@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/hook.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABAklEQVR4nLXSvUoDQRSG4feMJsHESBAhBlOInQTUTrSUXIDWErZQaxXURsRrUC8haO5DCPEGjI1aBLOW8adc1s9KbHYXd8GvnZnnzJw58F9ZqM/LYTJMDlNqoJQv6eBwX0EYCEgPAFSKZVmW6j/p9e5kWavXZ2pqNjfkea1syNx0TQYyULFQiAUsbmHSTWhzewuATrtDiCL3ujigOltl3OV5fnyKPZwIvLz65HJjjEZvpO6BgaQvGei229XxyVG6RnpeS3u7O2o0FlUpTykIA62vrUYCsU9YWVqmf//A++cH56dnSbeNUk1XlxcMfR+AwXDAdfsGJfxahPw7wi7rNP4l31VgXMWZNftBAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

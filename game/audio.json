@@ -95,6 +95,46 @@
   "kind": "sfx",
   "secs": 22.0
  },
+ "drone": {
+  "kind": "voice",
+  "secs": 7.07
+ },
+ "winch": {
+  "kind": "sfx",
+  "secs": 0.83
+ },
+ "chipper_1": {
+  "kind": "sfx",
+  "secs": 1.55
+ },
+ "chipper_2": {
+  "kind": "sfx",
+  "secs": 1.51
+ },
+ "slurp_1": {
+  "kind": "sfx",
+  "secs": 1.12
+ },
+ "slurp_2": {
+  "kind": "sfx",
+  "secs": 1.2
+ },
+ "clank": {
+  "kind": "sfx",
+  "secs": 0.88
+ },
+ "mush": {
+  "kind": "sfx",
+  "secs": 1.45
+ },
+ "coins": {
+  "kind": "sfx",
+  "secs": 0.43
+ },
+ "hum": {
+  "kind": "sfx",
+  "secs": 12.0
+ },
  "ko_1": {
   "kind": "voice",
   "secs": 1.06
@@ -157,7 +197,7 @@
  },
  "welcome": {
   "kind": "voice",
-  "secs": 3.97
+  "secs": 6.63
  },
  "goldseal": {
   "kind": "voice",
@@ -183,12 +223,48 @@
   "kind": "voice",
   "secs": 1.6
  },
- "camp": {
-  "kind": "voice",
-  "secs": 1.75
- },
  "husky": {
   "kind": "voice",
-  "secs": 2.64
+  "secs": 4.2
+ },
+ "drone2": {
+  "kind": "voice",
+  "secs": 3.23
+ },
+ "factory": {
+  "kind": "voice",
+  "secs": 4.56
+ },
+ "sold_1": {
+  "kind": "voice",
+  "secs": 3.61
+ },
+ "sold_2": {
+  "kind": "voice",
+  "secs": 1.82
+ },
+ "full": {
+  "kind": "voice",
+  "secs": 2.24
+ },
+ "mush_1": {
+  "kind": "voice",
+  "secs": 1.52
+ },
+ "mush_2": {
+  "kind": "voice",
+  "secs": 1.5
+ },
+ "byebye_1": {
+  "kind": "voice",
+  "secs": 1.21
+ },
+ "byebye_2": {
+  "kind": "voice",
+  "secs": 2.34
+ },
+ "messy": {
+  "kind": "voice",
+  "secs": 1.78
  }
 }

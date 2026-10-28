@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_bone2.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC4klEQVR4nO2VT0hUURjFf3dek2KhFNKkowVJEC7MVrVoF1QEEwqFMZD2Zxe5iow2GUkUSZjUMlokCOFCMDL8Q0L/RJQmqMSUIXOqGTATZ8ZpxnnvfS2GxiZHSufZJg/czeO+e84937nfB6v436GsPOzijhPyeXYGgPu+dkvP/iNqnJXie+pJrtqSKvmn5BN9gxKLz4hpipimiO+pR2qclX8UYVsJQXEjSHTIz9b8jVzaeVqqixcXssYKQrFBfDwCexPkALYN66h7fgGAac8seSfXym3vg5XJRXVxpdSWVMmk3yux+EzatVhJLHHgxZcPdN9tJjc/P+W7XcsFEq6IoSNpCp5xBtxOl3TfbcZxpAAApSDQNYxSoJtBdDOIUhDzhuj3f1zwf0YOuJ0uabheh6PCQc667QBEo+NMtT1kqu0huQcOoTSFGYpRX98EsjCLyxbgLjosDdfO46hwkJ2zFYDvkfcE2ieTe4JdnShNaOx6y0DAhy1N31tWKn+9uT3bAYAe8xNonyTY10lj9zsG/BMA2JQNRBgzPNa8ALfTJd6WZxIOjYppiuhGTGbDI+JteSaeUxfFXXRYSrTylemCv5ObpqSSO11LJl80A3WlxyUQCqOLwYB/gt0FW7hyow6Ha1MycD9rnrQ94MNrvF6S1WkFVBdXypnmWrQsOwDR0WkACiucrM0qTJL7O74S6utMhmyp5GlRXZw6WNJ1NStrvqxnOH7zDXMfXyXTnsnNF3RCXQzi4xGUmh8sga7hlD3Z2zbT1DPCYOBTxrYvcGDAP8HMk0dIlobSFMa3WSJD/RQcLE1pZOeq9nHk1r1MuIE0DniN16qqtYfg4w6ib4e5fPUOph5DJDFc7FouRcfKMOf0jMlhkQyMGR51tFXEpnoBWL/nLDBfEqVgfVnZygkAkrXdru2S8MtefHk5CfJfh4sF+KsAlWjl0ubej7JrAJakf0kCIOEEKrHdFNOaprOKVQA/AKgLwwwrAYN6AAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

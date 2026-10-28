@@ -1,0 +1,11 @@
+{
+ "description": "a cute boxy yellow and grey delivery quadcopter drone with four small propellers on arms and a little cable winch underneath, side view facing right, cozy pastel pixel art game sprite",
+ "image_size": {
+  "width": 48,
+  "height": 48
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

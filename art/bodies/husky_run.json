@@ -1,0 +1,8 @@
+{
+ "first_frame": {
+  "file": "art/ref/f_huskyrun.png"
+ },
+ "action": "the husky gallops forward to the right pulling hard in its sled harness, a happy running cycle, ears bouncing",
+ "frame_count": 8,
+ "no_background": true
+}

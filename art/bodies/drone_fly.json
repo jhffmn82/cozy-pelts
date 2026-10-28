@@ -1,0 +1,8 @@
+{
+ "first_frame": {
+  "file": "art/ref/f_drone.png"
+ },
+ "action": "the drone hovers in place, its four propellers spinning fast in a blur, bobbing gently up and down",
+ "frame_count": 8,
+ "no_background": true
+}

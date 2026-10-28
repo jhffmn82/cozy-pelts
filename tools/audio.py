@@ -38,7 +38,16 @@ SFX = {
     'fish': (1, 'a fish tossed into the sea plops into the water with a splash', .8, False),
     'shore': (1, 'calm arctic shore ambience: gentle waves lapping against ice floes, soft wind, faint distant seagulls, peaceful', 22, True),
     'nightair': (1, 'quiet arctic night ambience: soft wind over snow and a small crackling campfire, very calm', 22, True),
+    'drone': (1, 'a small quadcopter drone whirring and buzzing as it lifts off and flies past', 1.6, False),
+    'winch': (1, 'a small electric winch whirs and reels in a metal cable, ending with a clunk', 1.0, False),
+    'chipper': (2, 'a cartoon wood chipper grinding something soft and squishy, a wet crunchy grind that sputters to a stop', 1.6, False),
+    'slurp': (2, 'a huge industrial vacuum hose slurping something heavy up out of water, a deep wet shloop and a hollow metal thunk', 1.2, False),
+    'clank': (1, 'heavy factory machinery clanks once and lets out a short hiss of steam', .9, False),
+    'mush': (1, 'sleigh bells jingle as a dog sled sets off across the snow and a husky yips excitedly', 1.6, False),
+    'coins': (1, 'a satisfying old cash register ka-ching followed by a handful of coins clinking', 1.0, False),
+    'hum': (1, 'a steady low industrial factory hum with a slow rhythmic pump thumping, muffled and mechanical', 12, True),
 }
+LOOPS = {n for n, (_, _, _, loop) in SFX.items() if loop}
 # name: (voice, [lines]); words in [brackets] direct the voice and are not spoken
 LINES = {
     'ko': (HUNTER, ['[cheerful] Gotcha!', '[giggles] Bonk!', '[happy] Nice and fluffy!', "[pleased] Ooh, that's a good pelt.",
@@ -50,15 +59,22 @@ LINES = {
     'bought': (HUNTER, ['[happy] Ooh, cozy!', '[excited] Upgrade time!']),
     'fishy': (HUNTER, ['[sing-song] Here, fishy fishy!']),
     'roll': (HUNTER, ["[excited] I'm on a roll!"]),
-    'welcome': (NARRATOR, ['[warmly] Welcome to Cozy Pelts. The seals are coming up to lounge on the ice.']),
+    'welcome': (NARRATOR, ['[warmly] Welcome to Cozy Pelts, a wholesome family business. The seals are coming up to lounge on the ice.']),
     'goldseal': (NARRATOR, ["[hushed, excited] A golden seal. Don't let it slip away."]),
     'rush': (NARRATOR, ['[cheerful] Seal rush!']),
     'gull': (NARRATOR, ["[alarmed] Mind the gull. It's after your sled."]),
     'stolen': (NARRATOR, ['[sighs] The gull got away with some of your pelts.']),
     'dusk': (NARRATOR, ['[softly] Night falls over the ice. Sleepy seals make for sneaky bonks.']),
     'dawn': (NARRATOR, ['[warmly] A new day on the ice.']),
-    'camp': (NARRATOR, ['[proud] The camp grows cozier.']),
-    'husky': (NARRATOR, ['[warmly] A husky joins the camp, and starts hauling.']),
+    'husky': (NARRATOR, ['[warmly] Another husky joins the team. Good dog. Asks no questions.']),
+    'drone': (NARRATOR, ['[cheerfully] A drone, and a wood chipper. Seal goes in, pelt comes out. Best not to ask about the middle bit.']),
+    'drone2': (NARRATOR, ['[dryly] Another drone. The seals have started looking up.']),
+    'factory': (NARRATOR, ['[grandly] The pelt factory is open. It drinks the sea, and the sea is mostly seals.']),
+    'sold': (NARRATOR, ['[warmly] The trader paid up. He never asks where they come from.', '[pleased] Sold. Cozy money.']),
+    'full': (NARRATOR, ['[politely] The sled is full. The dogs are waiting.']),
+    'mush': (HUNTER, ['[shouting cheerfully] Mush! Mush!', '[sing-song] Off to market!']),
+    'byebye': (HUNTER, ['[sweetly] Bye bye, little guy!', '[giggles] Up you go!']),
+    'messy': (HUNTER, ['[wincing] Ooh. Messy.']),
 }
 MUSIC = {
     'day': (90, 'Cozy winter lo-fi for a cute pixel art game: music box melody, soft felt piano, gentle plucked acoustic '
@@ -131,12 +147,12 @@ def finish(kind, name, pcm):
     x = np.frombuffer(pcm, '<i2').astype(np.float64) / 32768
     if kind in STEREO:
         x = x[:len(x) // 2 * 2].reshape(-1, 2).mean(axis=1)
-    if kind != 'music' and name not in ('shore', 'nightair'):
+    if kind != 'music' and name not in LOOPS:
         loud = np.flatnonzero(np.abs(x) > .015)
         if len(loud):
             x = x[max(0, loud[0] - int(RATE * .01)):loud[-1] + int(RATE * .06)]
     x = x / (np.max(np.abs(x)) or 1) * (.9 if kind == 'voice' else .85)
-    fade = int(RATE * (.6 if kind == 'music' else .004 if name not in ('shore', 'nightair') else .25))
+    fade = int(RATE * (.6 if kind == 'music' else .25 if name in LOOPS else .004))
     if len(x) > 2 * fade and fade:
         x[:fade] *= np.linspace(0, 1, fade)
         x[-fade:] *= np.linspace(1, 0, fade)

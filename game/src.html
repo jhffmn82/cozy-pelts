@@ -76,7 +76,19 @@ body {
 #fishBtn .cd { position: absolute; inset: 0; background: rgba(75, 42, 43, .28); transform-origin: left; }
 #fishBtn:disabled { cursor: default; color: var(--ink-soft); }
 #fishBtn:not(:disabled):hover { background: #fff3df; }
-#fishBtn:focus-visible, .card:focus-visible, #campBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#sledBtn {
+  position: absolute; right: 2cqw; bottom: 2cqw; display: flex; align-items: center; gap: 1cqw;
+  height: 8cqw; padding: 0 2.2cqw 0 .8cqw; font: 600 3.3cqw var(--font); color: var(--ink); cursor: pointer;
+  background: var(--parch); border: .7cqw solid var(--wood); border-radius: 1.4cqw; box-shadow: 0 0 0 .4cqw var(--wood-dark);
+  overflow: hidden; font-variant-numeric: tabular-nums;
+}
+#sledBtn img { width: 6cqw; height: 6cqw; image-rendering: pixelated; position: relative; }
+#sledBtn span { position: relative; }
+#sledBtn .fill { position: absolute; inset: 0; background: rgba(244, 198, 79, .45); transform-origin: left; }
+#sledBtn.full .fill { background: rgba(244, 198, 79, .8); }
+#sledBtn:disabled { cursor: default; color: var(--ink-soft); }
+#sledBtn:not(:disabled):hover { background: #fff3df; }
+#fishBtn:focus-visible, #sledBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 #toast {
   position: absolute; left: 50%; top: 11cqw; transform: translateX(-50%); pointer-events: none;
   padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); white-space: nowrap;
@@ -127,6 +139,7 @@ body {
 }
 #peltBox img { width: 36px; height: 36px; image-rendering: pixelated; }
 #peltBox b { font-size: 30px; color: #2f3a6b; min-width: 3ch; }
+#sledLine { margin-top: -3px; text-align: center; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #cards { display: grid; gap: 6px; }
 #game.stacked #cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .card {
@@ -138,6 +151,7 @@ body {
 .card .ico img { width: 36px; height: 36px; image-rendering: pixelated; }
 .card .txt { min-width: 0; display: grid; gap: 1px; }
 .card .nm { font-weight: 700; font-size: 14px; letter-spacing: .03em; text-transform: uppercase; }
+.card .nm i { font-style: normal; }
 .card .nm small { font-weight: 500; font-size: 12px; color: var(--ink-soft); text-transform: none; letter-spacing: 0; margin-left: 4px; }
 .card .ds { font-size: 12px; color: var(--ink-soft); line-height: 1.25; }
 .price {
@@ -153,18 +167,20 @@ body {
 .card.maxed .price { background: #8fae7d; border-color: #5d7a4e; }
 .card.flash { animation: buy .35s ease-out; }
 @keyframes buy { 0% { background: #fff; } 100% { background: #fbf1e0; } }
-#campBtn {
-  display: grid; gap: 1px; justify-items: center; padding: 7px 8px 6px; cursor: pointer; font: inherit; color: var(--snow);
+#factBtn {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; padding: 6px 10px 6px 6px;
+  cursor: pointer; font: inherit; color: var(--snow); text-align: left;
   background:
     repeating-linear-gradient(135deg, rgba(255, 255, 255, .09) 0 6px, transparent 6px 12px),
     linear-gradient(var(--berry), var(--berry-dark));
   border: 3px solid #5d1119; border-radius: 12px; box-shadow: 0 3px 0 #5d1119, inset 0 0 0 3px rgba(255, 230, 230, .25);
   text-shadow: 0 2px 0 #5d1119;
 }
-#campBtn b { font-size: 22px; letter-spacing: .08em; }
-#campBtn span { font-size: 12px; font-variant-numeric: tabular-nums; }
-#campBtn:disabled { cursor: default; filter: saturate(.45) brightness(.9); }
-#campBtn:not(:disabled):hover { filter: brightness(1.08); }
+#factBtn img { grid-row: span 2; width: 40px; height: 40px; image-rendering: pixelated; }
+#factBtn b { font-size: 19px; letter-spacing: .06em; }
+#factBtn span { font-size: 12px; line-height: 1.25; font-variant-numeric: tabular-nums; }
+#factBtn:disabled { cursor: default; filter: saturate(.45) brightness(.9); }
+#factBtn:not(:disabled):hover { filter: brightness(1.08); }
 #foot { display: grid; gap: 5px; font-size: 11px; color: var(--ink-soft); }
 #stats { font-variant-numeric: tabular-nums; line-height: 1.35; }
 .togs { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -185,27 +201,29 @@ body {
     </div>
     <div id="combo" hidden><div id="comboText">COMBO x1.0</div><div class="bar"><i id="comboBar"></i></div></div>
     <button id="fishBtn" type="button" title="Toss a fish to lure a seal rush (F)"><div class="cd" id="fishCd"></div><img id="fishIcon" alt=""><span id="fishText">Toss fish</span></button>
+    <button id="sledBtn" type="button" title="Send the sled up to the hut to sell (S)"><div class="fill" id="sledFill"></div><img id="sledIcon" alt=""><span id="sledText">Send sled</span></button>
     <div id="toast" role="status" aria-live="polite"></div>
     <div id="intro">
       <div class="card-in">
         <h2>Cozy Pelts</h2>
-        <p>Seals hop up onto the ice to lounge. Tap one and your hunter runs over to bonk it.</p>
+        <p>A wholesome family business on the ice. Seals haul out to lounge; tap one and your hunter runs over and bonks it.</p>
         <ul>
-          <li>Hurt seals scoot for the water. Finish them for a pelt bundle.</li>
-          <li>Napping seals take sneak bonks: double damage, triple pelts.</li>
-          <li>Keep bonking to build a combo. Golden seals are rare and skittish.</li>
-          <li>Watch the gull. It has its eye on your sled.</li>
+          <li>Knocked-out seals go on the sled as pelts. Send the sled up to the hut and the trader pays in coins.</li>
+          <li>Hurt seals scoot for the water. Napping seals take sneak bonks: double damage, double pelts.</li>
+          <li>Save up for drones, a wood chipper and, one day, the factory.</li>
+          <li>Mind the gull. It steals off the sled.</li>
         </ul>
         <button id="startBtn" type="button">Start</button>
       </div>
     </div>
   </div>
-  <aside id="panel" aria-label="Pelts and upgrades">
+  <aside id="panel" aria-label="Coins and upgrades">
     <h1>COZY PELTS</h1>
     <div class="trees" aria-hidden="true"></div>
-    <div id="peltBox"><img id="peltIcon" alt=""><span>PELTS:</span><b id="peltCount">0</b></div>
+    <div id="peltBox"><img id="coinIcon" alt=""><span>COINS:</span><b id="coinCount">0</b></div>
+    <div id="sledLine"></div>
     <div id="cards"></div>
-    <button id="campBtn" type="button"><b>UPGRADE CAMP</b><span id="campInfo">Doubles every pelt</span></button>
+    <button id="factBtn" type="button"><img id="factIcon" alt=""><b id="factName">BUILD THE FACTORY</b><span id="factInfo"></span></button>
     <div id="foot">
       <div id="stats"></div>
       <div class="togs">
@@ -250,8 +268,17 @@ const FLOES = [
   { id: 'shelf', seals: 2, pts: [[146,115],[160,110],[200,108],[212,111],[212,117],[170,119],[148,119]] },
   { id: 'step', seals: 0, pts: [[89,135],[95,132],[106,132],[110,135],[106,138],[92,138]] },
 ];
-const SLED = { x: 207, y: 184 }, HUSKY = { x: 157, y: 193 }, PERCH = { x: 221, y: 207 }, CHIMNEY = { x: 220, y: 27 };
+const SLED = { x: 207, y: 184 }, PERCH = { x: 221, y: 207 }, CHIMNEY = { x: 220, y: 27 };
 const WINDOWS = [[198,58],[213,58],[226,59],[188,60],[205,61]];
+// the sled's road up to the hut door, and the dog yard it stops beside on the way home
+const ROAD = [[207,184],[232,172],[241,152],[238,132],[228,114],[217,98],[207,84],[199,73]];
+const YARD = [-1, .22];
+// the machines: where each stands, and the spots on its sprite that things go in and out of
+const FACTORY = { x: 42, y: 129 }, PIPE = [72, 102], CHUTE = [18, 113], STACK = [21, 45];
+const FACTORY_WINDOWS = [[14,95],[24,99],[42,76],[54,70]];
+const HOSE = [[72,102],[100,94],[98,128],[86,147]];    // a cubic from the factory's pipe down into the sea
+const CHIPPER = { x: 160, y: 118 }, HOPPER = [155, 75], SPOUT = [179, 99];   // drawn mirrored, spout to the right
+const DRONE_HOME = [[128, 60], [150, 52], [106, 54]];
 let walk, water, exitDist, exitsOf = {};
 
 function inPoly(x, y, p) {
@@ -339,42 +366,57 @@ function spotOn(fl, tries = 40) {
 }
 
 // ---------------------------------------------------------------- state
+// Pelts are goods: every one comes off a seal and rides the sled up to the hut, where the trader pays in coins.
+// Coins buy the upgrades, and every upgrade is something you can watch doing its job. Each level costs a fixed
+// multiple of the one before.
+const CLUBS = [
+  { name: 'Driftwood Club', icon: 'i_club', dmg: 1 },
+  { name: 'Frozen Salmon', icon: 'i_salmon', dmg: 2, ds: 'Hits for 2. Slapping a seal with a fish feels like justice.' },
+  { name: 'Whale Bone', icon: 'i_bone', dmg: 3, ds: 'Hits for 3. Pups go down in one.' },
+  { name: 'Ship Anchor', icon: 'i_anchor', dmg: 6, ds: 'Hits for 6. Even the big grey ones fold.' },
+  { name: 'Narwhal Tusk', icon: 'i_tusk', dmg: 8, ds: 'Hits for 8 and skewers the seal behind it too. Kebab night.' },
+];
 const UPG = [
-  { id: 'club', name: 'Sturdier Club', icon: 'i_club', base: 50, grow: 1.55, max: 60,
-    ds: () => '+1 pelt per bonk', now: () => `${fmt(perBonk())} a bonk, hits for ${dmg()}` },
-  { id: 'sled', name: 'Helper Sled', icon: 'i_sled', base: 100, grow: 1.5, max: 60,
-    ds: () => '+2 pelts / sec', now: () => `${fmt(passive())} / sec` },
-  { id: 'mittens', name: 'Warmer Mittens', icon: 'i_mittens', base: 75, grow: 1.65, max: 8,
-    ds: () => 'Swing faster', now: () => `${swingTime().toFixed(2)} s a swing` },
-  { id: 'boots', name: 'Snow Boots', icon: 'i_boots', base: 60, grow: 1.6, max: 6,
-    ds: () => 'Run and hop faster', now: () => `${Math.round(runSpeed())} paces a sec` },
-  { id: 'bucket', name: 'Fish Bucket', icon: 'i_bucket', base: 150, grow: 1.75, max: 6,
-    ds: () => 'More seals, quicker fish tosses', now: () => `${maxSeals()} seals, toss every ${fishCooldown()} s` },
-  { id: 'cocoa', name: 'Hot Cocoa', icon: 'i_cocoa', base: 250, grow: 1.8, max: 5,
-    ds: () => 'Bigger bundles, longer combos', now: () => `bundles x${bundleMult().toFixed(1)}` },
+  { id: 'club', base: 40, grow: 6, max: CLUBS.length - 1,
+    name: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].name, icon: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].icon,
+    ds: () => S.lv.club < CLUBS.length - 1 ? CLUBS[S.lv.club + 1].ds : 'Hits for 8 and skewers the seal behind it too.' },
+  { id: 'boots', base: 60, grow: 2.2, max: 6, name: () => 'Snow Boots', icon: () => 'i_boots',
+    ds: () => `Run and hop faster. Seals have flippers; you have boots.` },
+  { id: 'bucket', base: 120, grow: 2.4, max: 6, name: () => 'Fish Bucket', icon: () => 'i_bucket',
+    ds: () => S.lv.bucket < 6 ? `Lures ${maxSeals() + 1} seals onto the ice and refills the fish sooner. Free lunch, technically.` : `${maxSeals()} seals at once. That's all the ice will hold.` },
+  { id: 'sled', base: 150, grow: 2.3, max: 10, name: () => 'Bigger Sled', icon: () => 'i_sled',
+    ds: () => S.lv.sled < 10 ? `Carries ${fmt(sledCap(S.lv.sled + 1))} pelts a trip. They stack neatly once they stop wriggling.` : `Carries ${fmt(sledCap())} pelts a trip.` },
+  { id: 'dogs', base: 500, grow: 5, max: 3, name: () => 'Husky Team', icon: () => 'i_husky',
+    ds: () => ['Another dog on the line: faster trips. Good dog. Asks no questions.',
+               'A third dog. Now the team sets off by itself when the sled is full.',
+               'A fourth dog. The fastest sled on the ice.', 'Four good dogs. The fastest sled on the ice.'][S.lv.dogs] },
+  { id: 'drones', base: 800, grow: 4, max: 3, name: () => 'Seal Drone', icon: () => 'i_drone',
+    ds: () => ['Builds a wood chipper, and a drone to feed it lounging seals.',
+               'A second drone. The seals have started looking up.', 'A third drone. The sky is full of seals.',
+               'Three drones, one chipper, no questions.'][S.lv.drones] },
 ];
 const TYPES = {
-  pup: { hp: 3, speed: 12, mult: 1, pitch: 1.15, stay: [24, 40] },
-  grey: { hp: 6, speed: 15, mult: 3, pitch: .78, stay: [20, 32] },
-  gold: { hp: 4, speed: 24, mult: 20, pitch: 1.4, stay: [11, 15], skittish: true },
+  pup: { hp: 3, speed: 12, value: 8, pitch: 1.15, stay: [24, 40] },
+  grey: { hp: 6, speed: 15, value: 25, pitch: .78, stay: [20, 32] },
+  gold: { hp: 4, speed: 24, value: 150, pitch: 1.4, stay: [11, 15], skittish: true },
 };
 function fresh() {
-  return { pelts: 0, total: 0, lv: { club: 0, sled: 0, mittens: 0, boots: 0, bucket: 0, cocoa: 0 }, camp: 0,
-    day: 1, dayT: .04, pile: 0, fishCd: 8, gullCd: 70, tut: 0,
-    stats: { bonks: 0, kos: 0, escaped: 0, golden: 0, best: 1 }, sound: { music: true, sfx: true, voice: true }, t: Date.now() };
+  return { v: 2, coins: 0, load: 0, heap: 0, total: 0, lv: { club: 0, boots: 0, bucket: 0, sled: 0, dogs: 0, drones: 0 }, factory: 0, pump: 0,
+    day: 1, dayT: .04, fishCd: 8, gullCd: 70, tut: 0,
+    stats: { bonks: 0, kos: 0, escaped: 0, golden: 0, best: 1, trips: 0, chipped: 0, slurped: 0 }, sound: { music: true, sfx: true, voice: true }, t: Date.now() };
 }
 let S = fresh();
-const campMult = () => Math.pow(2, S.camp);
-const dmg = () => 1 + Math.floor(S.lv.club / 2);
-const perBonk = () => (1 + S.lv.club) * campMult();
-const passive = () => 2 * S.lv.sled * campMult();
-const swingTime = () => Math.max(.2, .5 * Math.pow(.87, S.lv.mittens));
+const dmg = () => CLUBS[S.lv.club].dmg;
+const SWING = .42;
 const runSpeed = () => 115 * (1 + .18 * S.lv.boots);
-const maxSeals = () => Math.min(9, 3 + S.lv.bucket);
-const comboWindow = () => 2.6 + .4 * S.lv.cocoa;
-const bundleMult = () => 1 + .5 * S.lv.cocoa;
+const maxSeals = () => Math.min(12, 3 + S.lv.bucket + S.lv.drones);   // the chipper's smell draws a few more
+const COMBO_WINDOW = 3;
 const fishCooldown = () => 45 - 4 * S.lv.bucket;
-const campCost = () => 1000 * Math.pow(12, S.camp);
+const sledCap = (lv = S.lv.sled) => Math.round(40 * Math.pow(1.75, lv) / 10) * 10;
+const sledSpeed = () => 16 * (1 + .6 * S.lv.dogs);
+const FACTORY_COST = 15000;
+const pumpCost = () => Math.ceil(5000 * Math.pow(2.2, S.pump));
+const PUMP_MAX = 10, pumpGap = () => Math.max(.3, 2.4 * Math.pow(.82, S.pump));   // seconds between seals up the hose
 const cost = u => Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id]));
 const comboMult = () => 1 + .1 * Math.min(Math.max(combo.n - 1, 0), 30);
 
@@ -382,7 +424,8 @@ let seals = [], fx = [], drops = [], texts = [], bundles = [], sparkles = [], fl
 let combo = { n: 0, t: 0 }, income = [], shake = 0, now = 0, rush = 0, sid = 0;
 const hunter = { x: 112, y: 172, dir: 1, path: null, target: null, pending: 0, swing: -1, struck: false, cheer: 0, at: 0, z: 0 };
 const gull = { state: 'perch', x: PERCH.x, y: PERCH.y, t: 0, dir: -1, at: 0, carry: 0, tx: 0, ty: 0 };
-let husky = { at: 0, pet: 0 };
+const sled = { st: 'home', d: 0, t: 0, at: 0, cargo: 0, warned: false };
+const drones = [], chipper = { grind: 0, queue: [], t: 0 }, factory = { t: 0, lumps: [], shake: 0, slurpT: 0, clankT: 0 };
 
 // ---------------------------------------------------------------- drawing setup
 const world = document.createElement('canvas'); world.width = W; world.height = H;
@@ -413,6 +456,16 @@ function spr(ctx, name, fi, x, y, flip, src) {
     ctx.restore();
   } else ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, x + m.ox, y + m.oy, m.w, m.h);
 }
+function sprK(ctx, name, fi, x, y, flip, k) {   // scaled about the anchor, for things far up the hill or swelling
+  if (k === 1) return spr(ctx, name, fi, x, y, flip);
+  const m = A[name]; if (!m) return;
+  const n = m.f.length, f = m.f[(((fi | 0) % n) + n) % n];
+  const w = Math.max(1, Math.round(m.w * k)), h = Math.max(1, Math.round(m.h * k));
+  const ox = Math.round(m.ox * k), oy = Math.round(m.oy * k);
+  x = Math.round(x); y = Math.round(y);
+  if (flip) { ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1); ctx.drawImage(atlas, f[0], f[1], m.w, m.h, ox, oy, w, h); ctx.restore(); }
+  else ctx.drawImage(atlas, f[0], f[1], m.w, m.h, x + ox, y + oy, w, h);
+}
 function iconURL(name) {
   const m = A[name]; const c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
   c.getContext('2d').drawImage(atlas, m.f[0][0], m.f[0][1], m.w, m.h, 0, 0, m.w, m.h);
@@ -435,7 +488,7 @@ const Snd = {
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     this.noise = buf;
     this.apply();
-    this.loadSamples().then(() => { if (!this.loops()) this.ambient(); });
+    this.loadSamples().then(() => { if (!this.loops()) this.ambient(); this.hum(); });
     this.nextBeat = c.currentTime + .3; this.beat = 0;
     setInterval(() => this.music(), 120);
   },
@@ -475,6 +528,13 @@ const Snd = {
     }
     this.mix(night());
     return true;
+  },
+  hum() {                                 // the factory's pump, under everything, once it is built
+    if (!this.c || !this.buf.hum) return;
+    if (S.factory && !this.humSrc) {
+      const src = this.humSrc = this.c.createBufferSource(); src.buffer = this.buf.hum[0]; src.loop = true;
+      const gn = this.c.createGain(); gn.gain.value = .3; src.connect(gn); gn.connect(this.amb); src.start();
+    } else if (!S.factory && this.humSrc) { try { this.humSrc.stop(); } catch (e) {} this.humSrc = null; }
   },
   mix(n) {
     if (!this.dayAmb) return;
@@ -668,10 +728,16 @@ function toast(msg, ms = 2600) {
   const el = $('#toast'); el.textContent = msg; el.classList.add('show');
   clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), ms);
 }
-function addPelts(n, x, y, label) {
-  S.pelts += n; S.total += n; income.push([now, n]);
-  if (x != null) say((label || '+') + fmt(n), x, y, { color: label && label.length > 2 ? '#ffe08a' : '#fffaf3' });
+function harvest(n) {                     // a bundle reaches the sled; what will not fit waits in a heap on the ice
+  n = Math.round(n); if (n <= 0) return;
+  S.total += n; income.push([now, n]);
+  const room = sled.st === 'home' ? Math.max(0, sledCap() - S.load) : 0, k = Math.min(room, n);
+  S.load += k; S.heap += n - k;
   dirtyPanel = true;
+}
+function earn(n, x, y) {
+  S.coins += n; dirtyPanel = true;
+  if (x != null) say('+' + fmt(n) + ' coins', x, y, { color: '#ffe08a', size: 7, life: 1.6, rise: 12 });
 }
 
 // ---------------------------------------------------------------- seals
@@ -700,7 +766,7 @@ function spawnSeal(rushy) {
   if (!ex) return false;
   let sx = ex.wx, sy = ex.wy;
   for (let k = 0; k < 16; k++) { const nx = sx + ex.dx * 1.5, ny = sy + ex.dy * 1.5; if (!isWater(nx, ny) || !isWater(nx + 4, ny) || !isWater(nx - 4, ny)) break; sx = nx; sy = ny; }
-  const type = rollType(rushy), T = TYPES[type], hp = Math.ceil(T.hp * (1 + .6 * S.camp));
+  const type = rollType(rushy), T = TYPES[type], hp = T.hp;
   const s = { id: ++sid, type, T, hp, maxHp: hp, x: sx, y: sy, wx: ex.wx, wy: ex.wy, lx: ex.lx, ly: ex.ly, floe: fl, fi,
     dir: ex.lx < sx ? -1 : 1, state: 'surface', t: 0, at: Math.random() * 5, dur: 0, next: rnd(1.5, 3),
     stay: rnd(T.stay[0], T.stay[1]), marks: [], flash: 0, alpha: 0, hurtOnce: false, tx: 0, ty: 0 };
@@ -710,6 +776,7 @@ function spawnSeal(rushy) {
 }
 function setState(s, st, extra) { s.state = st; s.t = 0; if (extra) Object.assign(s, extra); }
 const ON_ICE = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1, hurt: 1, flee: 1, leave: 1, startle: 1 };
+const LOUNGING = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1 };   // what a drone can pick off
 function nearestExit(s) {
   let best = null, bd = 1e9;
   for (const e of exitsOf[s.floe.id]) { const d = Math.hypot(e.ex - s.x, e.ey - s.y); if (d < bd) { bd = d; best = e; } }
@@ -826,12 +893,17 @@ function updateSeal(s, dt) {
       if (s.t > 1.35 && !s.bundled) {
         s.bundled = true; s.state = 'gone';
         addFx('fx_poof', s.x, s.y - 6); Snd.plop();
-        const value = 5 * (1 + S.lv.club) * s.T.mult * campMult() * bundleMult() * comboMult();
-        bundles.push({ x: s.x, y: s.y - 8, sx: s.x, sy: s.y - 8, t: 0, dur: .75, value, gold: s.type === 'gold' });
+        bundles.push({ x: s.x, y: s.y - 8, sx: s.x, sy: s.y - 8, t: 0, dur: .75, value: s.T.value * (s.koMult || 1), gold: s.type === 'gold',
+          label: s.sneakKo ? 'SNEAK +' : s.type === 'gold' ? 'GOLDEN +' : '+' });
       }
       break;
+    case 'hooked': break;                  // the drone carries it
+    case 'drop':                           // let go over the chipper's hopper
+      s.vy = (s.vy || 0) + 260 * dt; s.y += s.vy * dt;
+      if (s.y > HOPPER[1] + 26) { s.state = 'gone'; chipper.queue.push(s.type); }
+      break;
   }
-  if (ON_ICE[s.state] && s.state !== 'hurt' && s.state !== 'flee' && s.state !== 'leave' && s.state !== 'startle') {
+  if (LOUNGING[s.state] && !s.claim) {
     s.stay -= dt;
     if (s.type === 'gold' && hd < 46 && s.state !== 'nap') {   // skittish: edges away from the hunter
       const k = (s.x < hunter.x ? -1 : 1) * 22 * dt;
@@ -845,13 +917,12 @@ function hitSeal(s) {
   const sneak = s.state === 'nap';
   const d = dmg() * (sneak ? 2 : 1);
   s.hp -= d; s.flash = .09; s.hurtOnce = true;
-  combo.n = now - combo.t < comboWindow() ? combo.n + 1 : 1; combo.t = now;
+  if (s.claim) { s.claim.s = null; s.claim.st = 'home'; s.claim = null; }   // the hunter got there first
+  combo.n = now - combo.t < COMBO_WINDOW ? combo.n + 1 : 1; combo.t = now;
   if (combo.n === 11) quip('roll', 1);
-  if (sneak) quip('sneak', .6);
+  if (sneak) { quip('sneak', .6); say('SNEAK BONK', s.x, s.y - 28, { size: 6, color: '#ffe08a' }); }
   S.stats.best = Math.max(S.stats.best, comboMult());
   S.stats.bonks++;
-  const gain = perBonk() * comboMult() * (sneak ? 3 : 1) * (s.type === 'gold' ? 3 : 1);
-  addPelts(gain, s.x, s.y - 26, sneak ? 'SNEAK BONK +' : '+');
   const hx = s.x + s.dir * 9, hy = s.y - 12;
   addFx('fx_bonk', hx, hy, { fps: 18 }); addFx('fx_blood', s.x, s.y - 10, { fps: 16, flip: Math.random() < .5 });
   bleed(hx, s.y - 2, 9 + d * 3);
@@ -866,7 +937,7 @@ function hitSeal(s) {
     say('!', o.x, o.y - 26, { size: 7, color: '#bfe3ff', life: .7, rise: 6, edge: '#3a4f8a' });
   }
   if (s.hp <= 0) {
-    setState(s, 'ko');
+    setState(s, 'ko', { koMult: comboMult() * (sneak ? 2 : 1), sneakKo: sneak });
     S.stats.kos++; if (s.type === 'gold') S.stats.golden++;
     setTimeout(() => Snd.squeal(s.T.pitch * .95, .75, .34, true), 90);
     bleed(s.x, s.y - 6, 26, 1.3);
@@ -891,6 +962,8 @@ function sealFrame(s) {
     case 'roll': return ['seal_roll', Math.min(8, Math.floor(s.t * 9))];
     case 'hurt': return ['seal_hurt', Math.min(6, Math.floor(s.t * 14))];
     case 'ko': return ['seal_ko', Math.min(8, Math.floor(s.t * 10))];
+    case 'hooked': return ['seal_hurt', [5, 6][Math.floor(s.at * 5) % 2]];   // the later frames, without the ouch swirl
+    case 'drop': return ['seal_hurt', 6];
   }
   return ['seal_idle', 0];
 }
@@ -956,11 +1029,15 @@ function updateHunter(dt) {
   if (tgt && (tgt.state === 'gone' || tgt.state === 'ko' || !ON_ICE[tgt.state])) { hunter.target = null; hunter.pending = 0; }
   if (hunter.swing >= 0) {
     hunter.swing += dt;
-    const T = swingTime();
+    const T = SWING;
     if (!hunter.struck && hunter.swing >= T * .3) {
       hunter.struck = true;
       const s = hunter.target;
-      if (s && ON_ICE[s.state] && inReach(s)) hitSeal(s); else Snd.whiff();
+      if (s && ON_ICE[s.state] && inReach(s)) {
+        hitSeal(s);
+        if (S.lv.club >= CLUBS.length - 1)   // the tusk goes through the one behind it as well
+          for (const o of seals) if (o !== s && ON_ICE[o.state] && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) hitSeal(o);
+      } else Snd.whiff();
       hunter.pending = Math.max(0, hunter.pending - 1);
     }
     if (hunter.swing >= T) hunter.swing = -1;
@@ -986,7 +1063,7 @@ function updateHunter(dt) {
 }
 function hunterFrame() {
   if (hunter.swing >= 0) {
-    const p = hunter.swing / swingTime();
+    const p = hunter.swing / SWING;
     return ['hunter_swing', p < .3 ? 0 : p < .42 ? 1 : p < .56 ? 2 : p < .7 ? 3 : p < .85 ? 7 : 8];
   }
   if (hunter.z > 0) return ['hunter_walk', 3];
@@ -1013,17 +1090,21 @@ function updateGull(dt) {
     case 'perch':
       gull.dir = -1;
       S.gullCd -= dt;
-      if (S.gullCd <= 0 && S.pelts >= 40 && S.pile > 0) { gull.state = 'swoop'; gull.t = 0; toast('The gull is going for your sled!'); Snd.squawk(); Snd.voice('gull', 2); }
+      if (S.gullCd <= 0 && ((sled.st === 'home' && S.load >= 20) || S.heap >= 20)) { gull.state = 'swoop'; gull.t = 0; toast('The gull is going for your sled!'); Snd.squawk(); Snd.voice('gull', 2); }
       break;
     case 'swoop': if (fly(SLED.x + 6, SLED.y - 22, 70)) { gull.state = 'grab'; gull.t = 0; } break;
     case 'grab':
-      if (gull.t > .5) { gull.state = 'escape'; gull.t = 0; gull.carry = Math.max(5, Math.floor(S.pelts * .08)); S.pile = Math.max(0, S.pile - 1); gull.tx = -30; gull.ty = rnd(50, 90); }
+      if (gull.t > .5) {                   // off the sled if it is here, else off the heap
+        const fromSled = sled.st === 'home' && S.load > 0, have = fromSled ? S.load : S.heap;
+        const n = Math.min(have, Math.max(5, Math.floor(have * .15)));
+        if (fromSled) S.load -= n; else S.heap -= n;
+        gull.carry = n; gull.state = 'escape'; gull.t = 0; gull.tx = -30; gull.ty = rnd(50, 90); dirtyPanel = true;
+        if (!n) gull.state = 'shooed';
+      }
       break;
     case 'escape':
       if (fly(gull.tx, gull.ty, 34)) {
-        const n = Math.min(gull.carry, Math.floor(S.pelts));
-        S.pelts -= n; dirtyPanel = true;
-        toast(`The gull stole ${fmt(n)} pelts.`); Snd.voice('stolen', 2);
+        toast(`The gull stole ${fmt(gull.carry)} pelts.`); Snd.voice('stolen', 2);
         gull.state = 'away'; gull.t = 0; gull.carry = 0; S.gullCd = rnd(60, 110);
       }
       break;
@@ -1040,9 +1121,8 @@ function shooGull() {
   if (gull.state === 'swoop' || gull.state === 'grab' || gull.state === 'escape') {
     quip('shoo', 1, true);
     if (gull.carry) {
-      const bonus = Math.ceil(gull.carry * .25);
-      bundles.push({ x: gull.x, y: gull.y, sx: gull.x, sy: gull.y, t: 0, dur: .7, value: bonus, back: true });
-      toast('Saved the bundle!'); S.pile++;
+      bundles.push({ x: gull.x, y: gull.y, sx: gull.x, sy: gull.y, t: 0, dur: .7, value: gull.carry, back: true, label: 'saved +' });
+      toast('Saved the bundle!');
     } else say('shoo!', gull.x, gull.y - 14, { size: 6 });
     gull.carry = 0; gull.state = 'shooed'; gull.tx = 300; gull.ty = 20; gull.t = 0;
   }
@@ -1059,14 +1139,262 @@ function drawGull() {
   if (gull.carry) spr(g, 'pelt', 0, gull.x - gull.dir * 2, gull.y + 10, false);
 }
 const PILE = [[-18, -14], [-6, -15], [6, -16], [18, -17], [-12, -19], [0, -20], [12, -21], [-6, -24], [6, -25], [0, -29], [-18, -20], [18, -23]];
-function drawSled() {
-  spr(g, 'sled', 0, SLED.x, SLED.y, false);
-  for (let i = 0; i < Math.min(S.pile, PILE.length); i++) spr(g, 'pelt', 0, SLED.x + PILE[i][0], SLED.y + PILE[i][1], i % 2 === 1);
+const HEAP = [[-30, 8], [-18, 9], [-24, 4], [-36, 4], [-12, 6], [-30, 0], [-20, -1], [-42, 9], [-26, -4], [-36, -2]];
+let SEG = [], ROAD_LEN = 0;
+function roadAt(d) {                      // a point on the road; below the sled it runs on into the dog yard
+  if (d <= 0) return [ROAD[0][0] - YARD[0] * d, ROAD[0][1] - YARD[1] * d, 1];
+  for (let i = 1; i < ROAD.length; i++) {
+    const l = SEG[i - 1];
+    if (d <= l || i === ROAD.length - 1) {
+      const t = Math.min(1, d / l), [ax, ay] = ROAD[i - 1], [bx, by] = ROAD[i];
+      return [lerp(ax, bx, t), lerp(ay, by, t), bx < ax ? -1 : 1];
+    }
+    d -= l;
+  }
 }
-function drawHusky() {
-  if (!S.lv.sled) return;
-  husky.at += 1 / 60;
-  spr(g, 'husky_idle', Math.floor(husky.at * 9) % 9, HUSKY.x, HUSKY.y, false);
+const farK = y => 1 - .45 * clamp((SLED.y - y) / (SLED.y - ROAD[ROAD.length - 1][1]), 0, 1);   // smaller up the hill
+const dogs = () => 1 + S.lv.dogs;
+const dogGap = i => 46 + 15 * i;
+function sendSled(auto) {
+  if (sled.st !== 'home' || S.load < 1) return false;
+  sled.st = 'up'; sled.t = 0; sled.cargo = S.load; S.load = 0; sled.warned = false; dirtyPanel = true;
+  Snd.play('mush', { vol: .8 }); Snd.bark();
+  if (!auto) quip('mush', .7, true);
+  if (S.tut < 3 && !S.tipSent) S.tipSent = true;
+  return true;
+}
+function updateSled(dt) {
+  sled.t += dt; sled.at += dt;
+  const sp = sledSpeed();
+  switch (sled.st) {
+    case 'home':
+      if (S.heap > 0 && S.load < sledCap()) { const k = Math.min(S.heap, sledCap() - S.load); S.load += k; S.heap -= k; dirtyPanel = true; }
+      if (S.load >= sledCap()) {
+        if (S.lv.dogs >= 2) sendSled(true);
+        else if (!sled.warned) { sled.warned = true; toast('The sled is full. Send it up to the hut.'); Snd.voice('full', 2); }
+      }
+      if (!S.tipSled && S.load >= 24) { S.tipSled = true; toast('Tap the sled to send the pelts up to the hut.', 3400); }
+      break;
+    case 'up':
+      sled.d = Math.min(ROAD_LEN, sled.d + sp * dt);
+      if (sled.d >= ROAD_LEN) { sled.st = 'sell'; sled.t = 0; }
+      break;
+    case 'sell':
+      if (sled.t > .5 && sled.cargo) {
+        const [hx, hy] = ROAD[ROAD.length - 1];
+        earn(sled.cargo, hx, hy - 12); S.stats.trips++; sled.sold = sled.cargo; sled.cargo = 0;
+        Snd.play('coins', { vol: .9 }); if (Math.random() < .35) Snd.voice('sold', 1);
+        hunter.cheer = .75;
+        if (S.stats.trips === 1) toast('Sold! Spend the coins in the ledger.', 3000);
+      }
+      if (sled.t > 1.3) { sled.st = 'down'; sled.t = 0; }
+      break;
+    case 'down':
+      sled.d = Math.max(0, sled.d - sp * 1.3 * dt);
+      if (sled.d <= 0) { sled.st = 'turn'; sled.t = 0; }
+      break;
+    case 'turn':                           // the team trots back round to the front of the sled
+      if (sled.t > .9) { sled.st = 'home'; sled.t = 0; dirtyPanel = true; }
+      break;
+  }
+}
+function dogPos(i) {                       // [x, y, facing, running, alpha]
+  const g = dogGap(i), L = ROAD_LEN, fade = dd => clamp((L - dd) / 14, 0, 1);
+  switch (sled.st) {
+    case 'up': { const dd = sled.d + g, p = roadAt(dd); return [p[0], p[1], p[2], true, fade(dd)]; }
+    case 'sell': return [0, 0, 1, true, 0];
+    case 'down': { const dd = sled.d - g, p = roadAt(dd); return [p[0], p[1], -p[2], true, 1]; }
+    case 'turn': {
+      const a = roadAt(-g), b = roadAt(g), k = ease(clamp(sled.t / .9, 0, 1));
+      return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), 1, true, 1];
+    }
+  }
+  const p = roadAt(g); return [p[0], p[1], 1, false, 1];
+}
+function drawSled() {
+  const p = roadAt(sled.d), k = farK(p[1]);
+  const a = sled.st === 'sell' ? 0 : clamp((ROAD_LEN - sled.d) / 14, 0, 1);
+  if (a <= 0) return;
+  g.globalAlpha = a;
+  const flip = sled.st === 'down' && p[2] > 0 || sled.st === 'up' && p[2] < 0;
+  sprK(g, 'sled', 0, p[0], p[1], flip, k);
+  const load = sled.st === 'home' || sled.st === 'turn' ? S.load : sled.cargo, cap = sledCap();
+  const n = load > 0 ? Math.max(1, Math.ceil(PILE.length * Math.min(1, load / cap))) : 0;
+  for (let i = 0; i < n; i++) sprK(g, 'pelt', 0, p[0] + PILE[i][0] * k * (flip ? -1 : 1), p[1] + PILE[i][1] * k, i % 2 === 1, k);
+  g.globalAlpha = 1;
+}
+function drawHeap() {
+  const n = S.heap > 0 ? Math.min(HEAP.length, Math.ceil(S.heap / Math.max(8, sledCap() / 8))) : 0;
+  for (let i = 0; i < n; i++) spr(g, 'pelt', 0, SLED.x + HEAP[i][0], SLED.y + HEAP[i][1], i % 2 === 0);
+}
+function drawDog(i) {
+  const [x, y, face, run, a] = dogPos(i); if (a <= 0) return;
+  const k = farK(y), t = sled.at + i * .37;
+  g.globalAlpha = a;
+  if (run) sprK(g, 'husky_run', Math.floor(t * 14) % 9, x, y, face < 0, k);
+  else sprK(g, 'husky_idle', Math.floor(t * 9) % 9, x, y, face > 0, k);
+  g.globalAlpha = 1;
+}
+
+// ---------------------------------------------------------------- drones and the wood chipper
+function flyTo(o, tx, ty, sp, dt) {
+  const dx = tx - o.x, dy = ty - o.y, d = Math.hypot(dx, dy);
+  if (Math.abs(dx) > 1) o.dir = dx < 0 ? -1 : 1;
+  if (d <= sp * dt) { o.x = tx; o.y = ty; return true; }
+  o.x += dx / d * sp * dt; o.y += dy / d * sp * dt; return false;
+}
+const HANG = 34, HOOK_TO_FEET = 34;        // cable paid out to reach a lounging seal's back; hook to the seal's belly
+function syncMachines() {
+  FLOES[0].seals = S.factory ? 0 : 3;      // the west floe belongs to the factory once it stands
+  FLOES[3].seals = S.lv.drones ? 0 : 2;    // and the shelf to the chipper
+  while (drones.length < S.lv.drones) {
+    const i = drones.length, h = DRONE_HOME[i];
+    drones.push({ i, x: h[0] + 40, y: h[1] - 60, st: 'home', s: null, cable: 4, t: 0, at: Math.random() * 6, dir: -1 });
+  }
+  drones.length = S.lv.drones;
+  for (const s of seals) if (LOUNGING[s.state] && !s.floe.seals) s.stay = Math.min(s.stay, rnd(0, 2));
+}
+function pickSealFor(d) {
+  let best = null, bd = 1e9;
+  for (const s of seals) {
+    if (s.claim || !LOUNGING[s.state] || s === hunter.target || s.hurtOnce) continue;
+    if (Math.hypot(s.x - hunter.x, s.y - hunter.y) < 46) continue;   // leave the hunter's neighbours to the hunter
+    const dd = Math.hypot(s.x - d.x, s.y - d.y) - (s.state === 'nap' ? 40 : 0);
+    if (dd < bd) { bd = dd; best = s; }
+  }
+  return best;
+}
+function letGo(d) { if (d.s && d.s.claim === d) d.s.claim = null; d.s = null; d.st = 'home'; d.t = 0; }
+function updateDrone(d, dt) {
+  d.t += dt; d.at += dt;
+  const s = d.s, bob = Math.sin(d.at * 2.3 + d.i * 2) * 1.5;
+  switch (d.st) {
+    case 'home': {
+      const h = DRONE_HOME[d.i]; flyTo(d, h[0], h[1] + bob, 50, dt);
+      d.cable = Math.max(4, d.cable - 50 * dt);
+      if (d.t > .7 + d.i * .35) {
+        d.t = 0; const t = pickSealFor(d);
+        if (t) { t.claim = d; d.s = t; d.st = 'seek'; Snd.play('drone', { vol: .3, rate: rnd(.9, 1.12) }); }
+      }
+      break;
+    }
+    case 'seek':
+      if (!s || !LOUNGING[s.state] || s.claim !== d) { letGo(d); break; }
+      d.cable = Math.max(4, d.cable - 50 * dt);
+      if (flyTo(d, s.x, s.y - HOOK_TO_FEET - HANG + bob, 66, dt)) { d.st = 'lower'; d.t = 0; Snd.play('winch', { vol: .5 }); }
+      break;
+    case 'lower':
+      if (!s || !LOUNGING[s.state] || s.claim !== d) { letGo(d); break; }
+      d.x = s.x; d.y = s.y - HOOK_TO_FEET - HANG;
+      d.cable = Math.min(HANG, d.cable + 55 * dt);
+      if (d.cable >= HANG) {
+        setState(s, 'hooked'); d.st = 'lift'; d.t = 0;
+        Snd.squeal(s.T.pitch, .5, .32);
+        say('!', s.x, s.y - 30, { size: 7, color: '#bfe3ff', life: .7, rise: 6, edge: '#3a4f8a' });
+        if (Math.random() < .3) quip('byebye', 1);
+        for (const o of seals) if (o !== s && { idle: 1, look: 1, roll: 1 }[o.state] && Math.hypot(o.x - s.x, o.y - s.y) < 40 && Math.random() < .5) setState(o, 'look');
+      }
+      break;
+    case 'lift':
+      d.y -= 30 * dt; d.cable = Math.max(4, d.cable - 30 * dt);   // reel it in snug for the trip
+      if (d.t > .75) { d.st = 'ferry'; d.t = 0; }
+      break;
+    case 'ferry':
+      d.cable = Math.max(4, d.cable - 30 * dt);
+      if (flyTo(d, HOPPER[0], HOPPER[1] + 6 - HOOK_TO_FEET - d.cable + bob, 56, dt)) { d.st = 'drop'; d.t = 0; }
+      if (d.t > 1 && Math.random() < dt * 1.2) Snd.squeal(s.T.pitch * 1.1, .3, .18);
+      break;
+    case 'drop':
+      if (d.t > .25) {
+        if (s) { s.claim = null; setState(s, 'drop', { vy: 0 }); }
+        d.s = null; d.st = 'home'; d.t = 0;
+      }
+      break;
+  }
+  if (d.s && d.s.state === 'hooked') { d.s.x = d.x + Math.sin(d.at * 5) * 1.5; d.s.y = d.y + d.cable + HOOK_TO_FEET; d.s.dir = d.dir; }
+}
+function drawDrone(d) {
+  const x = Math.round(d.x), y = Math.round(d.y);
+  if (d.cable > 0) { g.fillStyle = '#2b2f45'; g.fillRect(x, y, 1, Math.round(d.cable)); }
+  if (d.s && d.s.state === 'hooked') drawSeal(d.s);
+  spr(g, 'hook', 0, x, y + d.cable - 1, false);
+  spr(g, 'drone', Math.floor(d.at * 16) % 9, x, y, d.dir < 0);
+}
+const REDS = ['#d4213a', '#b0172c', '#e8384b', '#8f1022', '#ff5468'];
+function updateChipper(dt) {
+  if (!S.lv.drones) return;
+  if (chipper.grind > 0) {
+    chipper.grind -= dt; chipper.t += dt;
+    if (chipper.t > .06) {                 // a red plume out of the spout and across the snow
+      chipper.t = 0;
+      for (let i = 0; i < 3; i++) drops.push({ x: SPOUT[0], y: CHIPPER.y - 4 + rnd(-3, 4), z: CHIPPER.y - SPOUT[1] - 2, vx: rnd(25, 85), vy: rnd(-6, 8), vz: rnd(10, 55), c: pick(REDS), s: Math.random() < .35 ? 2 : 1, any: true });
+      if (Math.random() < .25) addFx('fx_blood', SPOUT[0] + 4, SPOUT[1] + 2, { fps: 16 });
+    }
+    if (chipper.grind <= 0) {
+      const type = chipper.cur; chipper.cur = null; S.stats.chipped++;
+      bundles.push({ x: SPOUT[0], y: SPOUT[1], sx: SPOUT[0], sy: SPOUT[1], t: 0, dur: 1, value: TYPES[type].value, gold: type === 'gold', label: type === 'gold' ? 'GOLDEN +' : '+' });
+      Snd.plop();
+    }
+  } else if (chipper.queue.length) {
+    chipper.cur = chipper.queue.shift(); chipper.grind = 1.25; chipper.t = 0;
+    Snd.play('chipper', { vol: .85, rate: rnd(.92, 1.08) });
+    setTimeout(() => Snd.squeal(TYPES[chipper.cur || 'pup'].pitch * .9, .4, .2, true), 120);
+    if (Math.random() < .15) quip('messy', 1);
+  }
+}
+function drawChipper() {
+  const j = chipper.grind > 0 ? Math.round(rnd(-1, 1)) : 0;
+  spr(g, 'chipper', 0, CHIPPER.x + j, CHIPPER.y + (chipper.grind > 0 && Math.random() < .5 ? -1 : 0), true);
+}
+
+// ---------------------------------------------------------------- the factory and its hose
+let HOSE_PTS = [];
+function buildHose() {                    // one point a pixel along the cubic, from the factory's pipe to the sea
+  const [a, b, c, d] = HOSE, raw = [];
+  for (let i = 0; i <= 400; i++) {
+    const t = i / 400, u = 1 - t;
+    raw.push([u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0],
+              u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]);
+  }
+  HOSE_PTS = [raw[0]]; let acc = 0;
+  for (let i = 1; i < raw.length; i++) {
+    acc += Math.hypot(raw[i][0] - raw[i - 1][0], raw[i][1] - raw[i - 1][1]);
+    if (acc >= 1) { HOSE_PTS.push(raw[i]); acc = 0; }
+  }
+}
+function updateFactory(dt) {
+  if (!S.factory) return;
+  factory.t += dt; factory.shake = Math.max(0, factory.shake - dt);
+  const L = HOSE_PTS.length, sea = HOSE_PTS[L - 1];
+  if (factory.t >= pumpGap()) {            // another one comes up out of the sea
+    factory.t = 0;
+    factory.lumps.push({ p: L - 1, type: rollType(false) });
+    addFx('fx_splash', sea[0], sea[1] + 3, { fps: 16 });
+    if (now - factory.slurpT > .8) { factory.slurpT = now; Snd.play('slurp', { vol: .6, rate: rnd(.9, 1.1) }); }
+  }
+  if (Math.random() < dt * 6) sparkles.push({ x: sea[0] + rnd(-7, 7), y: sea[1] + rnd(0, 3), t: 0, life: .5, c: '#ffffff', ring: true });
+  for (const l of factory.lumps) {
+    l.p -= 72 * dt;
+    if (l.p <= 0 && !l.done) {
+      l.done = true; factory.shake = .14; S.stats.slurped++;
+      if (now - factory.clankT > .7) { factory.clankT = now; Snd.play('clank', { vol: .4 }); }
+      addFx('fx_poof', STACK[0], STACK[1], { fps: 8 });
+      bundles.push({ x: CHUTE[0], y: CHUTE[1], sx: CHUTE[0], sy: CHUTE[1], t: 0, dur: 1.5, value: TYPES[l.type].value, gold: l.type === 'gold', label: l.type === 'gold' ? 'GOLDEN +' : '+' });
+      if (Math.random() < .6) for (let i = 0; i < 5; i++) drops.push({ x: CHUTE[0], y: CHUTE[1] + 12, z: 10, vx: rnd(-30, 10), vy: rnd(-4, 6), vz: rnd(5, 30), c: pick(REDS), s: 1, any: true });
+    }
+  }
+  factory.lumps = factory.lumps.filter(l => !l.done);
+}
+function drawFactory() {
+  const j = factory.shake > 0 ? Math.round(rnd(-1, 1)) : 0;
+  spr(g, 'factory', 0, FACTORY.x + j, FACTORY.y, false);
+  // the hose, a ring a few pixels apart; it swells into a metal lump wherever a seal is on its way up
+  const P = HOSE_PTS;
+  for (let i = 0; i < P.length; i += 3) {
+    let k = 1.1;
+    for (const l of factory.lumps) { const d = Math.abs(i - l.p); if (d < 11) k = Math.max(k, 1.1 + .85 * Math.cos(d / 11 * Math.PI / 2)); }
+    sprK(g, 'hose', 0, P[i][0], P[i][1], false, k);
+  }
 }
 
 // ---------------------------------------------------------------- day and night
@@ -1086,7 +1414,7 @@ function grade() {
 const STARS = Array.from({ length: 46 }, () => [Math.random() * W, Math.random() * 44, Math.random() * 6]);
 
 // ---------------------------------------------------------------- frame
-let dirtyPanel = true, lastSpawn = 0, spawnGap = 1.6, last = 0, lastSave = 0, passiveAcc = 0, passiveShow = 0, smokeT = 0;
+let dirtyPanel = true, lastSpawn = 0, spawnGap = 1.6, last = 0, lastSave = 0, smokeT = 0;
 function update(dt) {
   now += dt;
   S.dayT += dt / 210;
@@ -1101,33 +1429,29 @@ function update(dt) {
     rush -= dt;
     if (lastSpawn > .45 && active < 12) { if (spawnSeal(true)) lastSpawn = 0; }
   } else if (lastSpawn > spawnGap && active < maxSeals()) {
-    if (spawnSeal(false)) { lastSpawn = 0; spawnGap = rnd(3.2, 5.8) * (1 - .08 * S.lv.bucket); }
+    if (spawnSeal(false)) { lastSpawn = 0; spawnGap = rnd(3.2, 5.8) * (1 - .08 * S.lv.bucket - .06 * S.lv.drones); }
   }
   for (const s of seals) updateSeal(s, dt);
   seals = seals.filter(s => s.state !== 'gone');
   updateHunter(dt);
   updateGull(dt);
-  // passive income
-  if (S.lv.sled) {
-    const p = passive() * dt; S.pelts += p; S.total += p; passiveAcc += p; passiveShow += dt;
-    if (passiveShow > 4) { say('+' + fmt(passiveAcc), HUSKY.x, HUSKY.y - 30, { size: 5, color: '#e9f6ff', edge: '#3b4c80' }); passiveAcc = 0; passiveShow = 0; }
-    dirtyPanel = true;
-  }
-  if (combo.n && now - combo.t > comboWindow()) combo.n = 0;
+  updateSled(dt);
+  for (const d of drones) updateDrone(d, dt);
+  updateChipper(dt);
+  updateFactory(dt);
+  if (combo.n && now - combo.t > COMBO_WINDOW) combo.n = 0;
   S.fishCd = Math.max(0, S.fishCd - dt);
-  // bundles fly to the sled
+  // bundles fly onto the sled, or onto the heap beside where it stands
   for (const b of bundles) {
     b.t += dt; const p = Math.min(1, b.t / b.dur);
-    const tx = SLED.x + rnd(-1, 1), ty = SLED.y - 18;
-    b.x = lerp(b.sx, tx, ease(p)); b.y = lerp(b.sy, ty, ease(p)) - Math.sin(Math.PI * p) * 26;
+    const home = sled.st === 'home' && S.load < sledCap();
+    const tx = home ? SLED.x + rnd(-1, 1) : SLED.x - 24, ty = home ? SLED.y - 18 : SLED.y + 2;
+    b.x = lerp(b.sx, tx, ease(p)); b.y = lerp(b.sy, ty, ease(p)) - Math.sin(Math.PI * p) * (b.dur > 1.2 ? 40 : 26);
     if (p >= 1 && !b.done) {
       b.done = true;
-      if (b.back) addPelts(b.value, SLED.x, SLED.y - 34, 'saved +');
-      else {
-        addPelts(b.value, SLED.x, SLED.y - 34, b.gold ? 'GOLDEN +' : 'bundle +');
-        S.pile = Math.min(PILE.length, S.pile + 1);
-      }
-      Snd.ding(b.gold ? 1.25 : 1); addFx('fx_sparkle', SLED.x, SLED.y - 20);
+      if (b.back) { S.heap += b.value; dirtyPanel = true; } else harvest(b.value);
+      say((b.label || '+') + fmt(b.value), tx, ty - 16, { color: b.label && b.label.length > 2 ? '#ffe08a' : '#fffaf3', size: b.value >= 20 ? 8 : 6 });
+      Snd.ding(b.gold ? 1.25 : 1); addFx('fx_sparkle', tx, ty - 2);
     }
   }
   bundles = bundles.filter(b => !b.done);
@@ -1136,7 +1460,7 @@ function update(dt) {
     d.x += d.vx * dt; d.y += d.vy * dt; d.vz -= 190 * dt; d.z += d.vz * dt;
     if (d.z <= 0) {
       d.dead = true;
-      if (onIce(d.x, d.y)) { sg.fillStyle = d.c; sg.globalAlpha = .9; sg.fillRect(Math.round(d.x), Math.round(d.y), d.s, 1); sg.globalAlpha = 1; }
+      if (onIce(d.x, d.y) || (d.any && d.y > 66 && !isWater(d.x, d.y))) { sg.fillStyle = d.c; sg.globalAlpha = .9; sg.fillRect(Math.round(d.x), Math.round(d.y), d.s, 1); sg.globalAlpha = 1; }
       else if (isWater(d.x, d.y)) sparkles.push({ x: d.x, y: d.y, t: 0, life: .5, c: '#e2566a', ring: true });
     }
   }
@@ -1195,16 +1519,23 @@ function render() {
   g.globalAlpha = 1;
   // everything standing on the ice, back to front
   const list = [];
-  for (const s of seals) list.push([s.y, () => drawSeal(s)]);
+  for (const s of seals) {
+    if (s.state === 'hooked') continue;    // drawn under its drone
+    list.push([s.state === 'drop' ? CHIPPER.y - .5 : s.y, () => drawSeal(s)]);
+  }
   list.push([hunter.y, drawHunter]);
-  list.push([SLED.y, drawSled]);
-  list.push([HUSKY.y, drawHusky]);
+  list.push([roadAt(sled.d)[1], drawSled]);
+  for (let i = 0; i < dogs(); i++) list.push([dogPos(i)[1] + .1, () => drawDog(i)]);
+  if (S.heap > 0) list.push([SLED.y + 6, drawHeap]);
+  if (S.lv.drones) list.push([CHIPPER.y, drawChipper]);
+  if (S.factory) list.push([FACTORY.y, drawFactory]);
   if (gull.state === 'perch') list.push([gull.y, drawGull]);
   list.sort((a, b) => a[0] - b[0]);
   for (const [, fn] of list) fn();
   for (const d of drops) { g.fillStyle = d.c; g.fillRect(Math.round(d.x), Math.round(d.y - d.z), d.s, d.s); }
   for (const f of fx) spr(g, f.name, Math.floor(f.t * f.fps), f.x, f.y, f.flip);
   for (const b of bundles) spr(g, 'pelt', 0, b.x, b.y, false);
+  for (const d of drones) drawDrone(d);
   if (gull.state !== 'perch') drawGull();
   // light
   const gr = grade(), n = night();
@@ -1229,12 +1560,10 @@ function render() {
       r.addColorStop(0, `rgba(255,190,90,${.55 * n})`); r.addColorStop(1, 'rgba(255,190,90,0)');
       g.globalAlpha = 1; g.fillStyle = r; g.fillRect(x - 9, y - 9, 18, 18);
     }
-    if (S.camp > 0) {
-      for (let i = 0; i < 4 + S.camp * 3; i++) {
-        const x = 168 + i * 6, y = 72 + Math.sin(i * .9) * 2;
-        g.globalAlpha = n * (.6 + .4 * Math.sin(now * 2 + i)); g.fillStyle = pick(['#ffd27a', '#ff9aa8', '#9ee7ff']);
-        g.fillRect(x | 0, y | 0, 1, 1);
-      }
+    if (S.factory) for (const [x, y] of FACTORY_WINDOWS) {     // the night shift
+      const r = g.createRadialGradient(x, y, 0, x, y, 10);
+      r.addColorStop(0, `rgba(255,170,70,${.6 * n})`); r.addColorStop(1, 'rgba(255,170,70,0)');
+      g.globalAlpha = 1; g.fillStyle = r; g.fillRect(x - 10, y - 10, 20, 20);
     }
     g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
   }
@@ -1269,52 +1598,83 @@ function buildPanel(icons) {
   const wrap = $('#cards');
   for (const u of UPG) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.id = 'up-' + u.id;
-    b.innerHTML = `<span class="ico"><img alt="" src="${icons[u.icon]}"></span><span class="txt"><span class="nm">${u.name}<small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.pelt}"><span></span></span>`;
+    b.innerHTML = `<span class="ico"><img alt=""></span><span class="txt"><span class="nm"><i></i><small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.i_coin}"><span></span></span>`;
     b.addEventListener('click', () => buy(u));
     wrap.appendChild(b);
-    cardEls[u.id] = { b, lv: b.querySelector('small'), ds: b.querySelector('.ds'), pr: b.querySelector('.price span') };
+    cardEls[u.id] = { b, ico: b.querySelector('.ico img'), nm: b.querySelector('.nm i'), lv: b.querySelector('small'), ds: b.querySelector('.ds'), pr: b.querySelector('.price span') };
   }
 }
 function buy(u) {
   Snd.init();
   const c = cost(u);
-  if (S.lv[u.id] >= u.max || S.pelts < c) return;
-  S.pelts -= c; S.lv[u.id]++; Snd.buy();
+  if (S.lv[u.id] >= u.max || S.coins < c) return;
+  S.coins -= c; S.lv[u.id]++; Snd.buy();
   const el = cardEls[u.id].b; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
-  if (u.id === 'sled' && S.lv.sled === 1) { toast('A husky joins the camp and starts hauling.'); Snd.bark(); Snd.voice('husky', 2); }
+  if (u.id === 'drones') {
+    syncMachines();
+    if (S.lv.drones === 1) { toast('A wood chipper and a drone. Seal goes in, pelt comes out.', 3600); Snd.voice('drone', 2); }
+    else { toast('Another drone takes to the sky.'); Snd.voice('drone2', 2); }
+  } else if (u.id === 'dogs') {
+    Snd.bark(); Snd.voice('husky', 2);
+    toast(S.lv.dogs === 2 ? 'Three dogs. They set off on their own once the sled is full.' : 'Another husky joins the team.', 3200);
+  } else if (u.id === 'club') { toast(`${CLUBS[S.lv.club].name} in hand.`); quip('bought', .6); }
   else quip('bought', .5);
   if (S.tut < 3) S.tut = 3;
   dirtyPanel = true; save();
 }
-function buyCamp() {
+function buyFactory() {
   Snd.init();
-  const c = campCost(); if (S.pelts < c) return;
-  S.pelts -= c; S.camp++; Snd.chime(); Snd.voice('camp', 2); hunter.cheer = .75;
-  toast(`Camp level ${S.camp + 1}. Every pelt is worth double, and the seals are hardier.`, 3600);
+  if (!S.factory) {
+    if (S.coins < FACTORY_COST) return;
+    S.coins -= FACTORY_COST; S.factory = 1; syncMachines(); Snd.hum(); Snd.chime(); Snd.voice('factory', 2); hunter.cheer = .75;
+    for (let i = 0; i < 6; i++) addFx('fx_poof', FACTORY.x + rnd(-34, 34), FACTORY.y - rnd(4, 60), { fps: 7 });
+    toast('The factory is open. It drinks the sea, and the sea is mostly seals.', 4200);
+  } else {
+    if (S.pump >= PUMP_MAX || S.coins < pumpCost()) return;
+    S.coins -= pumpCost(); S.pump++; Snd.buy(); factory.shake = .3;
+    toast(`Pump Lv ${S.pump}. A seal up the hose every ${pumpGap().toFixed(1)} s.`);
+  }
   dirtyPanel = true; save();
 }
 function refreshPanel() {
-  $('#peltCount').textContent = fmt(S.pelts);
+  $('#coinCount').textContent = fmt(S.coins);
   for (const u of UPG) {
-    const e = cardEls[u.id], lv = S.lv[u.id], maxed = lv >= u.max, c = cost(u);
-    e.lv.textContent = `Lv ${lv}`;
-    e.ds.textContent = lv ? `${u.ds()} · now ${u.now()}` : u.ds();
+    const e = cardEls[u.id], lv = S.lv[u.id], maxed = lv >= u.max, c = cost(u), name = u.name(), ico = icons[u.icon()];
+    if (e.ico.src !== ico) e.ico.src = ico;
+    e.nm.textContent = name; e.lv.textContent = `Lv ${lv}`; e.ds.textContent = u.ds();
     e.pr.textContent = maxed ? 'MAX' : fmt(c);
-    e.b.disabled = maxed || S.pelts < c;
-    e.b.classList.toggle('poor', !maxed && S.pelts < c);
+    e.b.disabled = maxed || S.coins < c;
+    e.b.classList.toggle('poor', !maxed && S.coins < c);
     e.b.classList.toggle('maxed', maxed);
-    e.b.setAttribute('aria-label', `${u.name}, level ${lv}. ${u.ds()}. ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' pelts'}`);
+    e.b.setAttribute('aria-label', `${name}, level ${lv}. ${u.ds()} ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' coins'}`);
   }
-  if (S.tut < 3 && !S.tipShop && S.pelts >= UPG[0].base) { S.tipShop = true; toast('You can afford a Sturdier Club. Upgrades are in the ledger.', 3400); }
-  const cc = campCost();
-  $('#campBtn').disabled = S.pelts < cc;
-  $('#campInfo').textContent = `Camp Lv ${S.camp + 1} · doubles every pelt · ${fmt(cc)}`;
+  if (S.tut < 3 && !S.tipShop && S.coins >= UPG[0].base) { S.tipShop = true; toast(`You can afford a ${UPG[0].name()}. Upgrades are in the ledger.`, 3400); }
+  const fb = $('#factBtn');
+  if (!S.factory) {
+    $('#factName').textContent = 'BUILD THE FACTORY';
+    $('#factInfo').textContent = `A steel hose sucks seals straight out of the sea · ${fmt(FACTORY_COST)} coins`;
+    fb.disabled = S.coins < FACTORY_COST;
+  } else if (S.pump >= PUMP_MAX) {
+    $('#factName').textContent = 'PUMP AT FULL TILT';
+    $('#factInfo').textContent = `A seal up the hose every ${pumpGap().toFixed(1)} s. The sea is getting quieter.`;
+    fb.disabled = true;
+  } else {
+    $('#factName').textContent = 'PUMP HARDER';
+    $('#factInfo').textContent = `Lv ${S.pump} · a seal every ${pumpGap().toFixed(1)} s, next ${(Math.max(.3, 2.4 * Math.pow(.82, S.pump + 1))).toFixed(1)} s · ${fmt(pumpCost())} coins`;
+    fb.disabled = S.coins < pumpCost();
+  }
+  const cap = sledCap();
+  $('#sledLine').textContent = ({
+    home: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`, turn: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`,
+    up: `Hauling ${fmt(sled.cargo)} pelts to the hut`, sell: `The trader is counting ${fmt(sled.sold || 0)} pelts`,
+    down: 'The sled is coming back',
+  })[sled.st] + (S.heap > 0 ? ` · ${fmt(S.heap)} on the ice` : '');
   const st = S.stats;
-  $('#stats').textContent = `Bonks ${fmt(st.bonks)} · Bundles ${fmt(st.kos)} · Golden ${st.golden} · Got away ${st.escaped} · Best combo x${st.best.toFixed(1)}`;
+  $('#stats').textContent = `Bonks ${fmt(st.bonks)} · Seals ${fmt(st.kos)} · Chipped ${fmt(st.chipped)} · Slurped ${fmt(st.slurped)} · Golden ${st.golden} · Got away ${st.escaped} · Trips ${st.trips} · Best combo x${st.best.toFixed(1)}`;
 }
 let hudLast = 0;
 function refreshHud() {
-  const perMin = income.reduce((a, [, n]) => a + n, 0) * 2 + passive() * 60;
+  const perMin = income.reduce((a, [, n]) => a + n, 0) * 2;
   $('#rateText').textContent = `${fmt(perMin)} pelts / min`;
   $('#dayText').textContent = `DAY ${S.day}`;
   const isNight = night() > .5;
@@ -1322,12 +1682,17 @@ function refreshHud() {
   const cb = $('#combo');
   if (combo.n >= 3) {
     cb.hidden = false; $('#comboText').textContent = `COMBO x${comboMult().toFixed(1)}`;
-    $('#comboBar').style.transform = `scaleX(${clamp(1 - (now - combo.t) / comboWindow(), 0, 1)})`;
+    $('#comboBar').style.transform = `scaleX(${clamp(1 - (now - combo.t) / COMBO_WINDOW, 0, 1)})`;
   } else cb.hidden = true;
   const fb = $('#fishBtn'), cd = S.fishCd;
   fb.disabled = cd > 0;
   $('#fishCd').style.transform = `scaleX(${cd / fishCooldown()})`;
   $('#fishText').textContent = cd > 0 ? `Fish in ${Math.ceil(cd)} s` : 'Toss fish';
+  const sb = $('#sledBtn'), cap = sledCap(), home = sled.st === 'home';
+  sb.disabled = !home || S.load < 1;
+  sb.classList.toggle('full', home && S.load >= cap);
+  $('#sledFill').style.transform = `scaleX(${home ? Math.min(1, S.load / cap) : sled.st === 'up' ? sled.d / ROAD_LEN : sled.st === 'down' ? sled.d / ROAD_LEN : 1})`;
+  $('#sledText').textContent = home ? (S.load ? `Send sled ${fmt(S.load)}/${fmt(cap)}` : 'Sled empty') : sled.st === 'sell' ? 'Selling...' : sled.st === 'up' ? 'Hauling up...' : 'Coming back...';
 }
 let icons = {};
 
@@ -1340,8 +1705,11 @@ function inBox([x0, y0, w, h], x, y, pad = 3) { return x >= x0 - pad && x <= x0 
 function tap(x, y) {
   Snd.init();
   if (gull.state !== 'away' && inBox(gullBox(), x, y)) { shooGull(); return; }
-  if (S.lv.sled && Math.hypot(x - HUSKY.x, y - (HUSKY.y - 14)) < 14) { Snd.bark(); say('♥', HUSKY.x, HUSKY.y - 34, { size: 8, color: '#ff8fa0' }); return; }
-  const under = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && inBox(sealBox(s), x, y));
+  for (let i = 0; i < dogs(); i++) {        // a pat for a good dog
+    const [dx, dy, , , a] = dogPos(i);
+    if (a > 0 && Math.hypot(x - dx, y - (dy - 12)) < 11) { Snd.bark(); say('♥', dx, dy - 30, { size: 8, color: '#ff8fa0' }); return; }
+  }
+  const under = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && s.state !== 'hooked' && s.state !== 'drop' && inBox(sealBox(s), x, y));
   const hit = under.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - x, a.y - 10 - y) - Math.hypot(b.x - x, b.y - 10 - y))[0] || under[0];
   if (hit) {
     if (!ON_ICE[hit.state]) {
@@ -1352,6 +1720,7 @@ function tap(x, y) {
     else { hunter.target = hit; hunter.pending = 1; }
     return;
   }
+  if (sled.st === 'home' && S.load > 0 && x > SLED.x - 40 && x < SLED.x + 40 && y > SLED.y - 32 && y < SLED.y + 3) { sendSled(); return; }
   hunter.target = null; hunter.pending = 0;
   const [tx, ty] = nearestIce(x, y);
   planPath(tx, ty);
@@ -1367,12 +1736,29 @@ function tossFish() {
 }
 
 // ---------------------------------------------------------------- save
-function serialize() { S.t = Date.now(); return JSON.parse(JSON.stringify(S)); }
+function serialize() {                    // a sled still out on the road is saved as back at camp with its load
+  S.t = Date.now(); const o = JSON.parse(JSON.stringify(S));
+  if (sled.st !== 'home' && sled.st !== 'turn') o.load += sled.cargo;
+  return o;
+}
+const machineRate = () => S.lv.drones * 1.6 + (S.factory ? 14 / pumpGap() : 0);   // pelts a second, near enough
 function save() { try { localStorage.setItem('cozy-pelts', JSON.stringify(serialize())); } catch (e) {} }
+function migrate(o) {                    // a save from before the sled run: every coin spent on gear that is gone comes back
+  const spent = (base, grow, n) => { let t = 0; for (let i = 0; i < (n || 0); i++) t += Math.ceil(base * Math.pow(grow, i)); return t; };
+  const lv = o.lv || {}, n = fresh();
+  n.coins = Math.floor((o.pelts || 0) + spent(50, 1.55, lv.club) + spent(100, 1.5, lv.sled) + spent(75, 1.65, lv.mittens)
+    + spent(250, 1.8, lv.cocoa) + spent(1000, 12, o.camp));
+  n.lv.boots = Math.min(6, lv.boots || 0); n.lv.bucket = Math.min(6, lv.bucket || 0);
+  Object.assign(n.stats, o.stats || {});
+  for (const k of ['sound', 'day', 'dayT', 'total', 't']) if (o[k] != null) n[k] = o[k];
+  n.tut = 3; n.tipShop = true; n.migrated = n.coins;
+  return n;
+}
 function restore(data) {
   let d = data && data.save;
   if (!d) { try { d = JSON.parse(localStorage.getItem('cozy-pelts') || 'null'); } catch (e) { d = null; } }
   if (!d || typeof d !== 'object') return 0;
+  if (!d.v) d = migrate(d);
   const base = fresh();
   S = Object.assign(base, d, { lv: Object.assign(base.lv, d.lv), stats: Object.assign(base.stats, d.stats), sound: Object.assign(base.sound, d.sound) });
   const away = clamp((Date.now() - (d.t || Date.now())) / 1000, 0, 7200);
@@ -1411,12 +1797,18 @@ async function start(data) {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const cx = c.getContext('2d'); cx.drawImage(bg, 0, 0);
   buildMaps(cx.getImageData(0, 0, W, H).data);
-  for (const n of ['i_seal', 'i_club', 'i_sled', 'i_mittens', 'i_boots', 'i_bucket', 'i_cocoa', 'i_sun', 'i_moon', 'i_fish', 'pelt']) icons[n] = iconURL(n);
-  $('#rateIcon').src = icons.i_seal; $('#peltIcon').src = icons.i_seal; $('#fishIcon').src = icons.i_fish; $('#dayIcon').src = icons.i_sun;
+  buildHose();
+  for (let i = 1; i < ROAD.length; i++) { SEG.push(Math.hypot(ROAD[i][0] - ROAD[i - 1][0], ROAD[i][1] - ROAD[i - 1][1])); ROAD_LEN += SEG[i - 1]; }
+  for (const n in A) if (n.startsWith('i_')) icons[n] = iconURL(n);
+  icons.pelt = iconURL('pelt');
+  $('#rateIcon').src = icons.i_seal; $('#coinIcon').src = icons.i_coin; $('#fishIcon').src = icons.i_fish; $('#dayIcon').src = icons.i_sun;
+  $('#sledIcon').src = icons.i_sled; $('#factIcon').src = icons.i_factory;
   const away = restore(data);
+  syncMachines();
   buildPanel(icons);
-  $('#campBtn').addEventListener('click', buyCamp);
+  $('#factBtn').addEventListener('click', buyFactory);
   $('#fishBtn').addEventListener('click', tossFish);
+  $('#sledBtn').addEventListener('click', () => { Snd.init(); sendSled(); });
   const setTog = () => { $('#musicTog').setAttribute('aria-pressed', S.sound.music); $('#sfxTog').setAttribute('aria-pressed', S.sound.sfx); $('#voxTog').setAttribute('aria-pressed', S.sound.voice); Snd.apply(); };
   $('#voxTog').addEventListener('click', () => { Snd.init(); S.sound.voice = !S.sound.voice; setTog(); save(); });
   $('#musicTog').addEventListener('click', () => { Snd.init(); S.sound.music = !S.sound.music; setTog(); save(); });
@@ -1426,11 +1818,14 @@ async function start(data) {
   $('#resetBtn').addEventListener('click', e => {
     if (Date.now() - armed > 2500) { armed = Date.now(); e.target.textContent = 'Tap again to start over'; setTimeout(() => e.target.textContent = 'New camp', 2500); return; }
     const snd = S.sound; S = fresh(); S.sound = snd; seals = []; bundles = []; combo.n = 0; sg.clearRect(0, 0, W, H);
+    Object.assign(sled, { st: 'home', d: 0, t: 0, cargo: 0, warned: false }); factory.lumps = []; chipper.queue = []; chipper.grind = 0;
+    syncMachines(); Snd.hum();
     e.target.textContent = 'New camp'; save(); dirtyPanel = true; toast('A fresh camp on the ice.');
   });
   view.addEventListener('pointerdown', e => { e.preventDefault(); const [x, y] = worldPoint(e); tap(x, y); });
   addEventListener('keydown', e => {
     if (e.key === 'f' || e.key === 'F') tossFish();
+    if (e.key === 's' || e.key === 'S') { Snd.init(); sendSled(); }
     if (e.key === ' ' && e.target === document.body) {
       e.preventDefault();
       const s = seals.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - hunter.x, a.y - hunter.y) - Math.hypot(b.x - hunter.x, b.y - hunter.y))[0];
@@ -1441,16 +1836,20 @@ async function start(data) {
   if (S.total > 0) intro.hidden = true;
   $('#startBtn').addEventListener('click', () => { Snd.init(); intro.hidden = true; Snd.voice('welcome', 2); });
   intro.addEventListener('pointerdown', e => { if (e.target === intro) { Snd.init(); intro.hidden = true; } });
-  if (away > 60 && passive() > 0) {
-    const gain = passive() * away * .5; S.pelts += gain; S.total += gain;
-    setTimeout(() => toast(`The husky hauled ${fmt(gain)} pelts while you were away.`, 4000), 600);
+  if (away > 60 && machineRate() > 0) {   // the machines kept going, and somebody ran the sled
+    const gain = Math.floor(machineRate() * away * .5); S.coins += gain; S.total += gain;
+    setTimeout(() => toast(`While you were away the machines sold ${fmt(gain)} coins' worth.`, 4200), 600);
+  }
+  if (S.migrated) {
+    const n = S.migrated; delete S.migrated;
+    setTimeout(() => toast(`New gear in the ledger. Your old pelts and upgrades came back as ${fmt(n)} coins.`, 5200), 900);
   }
   let hiddenAt = 0;
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { hiddenAt = Date.now(); save(); }
     else if (hiddenAt) {
       const s = clamp((Date.now() - hiddenAt) / 1000, 0, 7200);
-      if (s > 5 && passive() > 0) { const gain = passive() * s * .5; S.pelts += gain; S.total += gain; dirtyPanel = true; }
+      if (s > 5 && machineRate() > 0) { const gain = Math.floor(machineRate() * s * .5); S.coins += gain; S.total += gain; dirtyPanel = true; }
       hiddenAt = 0; last = performance.now();
     }
   });
@@ -1459,7 +1858,8 @@ async function start(data) {
   layout();
   for (let i = 0; i < 2; i++) spawnSeal(false);
   for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
-  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, tap, spawnSeal, hitSeal, tossFish, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
+  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, sled, drones, factory, chipper, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
+    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
   last = performance.now();
   let faults = 0;
   const loop = t => {

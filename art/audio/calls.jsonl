@@ -47,3 +47,26 @@
 {"t": "2026-10-28 11:54:57", "tag": "husky", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[warmly] A husky joins the camp, and starts hauling.", "bytes": 119952}
 {"t": "2026-10-28 11:54:59", "tag": "shoo_1", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[shouting] Hey! Shoo, shoo!", "bytes": 88200}
 {"t": "2026-10-28 11:56:49", "tag": "squeal_1", "path": "/sound-generation", "text": "a cute baby seal pup squeals once, a short high-pitched cartoon yelp", "bytes": 141120}
+{"t": "2026-10-28 15:02:44", "tag": "winch", "path": "/sound-generation", "text": "a small electric winch whirs and reels in a metal cable, ending with a clunk", "bytes": 176400}
+{"t": "2026-10-28 15:02:44", "tag": "chipper_2", "path": "/sound-generation", "text": "a cartoon wood chipper grinding something soft and squishy, a wet crunchy grind that sputters to a stop", "bytes": 282240}
+{"t": "2026-10-28 15:02:44", "tag": "chipper_1", "path": "/sound-generation", "text": "a cartoon wood chipper grinding something soft and squishy, a wet crunchy grind that sputters to a stop", "bytes": 282240}
+{"t": "2026-10-28 15:02:44", "tag": "drone", "path": "/sound-generation", "text": "a small quadcopter drone whirring and buzzing as it lifts off and flies past", "bytes": 282240}
+{"t": "2026-10-28 15:02:45", "tag": "slurp_1", "path": "/sound-generation", "text": "a huge industrial vacuum hose slurping something heavy up out of water, a deep wet shloop and a hollow metal thunk", "bytes": 211680}
+{"t": "2026-10-28 15:02:45", "tag": "clank", "path": "/sound-generation", "text": "heavy factory machinery clanks once and lets out a short hiss of steam", "bytes": 155232}
+{"t": "2026-10-28 15:02:46", "tag": "slurp_2", "path": "/sound-generation", "text": "a huge industrial vacuum hose slurping something heavy up out of water, a deep wet shloop and a hollow metal thunk", "bytes": 211680}
+{"t": "2026-10-28 15:02:46", "tag": "mush", "path": "/sound-generation", "text": "sleigh bells jingle as a dog sled sets off across the snow and a husky yips excitedly", "bytes": 282240}
+{"t": "2026-10-28 15:02:48", "tag": "coins", "path": "/sound-generation", "text": "a satisfying old cash register ka-ching followed by a handful of coins clinking", "bytes": 176400}
+{"t": "2026-10-28 15:02:48", "tag": "welcome", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[warmly] Welcome to Cozy Pelts, a wholesome family business. The seals are coming up to lounge on the ice.", "bytes": 296352}
+{"t": "2026-10-28 15:02:48", "tag": "husky", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[warmly] Another husky joins the team. Good dog. Asks no questions.", "bytes": 190512}
+{"t": "2026-10-28 15:02:49", "tag": "hum", "path": "/sound-generation", "text": "a steady low industrial factory hum with a slow rhythmic pump thumping, muffled and mechanical", "bytes": 2116800}
+{"t": "2026-10-28 15:02:50", "tag": "drone2", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[dryly] Another drone. The seals have started looking up.", "bytes": 148176}
+{"t": "2026-10-28 15:02:50", "tag": "drone", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[cheerfully] A drone, and a wood chipper. Seal goes in, pelt comes out. Best not to ask about the middle bit.", "bytes": 317520}
+{"t": "2026-10-28 15:02:50", "tag": "factory", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[grandly] The pelt factory is open. It drinks the sea, and the sea is mostly seals.", "bytes": 204624}
+{"t": "2026-10-28 15:02:51", "tag": "sold_2", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[pleased] Sold. Cozy money.", "bytes": 81144}
+{"t": "2026-10-28 15:02:51", "tag": "mush_1", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[shouting cheerfully] Mush! Mush!", "bytes": 70560}
+{"t": "2026-10-28 15:02:51", "tag": "mush_2", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[sing-song] Off to market!", "bytes": 70560}
+{"t": "2026-10-28 15:02:52", "tag": "full", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[politely] The sled is full. The dogs are waiting.", "bytes": 102312}
+{"t": "2026-10-28 15:02:52", "tag": "byebye_1", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[sweetly] Bye bye, little guy!", "bytes": 59976}
+{"t": "2026-10-28 15:02:53", "tag": "messy", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[wincing] Ooh. Messy.", "bytes": 84672}
+{"t": "2026-10-28 15:02:53", "tag": "byebye_2", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[giggles] Up you go!", "bytes": 105840}
+{"t": "2026-10-28 15:02:58", "tag": "sold_1", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[warmly] The trader paid up. He never asks where they come from.", "bytes": 162288}

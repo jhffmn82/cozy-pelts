@@ -4,14 +4,15 @@ Each animation is trimmed to the union of its frames, and each frame keeps its o
 (feet for bodies, the water line for a swimming head, the pivot for effects), so the game draws every frame at
 x + ox, y + oy and nothing jitters.
 """
-import json, os, glob
+import json, os, glob, re
 from PIL import Image
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 RAW = os.path.join(ROOT, "art", "raw")
 
 
-SHRINK = {"gull_flap": 0.6}  # the flying gull came out bigger than the perched one; bring it to the same size
+SHRINK = {"gull_flap": 0.6,  # the flying gull came out bigger than the perched one; bring it to the same size
+          "chipper": 0.85, "drone_fly": 0.85}  # small enough that a drone can drop a seal in without leaving the screen
 
 
 def frames_of(name):
@@ -47,14 +48,17 @@ ANIMS = {
     "hunter_idle": ("hunter_idle", (35, 81)), "hunter_walk": ("hunter_walk", (35, 81)),
     "hunter_swing": ("hunter_swing", (35, 81)), "hunter_cheer": ("hunter_cheer", (35, 81)),
     "gull_idle": ("gull_idle", (24, 46)), "gull_fly": ("gull_flap", (24, 26)),
-    "husky_idle": ("husky_idle", (24, 45)),
+    "husky_idle": ("husky_idle", (24, 45)), "husky_run": ("husky_run", (24, 40)),
+    "drone": ("drone_fly", (24, 40)),
 }
 STILLS = {
     "sled": "sled_iso", "pelt": "pelt", "husky": "husky", "splat": "splat_b", "drop": "splat_d", "pool": "pool2",
-    "gull": "gull_iso",
+    "gull": "gull_iso", "factory": "factory", "chipper": "chipper", "hook": "hook", "hose": "hose_seg",
 }
-ICONS = ["icon_seal", "icon_club", "icon_sled2", "icon_mittens", "icon_boots", "icon_bucket", "icon_cocoa",
-         "icon_cabin", "icon_sun", "icon_moon", "icon_fish"]
+# where each machine stands or hangs from: the factory and chipper by their feet, the hook by its eye
+ANCHOR = {"factory": (48, 89), "chipper": (30, 59), "hook": (8, 1)}
+ICONS = ["icon_seal", "icon_club", "icon_sled2", "icon_boots", "icon_bucket", "icon_sun", "icon_moon", "icon_fish",
+         "icon_coin", "icon_drone", "icon_factory3", "icon_husky", "icon_salmon", "icon_bone2", "icon_anchor", "icon_tusk2"]
 VFX = ["vfx_blood", "vfx_bonk", "vfx_splash", "vfx_poof", "vfx_sparkle"]
 
 
@@ -74,12 +78,13 @@ def main():
             continue
         im = fr[0]
         b = im.getbbox()
-        anchor = bottom_center(im) if name in ("sled", "husky", "gull") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2)
+        k = SHRINK.get(folder, 1)
+        anchor = tuple(round(v * k) for v in ANCHOR[name]) if name in ANCHOR else (bottom_center(im) if name in ("sled", "husky", "gull") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2))
         entries[name] = ([(im, anchor)], {})
     for name in ICONS:
         fr = frames_of(name)[:1]
         if fr:
-            entries[name.replace("icon_", "i_").replace("sled2", "sled")] = ([(fr[0], (0, 0))], {"icon": True})
+            entries[re.sub(r"\d+$", "", name.replace("icon_", "i_"))] = ([(fr[0], (0, 0))], {"icon": True})
     for name in VFX:
         if not os.path.exists(os.path.join(RAW, name, "02.json")):
             print("missing", name)

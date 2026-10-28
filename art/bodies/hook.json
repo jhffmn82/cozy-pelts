@@ -1,0 +1,11 @@
+{
+ "description": "a heavy steel crane hook hanging from a short chain, side view, grey metal with a highlight, game sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

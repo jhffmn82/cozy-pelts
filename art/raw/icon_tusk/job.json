@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_tusk.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFJ0lEQVR4nKWWf0yUdRzHXw9ep/jr7FQgScYOmyhmAssSBv4YqNEGrZVuFq6oLWXU2Zzh1rrWmQ1xbWLN5YxruyvanC6PBancIOSHwcaPoRRqd9mlDFEYJYoi+O2P83l8Dp67A31vz/Z9vs/3+b7f38/n8/18PhKPgRFbrhg7p8tzSJPZY1KLx5Lrza3j5odLkiYl5JEEyORZazZiSoxX5j1tXVT+elIRMhERusclT163lpzUOACcDW5MifF42rrQm09y/9Q2Ebbhm6AiJi1ADTU5oIw9bV0ASJFhIfcIvSIAEhY+96i/+iGoBdRRPhF/OhvctFTX8FtbsxKMoj1f3J+2hZt9Mcwe/AIAtVsCCpB9HW9aRm9fNyO2XKEWcaGhlaWbUjDcdmJvWwZAS3UNZTY7nTuTgT6mpNU+WF3rt7c6NjRdoA60wpK9bMnbSpTl8rh7Lx1vwe2+o7y7nC5lrDe38mfpbvr7zzNyLI3+bYlYYlLGcQV1gSkxnpzUOCW4oix2eqyxDJckEWVp4VVWKWtbqmvo7eumxxqL3lxF/8lfYOVCAMTTK5md0cwOBqEyBd1rdYj2fCGtOCRpWkBKeU9TUMTcBX7vnaN3Ob3HHewMXB0YRTTV8J9rUPO7pgDReFgZOxt8BMnr1tLlOa/M91hj2e/YB0Ba71nmtN5UvhkNRhZtfoP+n74n+mI3WhkTfSQwwTxguO0Elml+6714GYgBfBbS5TkkOVb07xQBRQ98P8SBynCs3kZG61YjLf1UCikg/MZU7tV4cc++Q/Lwk8q8mkRG1BNDgC+AoyyXAbDEpGCKmcGSaIkDlWD1NmI0GP04NF2gy3NIwyVJioll5EWsVG7D519OG2+Nvm5lXGCI5+VVM/F4b1FxdpCv/+3CaDDSW5qAtOJQ6Dwg4+cT5Qx3zGd+dD/5u9JhP+jNzYqghLWJtJy5yZlrg7wydRF6c7Ny3SrODmL1NvoscyzNd+IxtSFgKpatUO6posBVxg91F3GfH2LDS89r3mctyKcORB7SAn4BZa6i3FMVlNDW24zRYKTLMI/0yJlkXJvH0XPlSAufUoJuLEIWI12eQ5KtIed3gGxTJi++mcuS7M1+63ussbi89QDcuTUUavuJV0O5DsgiFqcm8UxmPH3T73K89R9c3no/gQWuMtab5pNtymTKC0cRv382rn2blICHrmhlV24hWVsyAKgscwX9LxRC3gI1MUDBhzvIWp/ht8blrafHGqtYyVfM+gGfpfBUQbR2/zBOwNgEIxNnrdnI6zu3k5Max9WBUQAOf/Ud4Uz1+1ddstO3b8NxosL38tfp0ALUWSxi7gJ6+7rJWrOR9Mx1RC5frFTF6DlTsOz5FoDS8iP0WGP9NtXM/QGgCFD3APtsDzNgxY+nFHL1yQHKbPZxG8r7ZJsyH54+CBRzqfv8or3FfieWWy01ymx2blypk2Szq2Nl07PZvL31Lao7mtjv2OcrPqr0q4ZyC+S7Plq3mt0ff8S1jgtKKc5JjcP6ybvKTy6ni4i5C1CT682tyCffXvw+1R1N/N3+R0gLaGLElivCZiWI4oMVovhghei8PiIG7gkxcE+Izusj4gPLERE2K8HvKcy3i9r6blFb3y0K8+2iMN8uwmYliED3X0bATle05wu5qSzaW6zMRy5f7LcuVjddGV+q6uLS9SsAPtM3bfKRBEjDQQXIIgBVd+vLA2p4nZ0ATJsRDsDRc+UAEyIPKWCskLFitCATT4R8wgICidHcMEC0B8L/v/5QO02GyTcAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

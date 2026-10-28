@@ -1,0 +1,12 @@
+{
+ "description": "a cute boxy yellow and grey quadcopter drone hovering in mid air, four spinning propellers on top, a small cable winch hanging underneath, seen straight from the side, floating with no shadow and no ground, cozy pastel pixel art game sprite",
+ "image_size": {
+  "width": 48,
+  "height": 48
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side",
+ "direction": "east"
+}

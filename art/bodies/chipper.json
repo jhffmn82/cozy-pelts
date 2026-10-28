@@ -1,0 +1,11 @@
+{
+ "description": "a chunky red wood chipper machine with a wide funnel hopper on top and a discharge chute sticking out to the left, two small wheels, riveted metal, side view, cozy pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 64,
+  "height": 64
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/drone_fly.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "f21c68b9-358b-445e-bcda-ea7f1f8b796a",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

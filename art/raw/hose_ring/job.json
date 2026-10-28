@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/hose_ring.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgUlEQVR4nMVSTStEYRg97xiMJBbmnWm6KYmwEJJrocQvsPFRWKFhFuIXuDvWFrLAsDDYzLCZRLKwsEBNUcotyce7eKWsiNKxGMPMuGLFWT7nec55voD/hnAOe/lBCQBMxfU3+VnFStssLKqk0jaVtllcUkOlbUJIZmdnKgrJvHwPZiNziIU3cZI4xf2DRv9AH57yX1FR3YzJkUGAjp0knYeCFktlHY2ASUASkPT5GzlqLdMn62mane9xB4H5aJzz0TirKtuY3MMn55P1VNrmzMqG4yiYDm8lXYXMKk5BEkLSCJhs7+hz4IVkMGRRaZt5nrKvy8rxU2mbwZCV0YFIF2hqakFtQysK3I8ILyzh5flSAIA71+Dg8BBcshy7K4s4t8+QOqkr3eXo8AAAsBZZx+X1DgAvISSvbvcQXY8BQLL4+2/w0giY7OmdIFx+BkMWx6dW6c412N01lnaZT7gzBe7EjQL5agIAEscJ3G/vf7A36gLAXYb/D6/MrJRfvfIf4w1QJa1KqRoZnQAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

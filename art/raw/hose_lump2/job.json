@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/hose_lump2.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAC+ElEQVR4nL2V20tUURTGf3NmDGzMLjhggzJqJioVGQmNZWA1UlpZUgYGKT75UPQSFFFPFeRLdHkr+gdKqATNsYIwssJINFDLy2TOpOallBkn6MyeHqZzOsc5J32p72nvtfb+vrXW3ntt+MewLGVRRESjRnarZFl0v20pxFab/e/+vwiZCkRENKoQF5VX4S4p5eWzVtUvSZIqHBHRqJmIoYBCXlReRXnlYU4dSkIWy3iQU8e77iEmJwJ8HhrklqcAJUMzkTgBLXl1bTUndlmRxTK+kctO93ISExJ42BzguDyk7rnlKTAVsRiRb9t3hGJPGQBCCCRJQghBfU0FAO2vOvG2tVP8wasL7tSTLiJySHcmNi25Mi72lCGE4MHta+rm1PUbAKivqWCnu5D+wXHa5sNca7jwR8HhiCu3rkRWm52qk+cAaLp7k3BwjrEv/pjPauPV73X1NRUU5KUzPfWVsxcbaLh0FoC681fjShV3Bq6sHB7euU5wdkZnH+jrYaCvB3dJKQCFWzcD0PjIi/f5SwC+z0wZZ6CtPUAkIgOo0SuIyCFyN7r5EQ6zfWuuau/rH2VyIgDA5aJ8XRaSlkCSYtNwcC4uEjOsWpOijsdHP8f5dQJCiCUTL4TfN2xoN3xoiUnJS84iOPed3q63pn4JYr0kIod4/bhR51zrTNPNrTY7jqw/tfd9mWLTuyZ1vn+2lwsdvbq3oCuRgpVOF4lJyYYiaZlZOJ0phH/+pLurWyXeP9trnoEWL560sOfgUeyrU3Qia51pHKg7TXpGNqmOlXjb2pFlWbd3YfSgOQOrZLEo17XYU8beY7U8bbpPqn2FGnl6RjaZrhSuX7lKXmERW3paDKPWIq77KSKV9WdYl5MPxG5Xpit2HX0jU/gG++PIjaI3FNCKKE1PaXjzoRBjgRE2ve+kNdmBJEkUTo9w4/UbQ3JdibTQlmv600cKdsc6q983zI4ZP/O/13U036MDTMlNM1iYialfDqkBma1Z9NM2+/AXI/5v+AVbMkppjTRbBgAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}
