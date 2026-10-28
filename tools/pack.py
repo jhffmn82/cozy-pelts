@@ -16,10 +16,41 @@ SHRINK = {"gull_flap": 0.6,  # the flying gull came out bigger than the perched 
           "ball_red": 0.84, "gundrone": 0.7}
 
 
+def drop_edge_scraps(im):
+    """An edited animation is drawn as one grid, so a weapon that pokes past its cell leaves a sliver in the next one,
+    or a cut-off scrap floating at the edge. Drop any piece not joined to the hunter that touches the left or right edge."""
+    w, h = im.size
+    a = im.getchannel("A").load()
+    seen, pieces = set(), []
+    for y in range(h):
+        for x in range(w):
+            if a[x, y] and (x, y) not in seen:
+                stack, px = [(x, y)], []
+                seen.add((x, y))
+                while stack:
+                    cx, cy = stack.pop()
+                    px.append((cx, cy))
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            nx, ny = cx + dx, cy + dy
+                            if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in seen and a[nx, ny]:
+                                seen.add((nx, ny))
+                                stack.append((nx, ny))
+                pieces.append(px)
+    pieces.sort(key=len, reverse=True)
+    out = im.copy()
+    for px in pieces[1:]:
+        xs = [p[0] for p in px]
+        if len(px) < 120 and (min(xs) <= 1 or max(xs) >= w - 2):
+            for p in px:
+                out.putpixel(p, (0, 0, 0, 0))
+    return out
+
+
 def frames_of(name):
     out = [Image.open(p).convert("RGBA") for p in sorted(glob.glob(os.path.join(RAW, name, "[0-9][0-9].png")))]
     if name.startswith("hw_"):
-        out = out[:9]   # an edited animation comes back twice; the second copy is identical
+        out = [drop_edge_scraps(f) for f in out[:9]]   # an edited animation comes back twice; the second copy is identical
     k = SHRINK.get(name)
     if k:
         out = [f.resize((round(f.width * k), round(f.height * k)), Image.NEAREST) for f in out]
