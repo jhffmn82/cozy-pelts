@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/m_bat.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "648a8fe1-e3c1-4bc8-a891-6bfdaaacbed7",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

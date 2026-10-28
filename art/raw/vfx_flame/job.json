@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_flame.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "8cd4f228-6adb-422d-ae82-b6c072417838",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

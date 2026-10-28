@@ -12,11 +12,14 @@ RAW = os.path.join(ROOT, "art", "raw")
 
 
 SHRINK = {"gull_flap": 0.6,  # the flying gull came out bigger than the perched one; bring it to the same size
-          "chipper": 0.85, "drone_fly": 0.85}  # small enough that a drone can drop a seal in without leaving the screen
+          "chipper": 0.85, "drone_fly": 0.85,  # small enough that a drone can drop a seal in without leaving the screen
+          "ball_red": 0.84, "gundrone": 0.7}
 
 
 def frames_of(name):
     out = [Image.open(p).convert("RGBA") for p in sorted(glob.glob(os.path.join(RAW, name, "[0-9][0-9].png")))]
+    if name.startswith("hw_"):
+        out = out[:9]   # an edited animation comes back twice; the second copy is identical
     k = SHRINK.get(name)
     if k:
         out = [f.resize((round(f.width * k), round(f.height * k)), Image.NEAREST) for f in out]
@@ -50,16 +53,31 @@ ANIMS = {
     "gull_idle": ("gull_idle", (24, 46)), "gull_fly": ("gull_flap", (24, 26)),
     "husky_idle": ("husky_idle", (24, 45)), "husky_run": ("husky_run", (24, 40)),
     "drone": ("drone_fly", (24, 40)),
+    # the mutants and the two bosses stand on their feet (None: the bottom centre of the first frame)
+    "mut_frog": ("a_frog", None), "mut_bat": ("a_bat", None), "mut_bloat": ("a_bloat", None),
+    "mut_kraken": ("a_kraken", None), "mut_mama": ("a_mama", None), "mut_thulu": ("a_thulu", None),
 }
+for w in ("salmon", "bone", "anchor", "tusk"):   # the hunter with each club, cut from 80x80 crops of the 96x84 frames
+    ANIMS[f"hunter_idle_{w}"] = (f"hw_{w}_idle", (35, 77))
+    ANIMS[f"hunter_walk_{w}"] = (f"hw_{w}_walk", (35, 77))
+    ANIMS[f"hunter_swing_{w}"] = (f"hw_{w}_swing", (26, 77))
+for w in ("harpoon", "flamer"):                    # and with each gun, for the sealocalypse
+    ANIMS[f"hunter_idle_{w}"] = (f"hw_{w}_idle", (35, 77))
+    ANIMS[f"hunter_walk_{w}"] = (f"hw_{w}_walk", (35, 77))
 STILLS = {
     "sled": "sled_iso", "pelt": "pelt", "husky": "husky", "splat": "splat_b", "drop": "splat_d", "pool": "pool2",
-    "gull": "gull_iso", "factory": "factory", "chipper": "chipper", "hook": "hook", "hose": "hose_seg",
+    "gull": "gull_iso", "chipper": "chipper", "hook": "hook", "decoy": "decoy2",
+    "contraption1": "contraption1", "contraption2": "contraption2", "contraption3": "contraption3",
+    "ball_red": "ball_red", "ball_cream": "ball_cream", "nozzle": "nozzle", "sludge": "sludge", "deadfish": "deadfish",
+    "barrel": "barrel", "heart_full": "heart_full", "heart_empty": "heart_empty", "harpoon": "harpoon_bolt",
+    "orb": "boss_orb", "tongue": "tongue2", "gundrone": "gundrone",
 }
 # where each machine stands or hangs from: the factory and chipper by their feet, the hook by its eye
-ANCHOR = {"factory": (48, 89), "chipper": (30, 59), "hook": (8, 1)}
-ICONS = ["icon_seal", "icon_club", "icon_sled2", "icon_boots", "icon_bucket", "icon_sun", "icon_moon", "icon_fish",
-         "icon_coin", "icon_drone", "icon_factory3", "icon_husky", "icon_salmon", "icon_bone2", "icon_anchor", "icon_tusk2"]
-VFX = ["vfx_blood", "vfx_bonk", "vfx_splash", "vfx_poof", "vfx_sparkle"]
+ANCHOR = {"factory": (48, 89), "chipper": (30, 59), "hook": (8, 1), "contraption1": (48, 90), "contraption2": (48, 90), "contraption3": (48, 90)}
+ICONS = ["icon_seal", "icon_club", "icon_sled2", "icon_decoy3", "icon_bucket", "icon_sun", "icon_moon", "icon_fish",
+         "icon_coin", "icon_drone", "icon_factory3", "icon_husky", "icon_salmon", "icon_bone2", "icon_anchor", "icon_tusk2",
+         "icon_harpoon", "icon_flamer", "icon_gundrone", "icon_heartup", "icon_parka"]
+VFX = ["vfx_blood", "vfx_bonk", "vfx_splash", "vfx_poof", "vfx_sparkle", "vfx_flame", "vfx_toxic", "vfx_acid"]
 
 
 def main():
@@ -70,6 +88,8 @@ def main():
             print("missing", folder)
             continue
         k = SHRINK.get(folder, 1)
+        if anchor is None:
+            anchor = bottom_center(fr[0]); k = 1
         entries[name] = ([(f, (round(anchor[0] * k), round(anchor[1] * k))) for f in fr], {})
     for name, folder in STILLS.items():
         fr = frames_of(folder)[:1]
@@ -79,7 +99,7 @@ def main():
         im = fr[0]
         b = im.getbbox()
         k = SHRINK.get(folder, 1)
-        anchor = tuple(round(v * k) for v in ANCHOR[name]) if name in ANCHOR else (bottom_center(im) if name in ("sled", "husky", "gull") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2))
+        anchor = tuple(round(v * k) for v in ANCHOR[name]) if name in ANCHOR else (bottom_center(im) if name in ("sled", "husky", "gull", "decoy", "nozzle", "barrel", "gundrone") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2))
         entries[name] = ([(im, anchor)], {})
     for name in ICONS:
         fr = frames_of(name)[:1]

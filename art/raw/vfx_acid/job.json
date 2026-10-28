@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_acid.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "e78ac17b-83a5-49a8-b9f0-f75f73e9531c",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

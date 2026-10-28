@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/contraption3.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "653febf0-0c04-47a6-9f9e-c2fa32480f8f",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

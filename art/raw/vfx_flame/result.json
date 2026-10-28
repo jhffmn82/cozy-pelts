@@ -1,0 +1,40 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_flame",
+ "files": {
+  "vfx-flame.gif": "https://api.pixellab.ai/mcp/pixel-tools/e9ec7edf-c7e5-4019-9cb6-0059cca2cd68/vfx-flame.gif",
+  "vfx-flame.png": "https://api.pixellab.ai/mcp/pixel-tools/e9ec7edf-c7e5-4019-9cb6-0059cca2cd68/vfx-flame.png",
+  "vfx-flame.json": "https://api.pixellab.ai/mcp/pixel-tools/e9ec7edf-c7e5-4019-9cb6-0059cca2cd68/vfx-flame.json"
+ },
+ "parts": [
+  "flamethrower"
+ ],
+ "anchor": {
+  "x": 4,
+  "y": 16,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 32
+ },
+ "frames": 8,
+ "message": "A 32x32 one-shot flamethrower burst, 8 frames at 12 fps: a bright yellow core licking out to the right in orange flame, with sparks flying off on the middle frames and the jet thinning out at the end. It fits inside the canvas without touching the edges. To tune it, try the size, speed and amount sliders, and the colour slider if you want a different fire.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=f9db9f4d-7af8-44f3-908c-750ccacb8efe",
+ "effect_id": "f9db9f4d-7af8-44f3-908c-750ccacb8efe",
+ "gif_exact": true,
+ "result_id": "e9ec7edf-c7e5-4019-9cb6-0059cca2cd68",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "27f47203-cb30-45ca-9a0b-965e7a594785",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

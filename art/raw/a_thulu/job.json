@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/a_thulu.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "7285c726-b9aa-4ef3-96b3-418cea4807f8",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 2.0
+ }
+}

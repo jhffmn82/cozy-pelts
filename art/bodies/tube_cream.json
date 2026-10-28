@@ -1,0 +1,10 @@
+{
+ "description": "one round ring segment of a bendy candy-striped tube seen straight end-on, glossy cream white with a bright top-left highlight and a dark outline, game sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail"
+}

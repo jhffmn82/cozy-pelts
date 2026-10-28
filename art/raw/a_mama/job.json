@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/a_mama.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "2541ecfb-b5f4-4dba-bca3-75b35bd59d72",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 2.0
+ }
+}

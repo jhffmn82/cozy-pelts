@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/tube_cream.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA30lEQVR4nMVSuw4BQRQ9XtlC6z+0dCohGq1KtlZR+walnzAFhYyoTLXTKBRbqUVDNERh5ShkB2t2QxROcou5d865T+DfSMX4+en/tI283g9BEiRx2fVAElqJJOEHWStBrQRJ8rLrceuDIbQSTBIxRK0EHcd5sedYnIjJGiWHJr2AJF8EnodC6QUAgGYlby3xuOkAAHKFQZR7FzicJd12K7aCELEtSC+g9IKvWrCtEePFyeqrlTKY6au1PQBANFO3v6Tbbpn3aOK/lW+7RDPM+XSFaqNoAvVy9o3z8yn/HzdGJsC7NAYXSQAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/m_kraken.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "dd0d10a6-15b3-49b6-bbd5-c1e62d994e45",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

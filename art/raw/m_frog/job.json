@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/m_frog.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "5e1e57cd-ccb1-4347-9f75-b5d0dc9f7874",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

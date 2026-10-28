@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/barrel.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACkElEQVR4nO2UTUhUURTHf28+/MLBefUY/MqKsIRAaEJKWxgWKBGUi1CZ0GgjRbZICCKCgYLAVWiGgoVYkrVxkX0IRUiokM0glaApWsNooqOjjag16mvxmJvTG9NFBIEHLhz+h3vO+f/PuRc2bdP+iRnlKNVqsql/PbHVZFONcpSafKNQ9fZ1qVKiWbWabGoI30hR6U/Jm/ITufspgQzrFBWNDbx4M4ztSRXbEi30DIzSbbxMa6cTgJmliYi5IoKh5KXt4wIr36fQd6KAk4odx+cGAHbFywzb5niwUkb5lbMs+3/o8hnWo3jEsiB8NyMA9E8GAXg6MsGBS14A6m/eI5JkuopWk02t3Bmk17cEwKtArIhVHYwja08KrqxzgkX/ZJDqIQd3sh8TX9+lY2FajwFAnPMQ885OAE37oW+8np0S8Y9DNdxfXhANrp7HuhKlNR8X/svlXOEXpUjihKw085buvmAgJZpV1W9g3hAAYgAYrDtFS76ZYmQ8wMCHt0TnncE0C49GN/YsBAN1PCglXzsGwHXvIt2VR2nJNwPgtHvDLk2PPSQ3PiAOQG1vLG5XzdoFAL7ebiOjsQTlagG7sxMobte2xelOZXvM1ogd1vbGYt9fwY4khS+LU7r3EFZA9RvwDfpR0mUupo0BcN71XcQz84oA6ClT6Jiz0DFnAcDtquG5913ExyYAoxyl7q07LeRwulPZoqxokvi0PjyONmYVPwk+WSTo8hUKP0dpJWCZCVtVCbQBJ134tS0ASrqM0+7F6U7FN+gXGCBmAwgZV2M5Sqtgo1WKjtatxOFnJaLz96XNmkRNDsGw2pPMtM8QFlttHkcbM0sT0pqfXaioJK+gjgd1jUiyJt/vMR3+39tP4uIBGb1m7tAAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-animation-v2",
+ "body": "art/bodies/hw_tusk_idle.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "5c9c6ee6-a3da-4f7b-b91a-48c7e0c30174",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/tongue2.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABV0lEQVR4nK2TMUjDQBSG/4hgoFDcHEop9JYWOShZFBcpLpYugrRbN52Euki7Zcgm6KA4li5dlOCmIIi4JeKQRUocFISSTRBCA5l8DjUh56V10H+6+7n/e+/dccAfpfw0MmqegnCkjG2Hkv754xA7+y3pvBQGAAZODJzGtkNj26GmqlFT1ah3MqCZgGQ49ANi4NRUNQr9IAbNhDBwsnSDQj+gjJoXQJZuxJBkZi65GeiNeH3b2cVAb8A5OsbQf4j9/n1PKCoAAODDtHC3si14y9lVtAwTV3sXUtfzaaO0XQ8wTACYVP9ep0l6luvyJkWQbq4U+y/eO7b0KtYMXchII0Tq5ko49J5RqxRQqxSmdiAB6u6NAgDZpWLsLRY3sF5emApJFQOnDqo0qh/Q5+UbRaP92kFSUVWvfza52BRJl8jA6bScE7y26+EVT6n/INVk4EK708L/oi/WGowdki38yAAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

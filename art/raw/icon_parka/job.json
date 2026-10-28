@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_parka.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADP0lEQVR4nO2XXUhTYRzGf5oFZYxTbWBBkzhwykWUIZwk7MaKCkYEXYYVFESQYFHEiqCodVWCA28ULOmmLEIMF1aQdFFBahHZ1EY56YPWhw37oGRvF+t9OWds82wFXdQDB877vs/z/z97z//9GPzHX0ZRoUJDM4W1PTx+v6BYBYl8bl08qP5k61txRy/IRN6Ck/OrxP6qFxyuOmHrX3MlRCReytHXD/KKWZIP2dBM8XbPdg4DwYattrGA5DROE4V+jimTd/T2iYnE25xPR2+fSK+PXHDk1NBMcaqzmY2VCwEID4xl5Mnx0MXbtB0846gmHBvoj3Wp5M+Go7QdPGPjnOpstplY6fU7MpBXDYQHxjiyeW/GMdVvmSknKM4nuUR/rItFng80+XWa/DolJe+QM5TO/W0YminqjzcLQzNVkfncuvh2qFb8uBESP26ExLdDtcLn1lWRWjV/JPm1lxMqYEdvnzjdckn43LqqfJ9bF6dbLqkVkK4pOPm1lxNiXU2dCmhopnpk8PR3qas/3izW1dQpXbY8WatUis4+uUVPazvXG88DsKFhu+I8vXmPirWrbDorb/2uOvYvrQWynxUZOw3NFA9ronSPegjEXAAEvQmOvfoOwNp9B1i/q86m6Wlt52YotTRPLJhh020qj2c9K7IakEKJ7lEPkXgpSzyfafk6CcDibQ0ADF1oBGD3zBLFSdcGYq78DFjbQW+CSLwUwBZ8S2QOAFeXfLSZlDw5CxJ5GUj/hgCLPB9SwedpiI071WfoaW2nKNxG5P04AM/jc5XGWkOZDOTcCXta22ny60w8GiAQc5Esq6b4zV3beDpk8qA3wezllXRn4Fgx5U4YHhnhcuVq1U6WVTM4vUJVO6Qqf3B6BcmyasqXLQbgcuVqwiMjU4XPvQyb/DoA54pn0d/5WAWXGH08BJCxf+XmZexIfgGgviua3zK0mpDvQW+CQMyl6mDsY5LBd9EiSF3RFs5JTebz+FzFlch1KuasAZvQWyGC3oSSBOIuIArA5KSb3TMTv3iJKZM6NiBhaKbYVB5V7e5RT0aede0bMdPR1czxfcCaNH1TGR6/XxSgsEPH8Y3I2s72y/7Uf4X/+LfwE+Kw2+SUwBcJAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

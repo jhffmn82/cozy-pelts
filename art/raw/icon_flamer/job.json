@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_flamer.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC0UlEQVR4nO2VW0hTcRzHP5uay2aCHpVYqWQXK9I0E8RbD+VDUtZL9hiJoNlFEHyTTCrI8DE1QiF8sgukpYVW1kQsNXM6zSbzwlR0m+adjcz1YBvT3JzaS7Tv0/mf8zv/7+d3+Z8DTjn1v0vkaGBaVKrJfP2wudTh9zYNYDY+2TNFTHATjepo6kK8/hqIzQ3C/OJN1utMg0BS8Cd8kkIZr+6wgGwWQmzL/JFJTKZB4EV2L/KySQAa1dGMV3cAEBPctBlfi1alNwNIL3XiGyfjQ+kUaQsxRHTrOaeTEuU+gcooWFoBG2+Hq60HzUZvUuJkqGtGyI+LIC5Ry0CtmMJnnmR3QovvHCWPdwLQX1wOpJo2ArFqC8zSNQzzdXApy4FaMUGJixx+MEzr+T2UvN0PgPzGE0oWspiXipedlE0BKLRy0X2Jnm6VlPzJWDT1ggXCI+8A986+tphXC+kciw7nzOVk5qV283EcwFoJ8z0AaOoFNPUCR41Lw9dfXE61kE5uXhaRkaFUFVXiMbtIWlSqaT2VsDkDCq1clNu4dBSDjG4MBP8AQDkWhq7hOd0qKdM+M7S2dVF2s5Qd4QHcvToOwHBFBY7OhN0KKLRykUIrFxn0/QSp3QAYGtegGZVQMZUIwKuqOiYGB7nmVwRARFQbpwv3csv3JWNJ/iZ9coHdajjctNjtSpKH1IzMGBjRS0jxqmWu7zvTUzN4BwbS/nHL79MAn0du41P5FEmGPz8XCrEHsSZAmF+86UrCKCG7Ziz3ClpkHNw3y6mt79DUt6NUfiO3MZBulRSAhbw7AGyPvYgkw9/u/mv2yAxgrR6NJ2/6tlnWCq1cZI4FqJGpcT1kQHJBBoCheAwX12yEypw//GwO4UpZm57YPbfMeCWITAvtQ8dNvl29uAdcx8WVVc3XBWBtotCuHXdE916EDviSYzfOoU+n9Z9xZdZOOeWUU/+8fgGLCCHNLAI4tAAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

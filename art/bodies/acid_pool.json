@@ -1,0 +1,11 @@
+{
+ "description": "a puddle of bubbling glowing green acid on snow seen from above, flat oval, game decal",
+ "image_size": {
+  "width": 32,
+  "height": 32
+ },
+ "no_background": true,
+ "outline": "lineless",
+ "detail": "medium detail",
+ "view": "high top-down"
+}

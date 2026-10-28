@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/deadfish.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA2UlEQVR4nO2RPwsBcRjHv79bpKhjOJ0r3blTFqXr3oVVsSkDZTIYKBPlBdgsJIM3I9IN91u8AN7D9TXgUJeS1Wd7hu+f53mAPx8pmFX+oufR9wmIL02EYE6zWWu0WWu07yaITAqOS4inqfIuBuutHs6XExLJFNJqFuPZHEffR0bNUzfKnE6GAGNK6UaZi+WaABiG4SOVze6Aze6Aq82Wul7iarN9a/TSXOFuf2AgJQMpCYCBlLQdj7bj3URCsNMf0TAr8XfJaXaUbBVdWkU3mqOdhfLTZ/7EcAUpmFzh+efx4QAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

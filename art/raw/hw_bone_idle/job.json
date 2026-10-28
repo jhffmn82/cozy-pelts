@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-animation-v2",
+ "body": "art/bodies/hw_bone_idle.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "a8b452c1-b6a2-4d85-a5a9-170bc0e47b6f",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}

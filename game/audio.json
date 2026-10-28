@@ -135,6 +135,102 @@
   "kind": "sfx",
   "secs": 12.0
  },
+ "sting": {
+  "kind": "sfx",
+  "secs": 2.0
+ },
+ "horn": {
+  "kind": "sfx",
+  "secs": 1.24
+ },
+ "hurt_1": {
+  "kind": "sfx",
+  "secs": 0.35
+ },
+ "hurt_2": {
+  "kind": "sfx",
+  "secs": 0.34
+ },
+ "croak_1": {
+  "kind": "sfx",
+  "secs": 0.58
+ },
+ "croak_2": {
+  "kind": "sfx",
+  "secs": 0.68
+ },
+ "tongue": {
+  "kind": "sfx",
+  "secs": 0.29
+ },
+ "retch_1": {
+  "kind": "sfx",
+  "secs": 0.73
+ },
+ "retch_2": {
+  "kind": "sfx",
+  "secs": 0.82
+ },
+ "splat_1": {
+  "kind": "sfx",
+  "secs": 0.3
+ },
+ "splat_2": {
+  "kind": "sfx",
+  "secs": 0.37
+ },
+ "splat_3": {
+  "kind": "sfx",
+  "secs": 0.37
+ },
+ "pop": {
+  "kind": "sfx",
+  "secs": 0.6
+ },
+ "hiss": {
+  "kind": "sfx",
+  "secs": 0.68
+ },
+ "gurgle": {
+  "kind": "sfx",
+  "secs": 0.73
+ },
+ "roar_1": {
+  "kind": "sfx",
+  "secs": 1.12
+ },
+ "roar_2": {
+  "kind": "sfx",
+  "secs": 1.24
+ },
+ "harpoon_1": {
+  "kind": "sfx",
+  "secs": 0.6
+ },
+ "harpoon_2": {
+  "kind": "sfx",
+  "secs": 0.41
+ },
+ "flame": {
+  "kind": "sfx",
+  "secs": 0.8
+ },
+ "gun_1": {
+  "kind": "sfx",
+  "secs": 0.48
+ },
+ "gun_2": {
+  "kind": "sfx",
+  "secs": 0.44
+ },
+ "dead": {
+  "kind": "sfx",
+  "secs": 1.52
+ },
+ "win": {
+  "kind": "sfx",
+  "secs": 2.27
+ },
  "ko_1": {
   "kind": "voice",
   "secs": 1.06
@@ -233,7 +329,47 @@
  },
  "factory": {
   "kind": "voice",
-  "secs": 4.56
+  "secs": 5.12
+ },
+ "apoc": {
+  "kind": "voice",
+  "secs": 2.51
+ },
+ "cleared_1": {
+  "kind": "voice",
+  "secs": 1.87
+ },
+ "cleared_2": {
+  "kind": "voice",
+  "secs": 1.27
+ },
+ "mama": {
+  "kind": "voice",
+  "secs": 1.33
+ },
+ "thulu": {
+  "kind": "voice",
+  "secs": 2.87
+ },
+ "won": {
+  "kind": "voice",
+  "secs": 4.47
+ },
+ "eaten": {
+  "kind": "voice",
+  "secs": 3.75
+ },
+ "ow_1": {
+  "kind": "voice",
+  "secs": 1.16
+ },
+ "ow_2": {
+  "kind": "voice",
+  "secs": 1.78
+ },
+ "ow_3": {
+  "kind": "voice",
+  "secs": 1.51
  },
  "sold_1": {
   "kind": "voice",

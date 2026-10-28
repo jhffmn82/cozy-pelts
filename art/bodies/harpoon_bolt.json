@@ -1,0 +1,11 @@
+{
+ "description": "a barbed steel harpoon spear flying horizontally pointing right, thin and long, with a bit of rope trailing, side view, game projectile sprite",
+ "image_size": {
+  "width": 32,
+  "height": 32
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

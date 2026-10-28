@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/boss_orb.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABzUlEQVR4nKWS30tTcRjGP+e7zU3cVX+ACSHFYYPoYhYqSJ2LLs5l0MUQvYpuIpaEHkMZQjgihPLaIHTI8Lolo3IlRHnTD6igkFoRdCspuu2c79vF2GnLDox6r15envfD87488J9lBMylU/3fALLdN8W1kTBH16MAVM5XWSi7HPuSO7TzJ0DGzRnquADkdg00HtNxhVKgNeTfz7ftqdbl0YTDjb0IALayULV94p6LrSy0hrmDKKMJp+3EJkAqvZMAXLc0trJI1ZZxhibInMmQqi1jK4vZWBWtYbtvyof4DgqpfrSGiy+HOV2/x93CWxbXyiyulZm8s8Wg24AAPO8e9m2Hm83HD9/I7Rqo6lOyA7e4fXKDS/2vAVj6NM3l+xbzz/IMhQ1m4i98QOsP0Hh0uYIO6ZY3u7/FtQhBJavJkqRNR1YTj+Xz8bRceGjKjqzIjqzI1Ven5OuJccknNxqaZEmaP/BPSP18QjFuUBjYhK0xFjIRriyNICGPm28esRkZo+iVUKqh9Q22ukibDtm9brI9+9jKYvDHO3qiFdaP2BS9EnMHUWZj1bYsHApS2nT80HQSpMAoT5yL0fsghNul+X623nGUfUjAPEj/7/UL8pe8hP+ylPIAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

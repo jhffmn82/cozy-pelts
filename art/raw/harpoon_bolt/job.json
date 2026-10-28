@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/harpoon_bolt.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB2klEQVR4nO2TTUhUYRSGn+s0rUQIkglcRGI2CDMyAwaT6TBesRoqQiZ0WqQkJP7RXtwo5QRtXNRGQUz6MRTUAiMrCtJclFrRD+ZCRPwJdJMo4oyeFjHjjN4ZQt31PXA353vve97v3HtAoVAoFP87WoIz+UfdnkiK13yirZzNxVZ0pyscJvJUX74aHU4AueGvEAOfXSPNvlzpqTwrp/MKZT0YEre7SEJLHdLid8eECS11yOp4o+hOV7gW42NQiyHeBBj64aR96Di2lGLK9U7OpK7QV99F74yZrsePWA+G+H6vFCbnaLk1aNRUwjoSTCjetzUUn8uq4ugxK7PTMwhJnLIO40g7xKeF37z7bON6s473wkUABp495X7TPE8+VAJw0HzAsKdRAGkt0+n+tsbLj8PbNQLgsLgY/zVCoCQfgFeTQV6PjeC11uD1FQJQ4D+B5Ugagy+ek51tJyMz0zDIDvNAST5VFXk87HxPzYM3iaYEaHLeVodmgq8/3zK1+gXQuNvQzXLyAqP9yQBcqjZhMpn/vqFtUuq/EjEIm8tE+zUA0u1Z3LndS33PjtvHw2hdI7Xik20UFB0GNqi96duu28JjzxGPPSf6D98zenpZlJ+2r2uqUCgUin3jD/GUqXgDcjKpAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

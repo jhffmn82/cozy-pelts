@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/ball_cream.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABEElEQVR4nNVSPUvEQBB9bxI9uFO0sxH8D3q1WAh2VtZerwj+EzmwPMRfYGMpiIWlqFgrGAMKIgnuXVJIsmNhjNncBWxvYFlmdt7HDgNMfXBScbXtqbV5mQsJEQ83STax34lux1cTBWqiQIdxqMM4VBMF+nByqGtzM1rvl7ryZfgEAJhfXP6zSYFHwenxAbodXxsJetvrJTgxbyArjikAiKWFtuPAryYrWzsgBaPP10KZ5fmdhRU2E6RfoxJYvd/vzyEEbH0A9S/E1xcQkTFw+vwIq4BVRUsciOtgcHaFjc2jcWYAttB/+TDNDu6SjLv7/QKAH9XKe2+vj9s0d4bQuEhCQrMcCoE3S6jF/xZp+uIbHLFf4omWkusAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

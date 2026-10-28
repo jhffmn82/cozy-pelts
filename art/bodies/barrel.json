@@ -1,0 +1,11 @@
+{
+ "description": "a rusty dented barrel leaking glowing green goo, half sunk and floating, side view, cozy pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 24,
+  "height": 24
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

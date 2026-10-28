@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/gundrone.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "a750018b-5fa4-4308-a2ed-4eaf7961bbe4",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

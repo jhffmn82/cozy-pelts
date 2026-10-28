@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/ball_red.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABLklEQVR4nMWSO0sDQRSFv5lMisCuDwIirJ0aXI1WFkkT0olWKe1EyC/zH2hKQVCERSwTDRhLEwwWIqbM7rWI2ewrWuY0M9y555s5MwOLlsoq7mGLAiTR2OE71W+SBRdLzorbHO46AFx7LxOAKHz/TbqM1FyAiyXnxRIb68vU764AKLg1Wr0PABrGgXE/BtHTSRlbmms7rKxanHZuAHhwa+j8pEWUoETRMA5lbEkBAEze0OzdhuakREmqFkZQehYtuvPl8zC8gz8BAO/DTx4P6ui8Do1RnVRK+AS07gfZACUqZZxmn6cQEAQCuZkpmJp+x+PqJj4BXrsfA8TQLpY0jMNRZYscGp8g1uy1+1x8vRJ9xliELiOlxwNZaheo7jv/mlMniJ5EZyw9ZXzlxesHTiBqwv0F49kAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

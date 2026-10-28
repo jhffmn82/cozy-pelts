@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/a_bat.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "c3e126bb-027e-413d-8d72-05aef77b8087",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

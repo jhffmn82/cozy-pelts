@@ -1,0 +1,27 @@
+{
+ "seed": 2829128004,
+ "type": "message_done",
+ "usage": {
+  "seconds": 31.091359853744507
+ },
+ "progress": 0.6041666666666667,
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1
+ },
+ "generation_id": "a67a14f1-7d22-4e1d-b322-0755e4f27a5c",
+ "queue_position": 0,
+ "billing_charged": true,
+ "generation_mode": "edit_image_pixen",
+ "quantized_image": {
+  "type": "base64",
+  "width": 48,
+  "base64": "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFEUlEQVR4nO2YXWxTZRjHf+/46Nli2BaoLQsxDFBoaUMg2wUuuBmJXrghk4gjOMAAxnJhZGFGL3BFQlwMgiYadie0NHzsirTGYBzyNY2OuCybNCTCyixjHUFgmmWTZa8Xp+e0py2j66benH/SnHPe85zn/f/f53mf85yCCRMmTJgwYcJEzhC5PGRX3DL5WkpJbLRHANgsLgno1/820ibRCBiMhGBgpFslGCfv2bs7zVk0MsgXX77L6a/72VK7yODbZnFJIQSly9foYzd6LoIQxOK+tYXR5soGM9MlCZqPHsxkK9vbOnWCjXXrdHFvp4hprFunCpVSt5FA6fI1vNX4SpKlfp7qWwohDJHNWkBspFt8sG2PHoWPM4vh5p9X0sYWzikn6A/we6QWbHUpjk8SOxaifNslpJQIIbL1bcgIZbZiEPTYUNksLokQaKvp+bCBaGSQoO943IN6b5xxbkU2pBNPIm/bWq1eHgsBUO4dU9ml+D7j85FHniG9HoX0FEqdW9uciltm8uTZu5uW/Ye51bsB8fM54FyazUB4GNvWap24hg7vTMq8YyCEYSXzxAyQ8rHkYRJVyGZxyeZjn+rX7W2dBH3HEULQ17s+Tv7RGAgPZxwv844hMKZqe1snQX8gKwGPjYAGIRK+2ts69fMO70yd/IlxP9G+IRY8NUe/vymvHgC7oyCjiCtaFFJ9y7RimJlXtgJsiltGTyWIDYSHKfOOoY1p5OfbYrrNDMvTBhH6c00PqdnyBhUvrASg8Oguajz2NN/ZRCAvWwGaY+3YcX7IcC/aN0SDZ5lhbOPLJUT7jHaAuvFRV1tb8Yl8T4SsUyg20i3KmlwSoTkvmPRrXCN5pGqYXf6AXoGC5MP3D4EH8aqWT2w0u5dZ1gIgvT2wpbQUGm5evzWhn/KqOXRUJa5XNY1yZ/RqTq3HpASkQqCuqt1RoI9NRH7f9dczjueJwJQ45Ay74pbV9ZtpWnwKu6OAE+P+NBttAx/o2U40MpjRT8gfmFT/k4wpd4xa83dl3ywAQzQ0HOjZTsv+wwBU12/Wx0N+deVzJQ9TTCEAhMCzdzdlTYcAqNlSk2YS9B1ikes5Xnq1jJb9h5GoK6eJCfkDMlcRkyqjqbArbtl89CDRyCBCCGKjPSLkDyT6pCT0/npJP4+NdIuBkW4R9Oee+9MCm+KWO3Y2y9QPHJvFJa0Wp+FnU9zSZnHJr06elVbFKZNtd+xslpm+Q7JBzhGwWpzSe+Qjzvh9NB58D6uSIOuuWgoCnM8u1n/LVi9knHH14RSq2hv5PxNgVZzyxbq1tHx2iMr1Ffx4+SKV6yuorK3Qy8KKSgfR3ttEe28DcP+P+wkHQvWhnov4Ibd9nNsmlvDtqe8oWTqXcHdP2u07A2q5fKIwn/5rd6EU9SjizZq2i1H3w/vb9mRs1bNBzuXLanFmzllBIkUEOFcv5uoP15ldOAvHyiV0XQjrpndGcnv7pk43bbBanPLJJYXMX1BC1/mwYYaSpXPVKKRgqiKmVEbTEKeiKPkg4PNNBdQ8M0Rrwzz6r91lRaWD1xx/4fMUUVr8EJ+n6NGRzBLTKwAY/O0BP539hZ2rhikuns3aVXZ8oRu0Nsyj60KYmqoFtLb18cmb87l37+8p58C0C/DtKqLxedhYu4TWtj6cy4sAOP1NBIDg+Sjv1C+jv3+Yy12Ze6PJYNr/PbMqTpm8ifWKk5woSbNOx0Y2YcKECRMmTPxf+AfAwxFP+aF8dwAAAABJRU5ErkJggg==",
+  "height": 48
+ },
+ "generation_started_at": "2026-10-28T21:24:14.145069+00:00",
+ "estimated_wait_seconds": 0,
+ "original_image_n_colors": 268,
+ "quantized_image_n_colors": 37
+}

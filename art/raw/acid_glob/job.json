@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/acid_glob.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3klEQVR4nGNgGHSAm6Hzv5I3038lb6b//Ezh/0nWvOq7+P/4Zwz/a42//ldmvkvQACZCCggZgmJAyLNyhq3vX6Io0L1cSbwLPn4IY9ihysOwQ5WH4dFmboYvHPqEHIgKVn0X/y/OzfOfgYGBQcmb6T8DAwND/DMGuJg4Nw+cjReEBpQSHfqM2DT+CtjBwLbBA0UhstjqDd2MGAaEBpT+/xWwgyhb2TZ4wA1hQZcUcLuMVZO3oDjDsvv2DP9PXSfsBa5p3QzfskoZ0NmhyxcxrI6MQ/ECVoAc0kSF+oACAGEHUzXMCAA3AAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

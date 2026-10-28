@@ -1,0 +1,10 @@
+{
+ "description": "a solid round glossy cherry red ball with a bright top-left highlight and a dark red outline, no hole, simple game sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail"
+}

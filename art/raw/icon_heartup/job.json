@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_heartup.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAD+0lEQVR4nO2WXUhbZxjHf+fk5KRJnPVrVrPNVaRK2lrbVdkI9aIyQcpEtuoYdLsZMhC8KFMou6pj3UVBYTBWb7bddIVCrZ1ImdLBLlKE0tEtm3WjXefm2lSL1q+YmHNyzruLmMzo0UQ3tov1gZAE3uf5/d7/++YDntT/vaR0C1raRkTi9aVe35bWg8Gl3tpNe5SNB/mF4nDz4fuVfy123BKx6NKGQ1vaRkRrxyH2PB0fOxrUV3qWM5JPGXS2Xxdj01FhmEbKY/iXiGhp8wurHqv1Y9NRcbZfF6nJbJJAS5tfVNfXcPBAjIo8lTe/SRX/4qgKHdWAXySSSOy8Ik+xWK/wxwENqAFGxNokLI/gnUaJngt2/NcF73a+gkOK90SF4HT3ILVHoLWjGojvqrXjEDe/28HwcJj3ulqwyxK6KbgfinC69xpgp+MEfHstgwQAei6Ar62eZ7OcuHaaFB+2oThsLAQjNHU2MtA9SO0RnYufvMjXv2r4r9upa6+n2O2g5CjY3SrzE4vwg5O69gbGI9DDkBVq/aegUq4VJyUHNXkqucUahVVO1OYBALS+JhaCEX4L2BnoHuTtVwWfX5Goa2+gZJeN4sM2HKXP8XrvEBePv8D8xCLTow4CM7NMGDs5L4X40fSnMGVLrZXKKpKScCI3UCoqyfY42V2l09TZaAl/7dxVLn96iua+m7jy1c3GpxcA0L88DpEbyfc2jwdXvsruKp0Tp5oocKrkl5lJ+JljXgDOHPPy1tDttAKWdyBqxJ8nAypFhFD7P8DudsSNCwuxux24gIL9UQBcu5wA9DXX8MblW3Rxha6v7vDZS+VMBjYXsEwgho3AzAK6KZgMqGhzOksPQgCYjx4hFxaiOGy48lWyPU5sHk+y93zDvlVwlZBhoptxTEwY61iW306Vcq1oNp+iQpljb24OdlmiqEpb2e2OJDAhA2AEg4SnlpMzEvCfHy9y28zmqry47gJumABAERrfx3IYm51LJgEQnlrGCAbjzRbwyYC6Dl6KZrn7DRMA8Eo+0Sm7uGuoHFyVRMH+KIot3uZ+JgsRixGeWiZmCKZH4/fk4VKUB+HlJPwjKcxPYsSStekPhFfyiZPCxTgq++QFqvKzAVKOBEiBjy+EeRgxuEtWWnhagbUSewhRmqVS4FSTEomj0U3B2OwcSyKeWgkaH6eBZyRgJeFWYskjAQgZJvfm5nkcc3EPlbIM4RkLrJUoQSNPCbM3N4f7oQgzUZ1Z083v2CjPIPZtCayWuIPK8xjkyktopsyM5GZKSFva+bYE1kqUozGOigcDBWPL8G0JrJUoQ6NXjhITxpbhf6u8kk+c42XhlXyWf7X+NYn/DP6kntQ/VX8Cw9P9mzgAFA8AAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

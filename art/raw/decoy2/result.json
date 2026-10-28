@@ -1,0 +1,27 @@
+{
+ "seed": 176723127,
+ "type": "message_done",
+ "usage": {
+  "seconds": 22.675785064697266
+ },
+ "progress": 0.6833333333333333,
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1
+ },
+ "generation_id": "b318b299-6d27-4268-9350-bf88f0a46751",
+ "queue_position": 0,
+ "billing_charged": true,
+ "generation_mode": "edit_image_pixen",
+ "quantized_image": {
+  "type": "base64",
+  "width": 64,
+  "base64": "iVBORw0KGgoAAAANSUhEUgAAAEAAAAA4CAYAAABNGP5yAAAEUElEQVR4nO2YUWhbVRjHf7m90jp0Pqz4Uh+kpqWiU7tCS9vRzmFH55gFrZUgWrGyh2G6DYNaKxRhY1YGo2vZQ/GlrmMWitrBpFCY3UhWUug2hdWYhILD6CwtE59amuT4cHNP7k3aapPbder5wSU555773ft93//7zuWCQqFQKBQKhUKhUCgUCoVCoVAoFAqFQqFQKP77uDbL8EiXR6x17rWTFzbtvhtFd9rgsK9NeHoH0hNCsy9wJblU9ICI/T7PobPj900gHGGkyyMSifnVj/iCbfzT9Jg41dG8pkr+dQz72tZ2fp1j2Ne2pUFwpASyZP9PyCyNLcLRHlC6o5y5xbDhnCtpmwf49uIgFfV7jElXEoSGp3eAobGAeKe1YVWbm90w8zY+0uURrcf7pJNzi+H0SaERvR4AYN++dsAIgqYbcS+vNpwOXbucDkyK6MwUADe//hLYvEDkrYCVlYT8P7cYloEwx+6qWttcRd3etDos1W86nIwb9sqrG8CVxL2rHgB/8cNi93uDjgchb4PDvjbx8jMtABS+3gSkSmEhaisDgOXzE7Z11lIJBSYBDCVklJCV8eM+DvR84VggHOkB0qGNrM1wUirDOm9tlKm55o9PcQmEU0Fw9kVIaJQWuxk97aW02G1veqztPJAeW4OQmovOTBFfWnb0UeVt8zXgaXxKDF/+Lj0hNK6f62PbEzuzGpt0zMysJQihwKRsjiaaXgCAu6o2fX3qOqdKIW8FLPz6B6HApG172/XGEbuMLdkNBSapqNtLePqqtKHpBehFhbLhZWNRRwr3/lcYWVoR+e4OjpSApuuEg37Ka3Znn8yQuhGopLHWqoR1Gt9qmLtFvuQdgIlIzNXZ7hVnhvpXlfa6uJKEg34gLfdMTPnbVAYy2J5rP4gLV27lrIK8ayiRmBenD73J/va30XRdZjY8fXV1RaQybTpurgmOjcolNS2t6yoiHPTL9wSA5opKJiKxnHzJ64W8qaxEANQdeImjHcfkw+FKkozH5d5uI+W8phdw984dwMhuTUsrPR+cyFoXDvqJzkzZDk0vkM4Hx0b5pLc7Zx9yDkBTWYkYD90gFJjk4uf9VJVtp7PdCxjbll5UKHtDdGbKlmFNL+DkR91GplchODYqHbWWRjKeIL60TJ/vCN7nqwFDLTUtrTIZGyWnAJjOdx9s5NynPQDMRP4EoLPdS3xpWe7bpgM7HiuRGQSI/XxX/jcZD92wqyDF7dlZFn+J0dnu5WjHMSK/rQDQfbARMEogV3LuAZkRt9ag9dyZoX4gHYjbs7NEb90E4Ktv/Iz/+H16e6zfQ3NFJe93vyvtfnZiIMt+5j1yrX/YxG+CJn8nzYHzZ3FX1dq6vDWj+Th3X/Lhi0+Kww2Pi8HDzeLVnY+KprISkUjMy9+3Xnha5FrPuXDPP8tUPvsc2x96UI4nIjGXmfHmikq0bY/c06w7/lU4F2wOR2Jb+CSK/x9/AXgHIdaG6vZzAAAAAElFTkSuQmCC",
+  "height": 56
+ },
+ "generation_started_at": "2026-10-28T20:49:22.193833+00:00",
+ "estimated_wait_seconds": 0,
+ "original_image_n_colors": 239,
+ "quantized_image_n_colors": 24
+}

@@ -1,0 +1,11 @@
+{
+ "description": "a floating slick of glowing toxic green sludge on water seen from above, a flat irregular puddle shape with bubbles, game decal",
+ "image_size": {
+  "width": 32,
+  "height": 32
+ },
+ "no_background": true,
+ "outline": "lineless",
+ "detail": "medium detail",
+ "view": "high top-down"
+}

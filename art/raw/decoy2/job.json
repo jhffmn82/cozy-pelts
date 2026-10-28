@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/decoy2.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "923838dc-416f-4e39-b093-33aa6e763511",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

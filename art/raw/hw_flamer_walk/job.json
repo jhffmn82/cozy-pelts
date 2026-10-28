@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-animation-v2",
+ "body": "art/bodies/hw_flamer_walk.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "191b92a9-01af-47cb-81fa-747db9604c9c",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}

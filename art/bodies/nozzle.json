@@ -1,0 +1,11 @@
+{
+ "description": "a big brass trumpet-shaped suction funnel nozzle pointing straight down, its wide round mouth at the bottom, riveted, side view, game sprite",
+ "image_size": {
+  "width": 32,
+  "height": 32
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

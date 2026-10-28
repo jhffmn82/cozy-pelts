@@ -1,0 +1,11 @@
+{
+ "description": "a flying cosmic horror seal god boss, Cthulhu-like: a fat white seal body whose face is a mass of writhing green tentacles, huge tattered bat-dragon wings spread wide, many glowing green eyes, a toxic green aura, front view, cute but horrifying, pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 128,
+  "height": 128
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_gundrone.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAD00lEQVR4nO1Wf2jUZRj/nNe1NDuusps4uYu5ZrXYHJ6M0cZNlC6pZmajuNj6QW5BsqaMwXaSgYwvjTtBEXI5i86knKHhsq5yHHLH6Yhh5Up305HT3Ziug+7itrX8fvpjft/uvN826J994ODe53ne5/28z/O8H77APP5nqFI5LVVlXG1ZgcLql1H+yxCMD/2Fe9a2Jt0z5ZZ45cbdGL1fi5Flufjs7XasM61Ci70z5TlxaHh+PaPXXU4bwwMnKZOccktsk6wx/jbJyut7NlAmGR44yS6nLcbf0dwQs47GgkTGzi9PxTCuGHaid6wAZ8+PJa3AUfUzOHt+DL1jBagYdsb4WuydqtsvlRF2bV7JEXs+p4NNrC3NEwksVWUxyaLXtaV5nA42ccSez12bVwr7trqahATibtPR3EDz+mdxc9lqqAP92Nf6FgCgvjKMyr2htL30NGr5oec+AMBWaT9Kcgbw0/QTOH3qq8xnwdOopUzy7++3i74OdjuoEEy0Z1tdDbucNv5+pInhIS+vug/T93OAMklPozZp+ZMy8ra/SADg+HfCtmZTK7Zs34f2V3Li4m2Hp3Fg91b8cFz6N3nuUwCACtsXSc/J+HkoM/Bxx0sAgMmHXxC+hb8dAwC83nIEAHDo3GjGee/KNPDQuVFVdCnvLXhS+ORbBDKdk4wIKKJypugR+E98jv5vL8NouJEymdGwBJaqx7ISrzikEpUZbzF99UX01ReJmOt7NgjbjLdYxKYTLwUJhUj/zjeqBKJCAFheOCnibr67RfxfU6eOictEvIA0Q1hbmseu3hqMf3QCn5zRwD/8p3gBV0YmRJzRsATA7EsozF+MV8tnkPtGNd5cdzTtQKZ0RouK47ViXFp7EOpAP8qefg6eRq2Iq9wbQp+r547FKw6WqjK2SVYOdjtiRCU85FVEheW1Tj7+Hpm3dCMBUBGvKbckej/Y7WCbZOXt0p1VBURgrKjQZNYDAK4GwhgfmgQAVSLxSleBrMuj1S7izupZDQhMBAEAn17+VZDINl9WGzQ6NYePO6FbbsTpg+8DAAavTSEwEYTD1X9HBDJWQo1OTZe0A/6LfuCiP86v1S5CKBTJ9vzEOpAIJSUPYodvBay7O7DqgT+waf/XwnfAdwGhUCT7aU9HQKNT02TW02TWU2OwC/uFS9ewUM6B+8cAAhNBTC6YRu8HO6nRqbP/6kkGk1nPcESmRqdmOCKzz9XDR83NNJn1vDXtyk+QnVMSCoFwRKbJrGefq2e2Ejp10kNS+f4TAaUKiLpxMgKGpYvnrg3KDMjk3PZ3HvOIwj+35ChhXa3m1wAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

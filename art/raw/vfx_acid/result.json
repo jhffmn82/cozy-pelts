@@ -1,0 +1,40 @@
+{
+ "fps": 14,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_acid",
+ "files": {
+  "vfx-acid.gif": "https://api.pixellab.ai/mcp/pixel-tools/3e449de1-a08c-4d2a-8935-8503a16efbde/vfx-acid.gif",
+  "vfx-acid.png": "https://api.pixellab.ai/mcp/pixel-tools/3e449de1-a08c-4d2a-8935-8503a16efbde/vfx-acid.png",
+  "vfx-acid.json": "https://api.pixellab.ai/mcp/pixel-tools/3e449de1-a08c-4d2a-8935-8503a16efbde/vfx-acid.json"
+ },
+ "parts": [
+  "water_splash"
+ ],
+ "anchor": {
+  "x": 18,
+  "y": 13,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 28,
+  "w": 35
+ },
+ "frames": 8,
+ "message": "A 32x32 green acid splash, 8 frames, one-shot: a small drop lands, the ground ripples out in a glowing ring, a crown of acid spatters up and then flies apart into droplets by the last frame. It's built on the water splash part, recoloured to a poison green. If you want it bigger or more splattery, try the splash size and height sliders.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=d5d54ee1-6ed9-479b-ae8d-ad244c5e3450",
+ "effect_id": "d5d54ee1-6ed9-479b-ae8d-ad244c5e3450",
+ "gif_exact": true,
+ "result_id": "3e449de1-a08c-4d2a-8935-8503a16efbde",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "9d83a0df-86da-453c-aa3b-d9c12f8bda6c",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

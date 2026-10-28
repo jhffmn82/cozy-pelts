@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/heart_full.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVR4nNWRvUoDURBGz1wTsN9oYfANrEUL3WQ7H0hBxFL8eyKbJIuICKbTOmC5ySZWJoh7P4uNiXFjBAvBr5y558wMF/59rFiJBAIT+Fbet7owwwHeN+x7gQt1W33EO2iMnjlOdgDjcjXGYXjEfrILalpR4ELdrT3gS7DZ6XK/vsLVMAVgbznAG9yMBqR4TvoRjDcpfb1gq9OjXQ1YGoMmoY8ZgAfMmNQ+CQwnaFcDZNPFZIY3cMphAGlKuQlu8FZmBp6XTICyokBZy7afNmiO0hnAj33xMCXJPBdpCIqtIMhfx3YwqNF47U8nCK5fUhLB2aAOxAu+cULVdB7ElJW3u3hOe2EBXhwLdVRBhxWEhfoZmLtJJHPRL+G/yjtgDHFKmHwk/QAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

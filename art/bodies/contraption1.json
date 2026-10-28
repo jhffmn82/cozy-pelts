@@ -1,0 +1,11 @@
+{
+ "description": "a zany whimsical storybook contraption machine: a tall wobbly crooked tower of mismatched riveted parts, candy-striped red and cream pipes curling in loops, a big brass funnel, accordion bellows, gears, a little spinning propeller on top, a crooked chimney, a coin chute at the bottom, side view, cozy pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 96,
+  "height": 96
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

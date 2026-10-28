@@ -1,0 +1,10 @@
+{
+ "description": "a glowing magenta and green energy orb bullet with a bright core, bullet hell projectile sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "lineless",
+ "detail": "medium detail"
+}

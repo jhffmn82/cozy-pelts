@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/a_kraken.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "12846167-f173-4b44-94a4-bdfa62e6171a",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

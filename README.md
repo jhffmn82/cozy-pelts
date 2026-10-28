@@ -9,15 +9,20 @@ up the road to the hut, where the trader pays in coins and asks no questions.
 Tap or click a seal to bonk it, tap the ice to walk, tap the sled (or `S`) to send it up to the hut, `F` tosses a
 fish, `Space` bonks the nearest seal.
 
+If things take a turn: tap the ice to move (or `WASD`), hold **FIRE** (or `Space`) to shoot the nearest thing, or
+hold a mouse button on the scene to aim yourself. `1` `2` `3` switch weapons.
+
 Coins buy, at prices that multiply with every level:
 
 - **Clubs:** driftwood, frozen salmon, whale bone, ship anchor, narwhal tusk. Each hits harder.
-- **Snow Boots** and a **Fish Bucket**: run faster, and draw more seals out of the sea.
+- **Fish Bucket**: more room on the ice, and the fish toss recharges 30% faster a level.
 - **Bigger Sled** and a **Husky Team**: carry more per trip and get there faster. From three dogs, the team sets
   off on its own when the sled is full.
 - **Seal Drones**, up to three: they lower a hook onto a lounging seal and fly it to a wood chipper by the hut.
-- **The Pelt Factory**: the last big purchase. A steel hose sucks seals straight out of the sea, and you can watch
-  each lump travel up it. Pump it harder from there.
+- **Seal Decoy**: a wooden seal that tells the others it's safe up here. More seals, and more golden ones.
+- **The Contraption**: the last big purchase, in three tiers. Its candy-striped tube loops once, then roams the
+  water slurping seals out of the sea and straight into coins. Each tier is a little worse for the sea. Nobody
+  knows what the third one does. Find out.
 
 Hurt seals scoot for the water, napping ones take sneak bonks, golden ones are rare and skittish, and the gull steals
 off the sled.

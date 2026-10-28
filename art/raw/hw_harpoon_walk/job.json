@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-animation-v2",
+ "body": "art/bodies/hw_harpoon_walk.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "07e978f1-004f-4585-a78e-c50b14691a6a",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}

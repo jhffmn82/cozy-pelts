@@ -70,3 +70,38 @@
 {"t": "2026-10-28 15:02:53", "tag": "messy", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[wincing] Ooh. Messy.", "bytes": 84672}
 {"t": "2026-10-28 15:02:53", "tag": "byebye_2", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[giggles] Up you go!", "bytes": 105840}
 {"t": "2026-10-28 15:02:58", "tag": "sold_1", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[warmly] The trader paid up. He never asks where they come from.", "bytes": 162288}
+{"t": "2026-10-28 16:24:48", "tag": "hurt_1", "path": "/sound-generation", "text": "a short pained cartoon grunt of a young woman getting hit", "bytes": 105840}
+{"t": "2026-10-28 16:24:48", "tag": "horn", "path": "/sound-generation", "text": "a deep ominous war horn blast announcing an attack", "bytes": 310464}
+{"t": "2026-10-28 16:24:48", "tag": "hurt_2", "path": "/sound-generation", "text": "a short pained cartoon grunt of a young woman getting hit", "bytes": 105840}
+{"t": "2026-10-28 16:24:48", "tag": "sting", "path": "/sound-generation", "text": "a huge dramatic horror orchestra sting with a deep boom and a shrieking choir, the end of the world", "bytes": 529200}
+{"t": "2026-10-28 16:24:49", "tag": "croak_2", "path": "/sound-generation", "text": "a wet gurgling monstrous frog croak", "bytes": 141120}
+{"t": "2026-10-28 16:24:49", "tag": "croak_1", "path": "/sound-generation", "text": "a wet gurgling monstrous frog croak", "bytes": 141120}
+{"t": "2026-10-28 16:24:49", "tag": "retch_1", "path": "/sound-generation", "text": "a cartoon monster retching and vomiting a wet splash", "bytes": 155232}
+{"t": "2026-10-28 16:24:49", "tag": "tongue", "path": "/sound-generation", "text": "a fast wet sticky tongue lash, a slurping thwip", "bytes": 84672}
+{"t": "2026-10-28 16:24:51", "tag": "retch_2", "path": "/sound-generation", "text": "a cartoon monster retching and vomiting a wet splash", "bytes": 155232}
+{"t": "2026-10-28 16:24:51", "tag": "hiss", "path": "/sound-generation", "text": "a swelling hiss of gas building pressure before a pop", "bytes": 119952}
+{"t": "2026-10-28 16:24:51", "tag": "gurgle", "path": "/sound-generation", "text": "a bubbling gurgle of a monster surfacing from water with a splash", "bytes": 176400}
+{"t": "2026-10-28 16:24:51", "tag": "pop", "path": "/sound-generation", "text": "a big wet balloon of slime bursting with a squelchy explosion", "bytes": 176400}
+{"t": "2026-10-28 16:24:53", "tag": "roar_1", "path": "/sound-generation", "text": "a huge monstrous seal roar, deep and bellowing with a wet gurgle", "bytes": 282240}
+{"t": "2026-10-28 16:26:19", "tag": "splat_3", "path": "/sound-generation", "text": "a wet squishy slime splat hit", "bytes": 84672}
+{"t": "2026-10-28 16:26:19", "tag": "splat_1", "path": "/sound-generation", "text": "a wet squishy slime splat hit", "bytes": 84672}
+{"t": "2026-10-28 16:26:19", "tag": "splat_2", "path": "/sound-generation", "text": "a wet squishy slime splat hit", "bytes": 84672}
+{"t": "2026-10-28 16:26:20", "tag": "roar_2", "path": "/sound-generation", "text": "a huge monstrous seal roar, deep and bellowing with a wet gurgle", "bytes": 282240}
+{"t": "2026-10-28 16:26:20", "tag": "harpoon_2", "path": "/sound-generation", "text": "a harpoon gun firing, a pneumatic thunk and a whizzing barbed spear", "bytes": 105840}
+{"t": "2026-10-28 16:26:21", "tag": "flame", "path": "/sound-generation", "text": "a short roaring whoosh of a flamethrower burst", "bytes": 176400}
+{"t": "2026-10-28 16:26:22", "tag": "gun_1", "path": "/sound-generation", "text": "a quick small machine gun burst of three shots, tinny", "bytes": 84672}
+{"t": "2026-10-28 16:26:22", "tag": "gun_2", "path": "/sound-generation", "text": "a quick small machine gun burst of three shots, tinny", "bytes": 84672}
+{"t": "2026-10-28 16:26:22", "tag": "harpoon_1", "path": "/sound-generation", "text": "a harpoon gun firing, a pneumatic thunk and a whizzing barbed spear", "bytes": 105840}
+{"t": "2026-10-28 16:26:23", "tag": "dead", "path": "/sound-generation", "text": "a sad slide whistle down and a cartoon thud, game over", "bytes": 282240}
+{"t": "2026-10-28 16:26:23", "tag": "win", "path": "/sound-generation", "text": "a triumphant heroic orchestral fanfare with timpani and cymbals, victory", "bytes": 613872}
+{"t": "2026-10-28 16:26:24", "tag": "cleared_1", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[relieved] Wave cleared.", "bytes": 88200}
+{"t": "2026-10-28 16:26:24", "tag": "apoc", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[booming, dramatic] You have started... the Sealocalypse.", "bytes": 116424}
+{"t": "2026-10-28 16:26:24", "tag": "factory", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[grandly] The contraption is running. It drinks the sea, and the sea is mostly seals.", "bytes": 225792}
+{"t": "2026-10-28 16:26:25", "tag": "mama", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[alarmed] Here comes Big Mama.", "bytes": 88200}
+{"t": "2026-10-28 16:26:25", "tag": "thulu", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[terrified whisper] Sealthulu has risen. Good luck.", "bytes": 130536}
+{"t": "2026-10-28 16:26:26", "tag": "won", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[awed] You won. The sea is quiet now. Too quiet.", "bytes": 201096}
+{"t": "2026-10-28 16:26:26", "tag": "ow_1", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[pained] Ow!", "bytes": 70560}
+{"t": "2026-10-28 16:26:26", "tag": "eaten", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[solemnly] You have been eaten. The seals send their regards.", "bytes": 169344}
+{"t": "2026-10-28 16:26:27", "tag": "ow_2", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[yelps] Ouch!", "bytes": 84672}
+{"t": "2026-10-28 16:26:27", "tag": "ow_3", "path": "/text-to-speech/cgSgspJ2msm6clMCkdW9", "text": "[gasps] Oh no!", "bytes": 70560}
+{"t": "2026-10-28 16:26:32", "tag": "cleared_2", "path": "/text-to-speech/JBFqnCBsd6RMkjVDRZzb", "text": "[dryly] That was the easy one.", "bytes": 84672}

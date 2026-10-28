@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_harpoon.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADYklEQVR4nO1WW2gUVxj+9jgWFvfCIuzCQFtcs5NtgtSauI6Xp3WjqIhsxdKHtJm0SGAfVqnkoZAWLH1pQbsllj5ECIG+umU24kN8Nd4SIaB5aRNhEnox0tLtFcnkfH1Y5pB0NzGTxD7lg4EzZ875v+/8tzPAJjbxP6CUSbCUSXDDDJatLOWzx5zt76F0bHY3tyxrvNIRI+lSDp+lQHh9IspWltKxWbayDIZ09ZStLCPxVJ1xTUTJsYucv3qS01aI1zK7qYmoPxFOIcxKR0wRC4TrThIM6Zzt71kiIhJPcf7qSQa2v8XLrYd5wcj5F7C/7QZJl1eqC9QShRU3y2ePaeaL6nspk6C2rYl9AxVq25p4LbPbfwhO7xlk7wR55vOF526Wjq0ETFshcuxi7cSJAk/vGfTvegAQCFMT0RU3m/kiSVeFYDH5BSPXMGQbBo/cnaidsGxlKYfPKnJv7oUJiMRTHO3NUzdMvvfhTWoiqhLOI/XWNKoSABDrEfD73PeB3Nf38EprBu0n0mr+y6kxSPwR8NY8eVrF5EfZ9VA1RimToFOo5YmZL9LMF5XbF68z80VKx27ohTV7oNIR47mvChgf34lzTXsxNzmCuckRSCmxty2F/ybuD5UbaDl4bK10SzFthSgdWyVbMKSTdCkQpjsxWJd4SSPN3gkyaaTru6UfYt0w+aiTiB07jpnPOnH7t3344rt76Gp+Gd92H4HrfAPt1U4AUDkAADNVn/H34rp4zmvHu3Jd1ER0SaYDtZ6xXM1Lx2bSSK+uHHXDVO705jyXq1p37FXXNumyu7ll9b1AN0w+dKkyOmmkGYmn+Osn+1Q/90TsynWtaJR0eflou79GVOmI8aFLnr80RK/Tnb80xGBIX3KbBUM6pWNztDdfZ7xsZUm6/PjgG8+9A+rK8PWUq8Zvv/8OHi1swd1bDzD/9184c38arqwGAOCfP38MvLTjXTx5WsVsf4/6QSFdDt/5GVu3bMeno1Nq/aoRiafYN1Bh30CFpEszX2TSSC97Eu/CWnxxrav3ayLK0vUxRf7agaNMGmmVE2s2vAzq3KOJKOcXfsH+Nz/A3OQIACDeegTmoTbcvfUA4/aQf7f6FdB+qku9eyIAYGbqpw0lbygAqMVVjYWAlBJCiA0n38QmAOBfZwkheLQ9F+8AAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

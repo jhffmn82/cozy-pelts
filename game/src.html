@@ -88,7 +88,7 @@ body {
 #sledBtn.full .fill { background: rgba(244, 198, 79, .8); }
 #sledBtn:disabled { cursor: default; color: var(--ink-soft); }
 #sledBtn:not(:disabled):hover { background: #fff3df; }
-#fishBtn:focus-visible, #sledBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#fishBtn:focus-visible, #sledBtn:focus-visible, #waveBtn:focus-visible, #fireBtn:focus-visible, #weaponBar button:focus-visible, #againBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 #toast {
   position: absolute; left: 50%; top: 11cqw; transform: translateX(-50%); pointer-events: none;
   padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); white-space: nowrap;
@@ -115,7 +115,7 @@ body {
 
 /* ---------- the ledger ---------- */
 #panel {
-  flex: none; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 12px 12px 10px;
+  flex: none; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 9px;
   background:
     repeating-linear-gradient(0deg, rgba(160, 110, 60, .06) 0 2px, transparent 2px 6px),
     linear-gradient(var(--parch), var(--parch-2));
@@ -125,7 +125,7 @@ body {
 #game:not(.stacked) #panel { margin: 9px; }
 #game.stacked #panel { margin-top: 12px; }
 #panel h1 {
-  margin: 0; text-align: center; font-weight: 700; font-size: 31px; line-height: 1; letter-spacing: .02em; color: #5a2b2e;
+  margin: 0; text-align: center; font-weight: 700; font-size: 28px; line-height: 1; letter-spacing: .02em; color: #5a2b2e;
   text-shadow: 0 3px 0 #e2b98b; text-wrap: balance;
 }
 .trees { height: 10px; margin: -2px 6px 0;
@@ -140,10 +140,10 @@ body {
 #peltBox img { width: 36px; height: 36px; image-rendering: pixelated; }
 #peltBox b { font-size: 30px; color: #2f3a6b; min-width: 3ch; }
 #sledLine { margin-top: -3px; text-align: center; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-#cards { display: grid; gap: 6px; }
+#cards { display: grid; gap: 5px; }
 #game.stacked #cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .card {
-  display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 9px; padding: 5px 7px; text-align: left;
+  display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 9px; padding: 4px 7px; text-align: left;
   font: inherit; color: var(--ink); cursor: pointer;
   background: #fbf1e0; border: 2px solid #d9b98f; border-radius: 9px; box-shadow: 0 2px 0 #c9a272;
 }
@@ -189,7 +189,65 @@ body {
   background: #fbf1e0; border: 2px solid #d9b98f; border-radius: 6px;
 }
 .tog[aria-pressed="false"] { color: var(--ink-soft); text-decoration: line-through; }
-@media (prefers-reduced-motion: reduce) { .card, #toast { transition: none; animation: none; } }
+/* ---------- the sealocalypse ---------- */
+body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%); }
+#game.apoc #stage { box-shadow: 0 0 0 3px #10170c, 0 0 0 6px #3d5a2a, 0 14px 40px rgba(10, 30, 6, .6); touch-action: none; }
+#game.apoc #view { touch-action: none; }   /* two thumbs at once, FIRE and a tap to move, must not read as a pinch */
+#game.apoc #panel {
+  background: repeating-linear-gradient(0deg, rgba(60, 255, 90, .05) 0 2px, transparent 2px 6px), linear-gradient(#2b3a22, #1d2817);
+  color: #d9f7c8; box-shadow: 0 0 0 3px #10170c, 0 0 0 9px #3d5a2a, 0 0 0 12px #10170c, 0 14px 40px rgba(10, 30, 6, .6);
+}
+#game.apoc #panel h1 { color: #b6ff7a; text-shadow: 0 3px 0 #2a4a14, 0 0 12px rgba(150, 255, 90, .6); }
+#game.apoc .card { background: #2f4226; border-color: #4f7a35; color: #e4ffd6; box-shadow: 0 2px 0 #1a2812; }
+#game.apoc .card:not(:disabled):hover { background: #3a5230; }
+#game.apoc .card .ds, #game.apoc .card .nm small, #game.apoc #sledLine, #game.apoc #foot { color: #a9d38f; }
+#game.apoc .card .ico { background: #1f3018; box-shadow: inset 0 0 0 2px #4f7a35; }
+#game.apoc #peltBox { border-color: #4f7a35; background: rgba(20, 40, 10, .5); color: #e4ffd6; }
+#game.apoc #peltBox b { color: #b6ff7a; }
+#game.apoc #factBtn { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .06) 0 6px, transparent 6px 12px), linear-gradient(#6a2bd1, #3a137a); border-color: #22084a; box-shadow: 0 3px 0 #22084a; text-shadow: 0 2px 0 #22084a; }
+#game.apoc .badge, #game.apoc #toast, #game.apoc .tog { background: #2f4226; color: #e4ffd6; border-color: #4f7a35; }
+#game.apoc .trees { background: repeating-linear-gradient(90deg, transparent 0 4px, #4f7a35 4px 12px, transparent 12px 16px, #7bd84a 16px 22px, transparent 22px 26px); }
+#heartsBadge { gap: .3cqw; padding: 0 1.4cqw; }
+#heartsBadge img { width: 4.4cqw; height: 4.4cqw; background: transparent; border-radius: 0; }
+#weaponBar { position: absolute; left: 2cqw; bottom: 2cqw; display: flex; gap: 1.2cqw; }
+#weaponBar button {
+  width: 9cqw; height: 9cqw; padding: 0; display: grid; place-items: center; cursor: pointer; position: relative;
+  background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw; box-shadow: 0 0 0 .4cqw #10170c;
+}
+#weaponBar button img { width: 6.6cqw; height: 6.6cqw; image-rendering: pixelated; }
+#weaponBar button span { position: absolute; right: .3cqw; bottom: 0; font: 700 2.4cqw var(--font); color: #b6ff7a; }
+#weaponBar button.on { border-color: var(--gold); box-shadow: 0 0 0 .4cqw #10170c, 0 0 1.6cqw rgba(244, 198, 79, .7); }
+#fireBtn {
+  position: absolute; right: 2.4cqw; bottom: 2.4cqw; width: 17cqw; height: 17cqw; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none;
+  font: 700 3.8cqw var(--font); letter-spacing: .08em; color: #fffaf3; text-shadow: 0 .4cqw 0 #5d1119;
+  background: radial-gradient(circle at 38% 32%, #ff8a5c, var(--berry) 55%, var(--berry-dark));
+  border: .8cqw solid #5d1119; box-shadow: 0 0 0 .5cqw #10170c, 0 .8cqw 0 #3a0a10;
+}
+#fireBtn.on { transform: translateY(.6cqw); box-shadow: 0 0 0 .5cqw #10170c, 0 .2cqw 0 #3a0a10, 0 0 3cqw rgba(255, 138, 92, .8); }
+#waveBtn {
+  position: absolute; right: 2cqw; top: 2cqw; height: 6.4cqw; padding: 0 2.4cqw; cursor: pointer;
+  font: 600 3.3cqw var(--font); color: #e4ffd6; background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw;
+  box-shadow: 0 0 0 .4cqw #10170c; font-variant-numeric: tabular-nums;
+}
+#waveBtn:disabled { cursor: default; color: #a9d38f; }
+#banner { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; font-weight: 700; color: #b6ff7a;
+  text-shadow: 0 .6cqw 0 #1d3a0a, 0 0 2cqw rgba(150, 255, 90, .9); opacity: 0; }
+#banner b { font-size: 4.6cqw; letter-spacing: .12em; color: #fffaf3; }
+#banner strong { font-size: 10.4cqw; letter-spacing: .03em; line-height: 1.05; }
+#banner.go { animation: banner 5.2s ease-out forwards; }
+@keyframes banner {
+  0% { opacity: 0; transform: scale(2.6) rotate(-5deg); } 7% { opacity: 1; transform: scale(1) rotate(-2deg); }
+  10% { transform: scale(1.08) rotate(1.5deg); } 13% { transform: scale(1) rotate(-1deg); } 80% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+#over { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(10, 24, 8, .55); }
+#over .card-in { background: #2f4226; color: #e4ffd6; border-color: #4f7a35; box-shadow: 0 0 0 .6cqw #10170c, 0 2cqw 4cqw rgba(0, 0, 0, .45); }
+#over h2 { margin: 0; font-size: 7cqw; color: #b6ff7a; text-shadow: 0 .5cqw 0 #1d3a0a; }
+#over p { margin: 0; }
+#overScore { color: #ffe08a; font-weight: 700; }
+#againBtn { justify-self: start; padding: 1.6cqw 5cqw; font: 700 4cqw var(--font); color: #fffaf3; cursor: pointer; background: #6a2bd1; border: .6cqw solid #22084a; border-radius: 1.4cqw; }
+@media (prefers-reduced-motion: reduce) { .card, #toast, #banner.go { transition: none; animation: none; } #banner.go { opacity: 1; } }
 </style>
 
 <main id="game">
@@ -198,11 +256,25 @@ body {
     <div class="hud">
       <div class="badge" id="dayBadge"><img id="dayIcon" alt=""><span id="dayText">DAY 1</span></div>
       <div class="badge" id="rateBadge"><img id="rateIcon" alt=""><span id="rateText">0 pelts / min</span></div>
+      <div class="badge" id="heartsBadge" hidden aria-label="Hearts"></div>
     </div>
     <div id="combo" hidden><div id="comboText">COMBO x1.0</div><div class="bar"><i id="comboBar"></i></div></div>
     <button id="fishBtn" type="button" title="Toss a fish to lure a seal rush (F)"><div class="cd" id="fishCd"></div><img id="fishIcon" alt=""><span id="fishText">Toss fish</span></button>
     <button id="sledBtn" type="button" title="Send the sled up to the hut to sell (S)"><div class="fill" id="sledFill"></div><img id="sledIcon" alt=""><span id="sledText">Send sled</span></button>
+    <div id="weaponBar" hidden></div>
+    <button id="waveBtn" type="button" hidden>Wave 1</button>
+    <button id="fireBtn" type="button" hidden aria-label="Fire at the nearest mutant (hold)">FIRE</button>
     <div id="toast" role="status" aria-live="polite"></div>
+    <div id="banner" hidden><b>YOU HAVE STARTED THE</b><strong>SEALOCALYPSE</strong></div>
+    <div id="over" hidden>
+      <div class="card-in">
+        <h2 id="overTitle">YOU WERE EATEN</h2>
+        <p id="overText"></p>
+        <p id="overScore"></p>
+        <p id="overBest"></p>
+        <button id="againBtn" type="button">New camp</button>
+      </div>
+    </div>
     <div id="intro">
       <div class="card-in">
         <h2>Cozy Pelts</h2>
@@ -274,11 +346,9 @@ const WINDOWS = [[198,58],[213,58],[226,59],[188,60],[205,61]];
 const ROAD = [[207,184],[232,172],[241,152],[238,132],[228,114],[217,98],[207,84],[199,73]];
 const YARD = [-1, .22];
 // the machines: where each stands, and the spots on its sprite that things go in and out of
-const FACTORY = { x: 42, y: 129 }, PIPE = [72, 102], CHUTE = [18, 113], STACK = [21, 45];
-const FACTORY_WINDOWS = [[14,95],[24,99],[42,76],[54,70]];
-const HOSE = [[72,102],[100,94],[98,128],[86,147]];    // a cubic from the factory's pipe down into the sea
 const CHIPPER = { x: 160, y: 118 }, HOPPER = [155, 75], SPOUT = [179, 99];   // drawn mirrored, spout to the right
 const DRONE_HOME = [[128, 60], [150, 52], [106, 54]];
+const DECOY = { x: 150, y: 161 };
 let walk, water, exitDist, exitsOf = {};
 
 function inPoly(x, y, p) {
@@ -371,27 +441,29 @@ function spotOn(fl, tries = 40) {
 // multiple of the one before.
 const CLUBS = [
   { name: 'Driftwood Club', icon: 'i_club', dmg: 1 },
-  { name: 'Frozen Salmon', icon: 'i_salmon', dmg: 2, ds: 'Hits for 2. Slapping a seal with a fish feels like justice.' },
+  { name: 'Frozen Salmon', icon: 'i_salmon', dmg: 2, ds: 'Hits for 2. Seal, meet fish.' },
   { name: 'Whale Bone', icon: 'i_bone', dmg: 3, ds: 'Hits for 3. Pups go down in one.' },
   { name: 'Ship Anchor', icon: 'i_anchor', dmg: 6, ds: 'Hits for 6. Even the big grey ones fold.' },
-  { name: 'Narwhal Tusk', icon: 'i_tusk', dmg: 8, ds: 'Hits for 8 and skewers the seal behind it too. Kebab night.' },
+  { name: 'Narwhal Tusk', icon: 'i_tusk', dmg: 8, ds: 'Hits for 8, and skewers the one behind. Kebab night.' },
 ];
 const UPG = [
   { id: 'club', base: 40, grow: 6, max: CLUBS.length - 1,
     name: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].name, icon: () => CLUBS[Math.min(S.lv.club + 1, CLUBS.length - 1)].icon,
-    ds: () => S.lv.club < CLUBS.length - 1 ? CLUBS[S.lv.club + 1].ds : 'Hits for 8 and skewers the seal behind it too.' },
-  { id: 'boots', base: 60, grow: 2.2, max: 6, name: () => 'Snow Boots', icon: () => 'i_boots',
-    ds: () => `Run and hop faster. Seals have flippers; you have boots.` },
+    ds: () => S.lv.club < CLUBS.length - 1 ? CLUBS[S.lv.club + 1].ds : 'Hits for 8, and skewers the one behind.' },
+  { id: 'decoy', base: 100, grow: 2.8, max: 8, name: () => 'Seal Decoy', icon: () => 'i_decoy',
+    tag: () => S.lv.decoy ? `Lv ${S.lv.decoy} · x${lure().toFixed(2)}` : 'Lv 0',
+    ds: () => `+30% seals and goldens. Says it's safe here. It isn't.` },
   { id: 'bucket', base: 120, grow: 2.4, max: 6, name: () => 'Fish Bucket', icon: () => 'i_bucket',
-    ds: () => S.lv.bucket < 6 ? `Lures ${maxSeals() + 1} seals onto the ice and refills the fish sooner. Free lunch, technically.` : `${maxSeals()} seals at once. That's all the ice will hold.` },
+    ds: () => S.lv.bucket < 6 ? `Room for ${maxSeals() + 1} seals, and a fish every ${fishCooldown(S.lv.bucket + 1)} s. Free lunch.`
+      : `${maxSeals()} seals, and a fish every ${fishCooldown()} s. The ice is full.` },
   { id: 'sled', base: 150, grow: 2.3, max: 10, name: () => 'Bigger Sled', icon: () => 'i_sled',
-    ds: () => S.lv.sled < 10 ? `Carries ${fmt(sledCap(S.lv.sled + 1))} pelts a trip. They stack neatly once they stop wriggling.` : `Carries ${fmt(sledCap())} pelts a trip.` },
+    ds: () => S.lv.sled < 10 ? `Carries ${fmt(sledCap(S.lv.sled + 1))} pelts. They stack once they stop wriggling.` : `Carries ${fmt(sledCap())} pelts a trip.` },
   { id: 'dogs', base: 500, grow: 5, max: 3, name: () => 'Husky Team', icon: () => 'i_husky',
-    ds: () => ['Another dog on the line: faster trips. Good dog. Asks no questions.',
-               'A third dog. Now the team sets off by itself when the sled is full.',
+    ds: () => ['Faster trips. Good dog. Asks no questions.',
+               'Three dogs set off on their own when the sled is full.',
                'A fourth dog. The fastest sled on the ice.', 'Four good dogs. The fastest sled on the ice.'][S.lv.dogs] },
   { id: 'drones', base: 800, grow: 4, max: 3, name: () => 'Seal Drone', icon: () => 'i_drone',
-    ds: () => ['Builds a wood chipper, and a drone to feed it lounging seals.',
+    ds: () => ['A wood chipper, and a drone to feed it seals.',
                'A second drone. The seals have started looking up.', 'A third drone. The sky is full of seals.',
                'Three drones, one chipper, no questions.'][S.lv.drones] },
 ];
@@ -401,22 +473,21 @@ const TYPES = {
   gold: { hp: 4, speed: 24, value: 150, pitch: 1.4, stay: [11, 15], skittish: true },
 };
 function fresh() {
-  return { v: 2, coins: 0, load: 0, heap: 0, total: 0, lv: { club: 0, boots: 0, bucket: 0, sled: 0, dogs: 0, drones: 0 }, factory: 0, pump: 0,
+  return { v: 2, coins: 0, load: 0, heap: 0, total: 0, lv: { club: 0, decoy: 0, bucket: 0, sled: 0, dogs: 0, drones: 0, harpoon: 0, flamer: 0, gundrone: 0, hearts: 0, parka: 0 },
+    factory: 0, apoc: 0, wave: 0, hp: 6, weapon: 'club', over: 0,
     day: 1, dayT: .04, fishCd: 8, gullCd: 70, tut: 0,
     stats: { bonks: 0, kos: 0, escaped: 0, golden: 0, best: 1, trips: 0, chipped: 0, slurped: 0 }, sound: { music: true, sfx: true, voice: true }, t: Date.now() };
 }
 let S = fresh();
 const dmg = () => CLUBS[S.lv.club].dmg;
 const SWING = .42;
-const runSpeed = () => 115 * (1 + .18 * S.lv.boots);
+const RUN = 140;
+const lure = () => Math.pow(1.3, S.lv.decoy);           // the decoy: seals and golden seals, 30% a level
 const maxSeals = () => Math.min(12, 3 + S.lv.bucket + S.lv.drones);   // the chipper's smell draws a few more
 const COMBO_WINDOW = 3;
-const fishCooldown = () => 45 - 4 * S.lv.bucket;
+const fishCooldown = (lv = S.lv.bucket) => Math.round(45 / Math.pow(1.3, lv));
 const sledCap = (lv = S.lv.sled) => Math.round(40 * Math.pow(1.75, lv) / 10) * 10;
 const sledSpeed = () => 16 * (1 + .6 * S.lv.dogs);
-const FACTORY_COST = 15000;
-const pumpCost = () => Math.ceil(5000 * Math.pow(2.2, S.pump));
-const PUMP_MAX = 10, pumpGap = () => Math.max(.3, 2.4 * Math.pow(.82, S.pump));   // seconds between seals up the hose
 const cost = u => Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id]));
 const comboMult = () => 1 + .1 * Math.min(Math.max(combo.n - 1, 0), 30);
 
@@ -425,7 +496,7 @@ let combo = { n: 0, t: 0 }, income = [], shake = 0, now = 0, rush = 0, sid = 0;
 const hunter = { x: 112, y: 172, dir: 1, path: null, target: null, pending: 0, swing: -1, struck: false, cheer: 0, at: 0, z: 0 };
 const gull = { state: 'perch', x: PERCH.x, y: PERCH.y, t: 0, dir: -1, at: 0, carry: 0, tx: 0, ty: 0 };
 const sled = { st: 'home', d: 0, t: 0, at: 0, cargo: 0, warned: false };
-const drones = [], chipper = { grind: 0, queue: [], t: 0 }, factory = { t: 0, lumps: [], shake: 0, slurpT: 0, clankT: 0 };
+const drones = [], chipper = { grind: 0, queue: [], t: 0 };
 
 // ---------------------------------------------------------------- drawing setup
 const world = document.createElement('canvas'); world.width = W; world.height = H;
@@ -435,7 +506,7 @@ const sg = stains.getContext('2d');
 const tmp = document.createElement('canvas'); tmp.width = 80; tmp.height = 80;
 const tg = tmp.getContext('2d');
 const view = $('#view'); const v = view.getContext('2d');
-let atlas, atlasGrey, atlasGold, bg, scale = 3;
+let atlas, atlasGrey, atlasGold, atlasToxic, bg, scale = 3;
 
 function tinted(color, glow) {
   const c = document.createElement('canvas'); c.width = atlas.width; c.height = atlas.height;
@@ -681,9 +752,10 @@ const Snd = {
   },
   music() {
     const c = this.c; if (!c) return;
-    const beatLen = night() > .5 ? .62 : .48;
-    const scale = [523, 587, 659, 784, 880, 1046, 1175, 1318];
-    const chords = [[262, 330, 392], [220, 262, 330], [175, 220, 262], [196, 247, 294]];
+    const ap = !!S.apoc;                  // after the sea turns it is the same music box, minor, faster and grubby
+    const beatLen = ap ? (S.wave === LAST_WAVE ? .2 : .26) : night() > .5 ? .62 : .48;
+    const scale = ap ? [262, 311, 349, 392, 415, 523, 622, 698] : [523, 587, 659, 784, 880, 1046, 1175, 1318];
+    const chords = ap ? [[131, 156, 196], [104, 131, 156], [117, 139, 175], [98, 123, 147]] : [[262, 330, 392], [220, 262, 330], [175, 220, 262], [196, 247, 294]];
     while (this.nextBeat < c.currentTime + .4) {
       const t = this.nextBeat, b = this.beat++;
       if (b % 8 === 0) chords[(b / 8) % 4 | 0].forEach(f => {
@@ -693,8 +765,8 @@ const Snd = {
       if (Math.random() < (b % 2 ? .35 : .7)) {
         this.melody = clamp((this.melody ?? 3) + pick([-2, -1, -1, 1, 1, 2, 0]), 0, scale.length - 1);
         const f = scale[this.melody];
-        for (const [k, gn] of [[1, .07], [2, .025]]) {
-          const o = c.createOscillator(); o.type = k === 1 ? 'triangle' : 'sine'; o.frequency.value = f * k;
+        for (const [k, gn] of [[1, ap ? .05 : .07], [2, .025]]) {
+          const o = c.createOscillator(); o.type = k === 1 ? (ap ? 'square' : 'triangle') : 'sine'; o.frequency.value = f * k;
           this.env(o, t, .005, gn, .02, 1.1).connect(this.mus); o.start(t); o.stop(t + 1.2);
         }
       }
@@ -743,7 +815,7 @@ function earn(n, x, y) {
 // ---------------------------------------------------------------- seals
 function rollType(rushy) {
   const r = Math.random();
-  if (r < (rushy ? .1 : .03)) return 'gold';
+  if (r < Math.min(.5, (rushy ? .1 : .03) * lure())) return 'gold';
   if (r < .2 + .03 * S.lv.bucket) return 'grey';
   return 'pup';
 }
@@ -755,7 +827,7 @@ function pickFloe() {
 }
 function spawnSeal(rushy) {
   const fl = pickFloe(); const fi = FLOES.indexOf(fl) + 1;
-  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && (Math.hypot(s.lx - x, s.ly - y) < 30 || Math.hypot(s.x - x, (s.y - y) * 1.5) < 34));
+  const crowded = (x, y) => byDecoy(x, y) || seals.some(s => s.state !== 'gone' && (Math.hypot(s.lx - x, s.ly - y) < 30 || Math.hypot(s.x - x, (s.y - y) * 1.5) < 34));
   let ex = null;
   for (let i = 0; i < 12; i++) {
     const e = pick(exitsOf[fl.id]);
@@ -771,9 +843,10 @@ function spawnSeal(rushy) {
     dir: ex.lx < sx ? -1 : 1, state: 'surface', t: 0, at: Math.random() * 5, dur: 0, next: rnd(1.5, 3),
     stay: rnd(T.stay[0], T.stay[1]), marks: [], flash: 0, alpha: 0, hurtOnce: false, tx: 0, ty: 0 };
   seals.push(s);
-  if (type === 'gold') { toast('A golden seal surfaced!'); Snd.chime(); Snd.voice('goldseal', 2); }
+  if (type === 'gold' && now - goldSaid > 20) { goldSaid = now; toast('A golden seal surfaced!'); Snd.chime(); Snd.voice('goldseal', 2); }
   return true;
 }
+const byDecoy = (x, y) => S.lv.decoy > 0 && Math.hypot(DECOY.x - x, (DECOY.y - y) * 1.5) < 32;
 function setState(s, st, extra) { s.state = st; s.t = 0; if (extra) Object.assign(s, extra); }
 const ON_ICE = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1, hurt: 1, flee: 1, leave: 1, startle: 1 };
 const LOUNGING = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1 };   // what a drone can pick off
@@ -788,7 +861,7 @@ function deepSpot(s) {                    // somewhere comfortably inland, so a 
   for (let i = 0; i < 60; i++) {
     const x = rnd(Math.min(...xs), Math.max(...xs)), y = rnd(Math.min(...ys), Math.max(...ys));
     if (!deep(x, y, fi)) continue;
-    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, (o.y - y) * 1.5) < 36)) continue;
+    if (byDecoy(x, y) || seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, (o.y - y) * 1.5) < 36)) continue;
     const d = Math.hypot(x - s.x, y - s.y);
     if (d < bd && d < 60) { bd = d; best = [x, y]; }
   }
@@ -800,7 +873,7 @@ function chooseBehaviour(s) {
   if (r < 35) {
     for (let i = 0; i < 8; i++) {
       const tx = s.x + rnd(-30, 30), ty = s.y + rnd(-8, 8);
-      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, (o.y - ty) * 1.5) < 34)) {
+      if (deep(tx, ty, s.fi) && !byDecoy(tx, ty) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, (o.y - ty) * 1.5) < 34)) {
         setState(s, 'scoot', { tx, ty }); return;
       }
     }
@@ -1019,6 +1092,7 @@ function standPoint(s) {
   }
   return nearestIce(s.x - 27, s.y);
 }
+const clubbable = t => t.kind ? !t.dead && !(t.kind === 'kraken' && t.st === 'under') && (t.z || 0) < 12 : t.state !== 'gone' && t.state !== 'ko' && ON_ICE[t.state];
 function inReach(s) {
   const dx = s.x - hunter.x, dy = s.y - hunter.y;
   return Math.abs(dy) <= 7 && Math.abs(dx) >= 12 && Math.abs(dx) <= 38 && hunter.z === 0;
@@ -1026,17 +1100,18 @@ function inReach(s) {
 function updateHunter(dt) {
   hunter.at += dt; hunter.cheer = Math.max(0, hunter.cheer - dt);
   const tgt = hunter.target;
-  if (tgt && (tgt.state === 'gone' || tgt.state === 'ko' || !ON_ICE[tgt.state])) { hunter.target = null; hunter.pending = 0; }
+  if (tgt && !clubbable(tgt)) { hunter.target = null; hunter.pending = 0; }
   if (hunter.swing >= 0) {
     hunter.swing += dt;
     const T = SWING;
     if (!hunter.struck && hunter.swing >= T * .3) {
       hunter.struck = true;
       const s = hunter.target;
-      if (s && ON_ICE[s.state] && inReach(s)) {
-        hitSeal(s);
+      if (s && clubbable(s) && inReach(s)) {
+        if (s.kind) { hitMutant(s, dmg() * 1.5); Snd.bonk(); bleed(s.x, s.y - 10, 6); }
+        else hitSeal(s);
         if (S.lv.club >= CLUBS.length - 1)   // the tusk goes through the one behind it as well
-          for (const o of seals) if (o !== s && ON_ICE[o.state] && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) hitSeal(o);
+          for (const o of (s.kind ? mutants : seals)) if (o !== s && clubbable(o) && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) o.kind ? hitMutant(o, dmg() * 1.5) : hitSeal(o);
       } else Snd.whiff();
       hunter.pending = Math.max(0, hunter.pending - 1);
     }
@@ -1052,7 +1127,7 @@ function updateHunter(dt) {
   const p = hunter.path;
   if (p) {
     const inGap = p.gaps.find(([a, b]) => p.s >= a && p.s <= b);
-    p.s = Math.min(p.len, p.s + runSpeed() * (inGap ? 1.25 : 1) * dt);
+    p.s = Math.min(p.len, p.s + RUN * (inGap ? 1.25 : 1) * dt);
     const k = p.len ? p.s / p.len : 1;
     hunter.x = lerp(p.ax, p.tx, k); hunter.y = lerp(p.ay, p.ty, k);
     if (Math.abs(p.tx - p.ax) > 1) hunter.dir = p.tx > p.ax ? 1 : -1;
@@ -1061,20 +1136,30 @@ function updateHunter(dt) {
     if (p.s >= p.len) { hunter.path = null; hunter.z = 0; if (p.gaps.length) { addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); } }
   }
 }
+const CLUB_ART = ['', '_salmon', '_bone', '_anchor', '_tusk'];
 function hunterFrame() {
+  const gun = S.apoc && S.weapon !== 'club' && A['hunter_idle_' + S.weapon];   // holding the harpoon gun or the flamethrower
+  const w = gun ? '_' + S.weapon : CLUB_ART[S.lv.club] || '', has = n => A[n + w] ? n + w : n;
+  if (gun) {
+    if (hunter.z > 0) return ['hunter_walk' + w, 3];
+    if (hunter.path || hunter.walking > 0) return ['hunter_walk' + w, 1 + Math.floor(hunter.at * 15) % 8];
+    return ['hunter_idle' + w, hunter.recoil > 0 || apoc.hold ? 0 : Math.floor(hunter.at * 6) % 9];
+  }
   if (hunter.swing >= 0) {
     const p = hunter.swing / SWING;
-    return ['hunter_swing', p < .3 ? 0 : p < .42 ? 1 : p < .56 ? 2 : p < .7 ? 3 : p < .85 ? 7 : 8];
+    return [has('hunter_swing'), p < .3 ? 0 : p < .42 ? 1 : p < .56 ? 2 : p < .7 ? 3 : p < .85 ? 7 : 8];
   }
-  if (hunter.z > 0) return ['hunter_walk', 3];
-  if (hunter.path) return ['hunter_walk', 1 + Math.floor(hunter.at * 15) % 8];
-  if (hunter.cheer > 0) return ['hunter_cheer', Math.min(8, Math.floor((.75 - hunter.cheer) * 12))];
-  return ['hunter_idle', Math.floor(hunter.at * 6) % 9];
+  if (hunter.recoil > 0) return [has('hunter_swing'), 2];
+  if (hunter.z > 0) return [has('hunter_walk'), 3];
+  if (hunter.path || hunter.walking > 0) return [has('hunter_walk'), 1 + Math.floor(hunter.at * 15) % 8];
+  if (hunter.cheer > 0 && !w) return ['hunter_cheer', Math.min(8, Math.floor((.75 - hunter.cheer) * 12))];
+  return [has('hunter_idle'), Math.floor(hunter.at * 6) % 9];
 }
 function drawHunter() {
+  if (S.apoc && apoc.inv > 0 && Math.floor(now * 18) % 2) return;   // blinking after a hit
   const [name, fi] = hunterFrame();
   if (hunter.z > 0) { g.fillStyle = 'rgba(40,50,110,.28)'; g.fillRect(Math.round(hunter.x) - 8, Math.round(hunter.y) - 1, 16, 2); }
-  spr(g, name, fi, hunter.x, hunter.y - hunter.z, hunter.dir < 0);
+  spr(g, name, fi, hunter.x - (hunter.recoil > 0 ? hunter.dir * 2 : 0), hunter.y - hunter.z, hunter.dir < 0);   // a kick back on each shot
 }
 
 // ---------------------------------------------------------------- gull, husky, sled
@@ -1247,11 +1332,11 @@ const HANG = 34, HOOK_TO_FEET = 34;        // cable paid out to reach a lounging
 function syncMachines() {
   FLOES[0].seals = S.factory ? 0 : 3;      // the west floe belongs to the factory once it stands
   FLOES[3].seals = S.lv.drones ? 0 : 2;    // and the shelf to the chipper
-  while (drones.length < S.lv.drones) {
+  while (!S.apoc && drones.length < S.lv.drones) {
     const i = drones.length, h = DRONE_HOME[i];
     drones.push({ i, x: h[0] + 40, y: h[1] - 60, st: 'home', s: null, cable: 4, t: 0, at: Math.random() * 6, dir: -1 });
   }
-  drones.length = S.lv.drones;
+  if (!S.apoc) drones.length = S.lv.drones;
   for (const s of seals) if (LOUNGING[s.state] && !s.floe.seals) s.stay = Math.min(s.stay, rnd(0, 2));
 }
 function pickSealFor(d) {
@@ -1267,6 +1352,12 @@ function pickSealFor(d) {
 function letGo(d) { if (d.s && d.s.claim === d) d.s.claim = null; d.s = null; d.st = 'home'; d.t = 0; }
 function updateDrone(d, dt) {
   d.t += dt; d.at += dt;
+  if (d.st === 'flee') {                   // off over the mountains, and good luck to you
+    if (d.s && d.s.state === 'hooked') d.s.state = 'gone';
+    d.s = null; d.y -= 60 * dt; d.x += (d.i - 1) * 30 * dt; d.cable = Math.max(4, d.cable - 40 * dt);
+    if (d.y < -40) d.gone = true;
+    return;
+  }
   const s = d.s, bob = Math.sin(d.at * 2.3 + d.i * 2) * 1.5;
   switch (d.st) {
     case 'home': {
@@ -1347,54 +1438,590 @@ function drawChipper() {
   spr(g, 'chipper', 0, CHIPPER.x + j, CHIPPER.y + (chipper.grind > 0 && Math.random() < .5 ? -1 : 0), true);
 }
 
-// ---------------------------------------------------------------- the factory and its hose
-let HOSE_PTS = [];
-function buildHose() {                    // one point a pixel along the cubic, from the factory's pipe to the sea
-  const [a, b, c, d] = HOSE, raw = [];
-  for (let i = 0; i <= 400; i++) {
-    const t = i / 400, u = 1 - t;
-    raw.push([u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0],
-              u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]);
-  }
-  HOSE_PTS = [raw[0]]; let acc = 0;
-  for (let i = 1; i < raw.length; i++) {
-    acc += Math.hypot(raw[i][0] - raw[i - 1][0], raw[i][1] - raw[i - 1][1]);
-    if (acc >= 1) { HOSE_PTS.push(raw[i]); acc = 0; }
-  }
-}
-function updateFactory(dt) {
-  if (!S.factory) return;
-  factory.t += dt; factory.shake = Math.max(0, factory.shake - dt);
-  const L = HOSE_PTS.length, sea = HOSE_PTS[L - 1];
-  if (factory.t >= pumpGap()) {            // another one comes up out of the sea
-    factory.t = 0;
-    factory.lumps.push({ p: L - 1, type: rollType(false) });
-    addFx('fx_splash', sea[0], sea[1] + 3, { fps: 16 });
-    if (now - factory.slurpT > .8) { factory.slurpT = now; Snd.play('slurp', { vol: .6, rate: rnd(.9, 1.1) }); }
-  }
-  if (Math.random() < dt * 6) sparkles.push({ x: sea[0] + rnd(-7, 7), y: sea[1] + rnd(0, 3), t: 0, life: .5, c: '#ffffff', ring: true });
-  for (const l of factory.lumps) {
-    l.p -= 72 * dt;
-    if (l.p <= 0 && !l.done) {
-      l.done = true; factory.shake = .14; S.stats.slurped++;
-      if (now - factory.clankT > .7) { factory.clankT = now; Snd.play('clank', { vol: .4 }); }
-      addFx('fx_poof', STACK[0], STACK[1], { fps: 8 });
-      bundles.push({ x: CHUTE[0], y: CHUTE[1], sx: CHUTE[0], sy: CHUTE[1], t: 0, dur: 1.5, value: TYPES[l.type].value, gold: l.type === 'gold', label: l.type === 'gold' ? 'GOLDEN +' : '+' });
-      if (Math.random() < .6) for (let i = 0; i < 5; i++) drops.push({ x: CHUTE[0], y: CHUTE[1] + 12, z: 10, vx: rnd(-30, 10), vy: rnd(-4, 6), vz: rnd(5, 30), c: pick(REDS), s: 1, any: true });
+// ---------------------------------------------------------------- the contraption
+// A storybook machine on the west floe. Its striped tube loops once, then the loose end swings about the water after
+// seals as they surface; each one it slurps rides up the tube as a lump and comes out of the chute as coins. Every
+// tier pollutes the sea a little more, and the third poisons it.
+const CONTRAPTION = { x: 42, y: 129 }, CHUTE = [63, 119], STACK = [52, 44];
+const TIER_COST = [15000, 40000, 100000];
+const POLLUTE = [0, .22, .5, 1];
+const tierGap = () => [2, 2, 1.1, .6][S.factory];          // seconds between seals surfacing for it
+const TUBE_FIXED = [[77,50],[85,40],[96,37],[106,40],[113,41],[121,44],[124,52],[121,60],[113,63],[105,60],[102,52],[105,44],[113,41],[121,40],[129,46]];
+const tube = { nx: 104, ny: 121, tx: 104, ty: 121, st: 'roam', t: 0, prey: null, lumps: [], shake: 0, slurpT: -9, coinT: -9, acc: 0, path: [] };
+let TUBE_HEAD = [], REACH = [], SEA_PTS = [], slicks = [], preys = [], coinFx = [], bgTier = [];
+function catmull(pts, n) {
+  const out = [], P = [pts[0], ...pts, pts[pts.length - 1]];
+  for (let i = 1; i < P.length - 2; i++) {
+    const p0 = P[i - 1], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2];
+    for (let j = 0; j < n; j++) {
+      const t = j / n, t2 = t * t, t3 = t2 * t;
+      out.push([0, 1].map(k => .5 * (2 * p1[k] + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t2 + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t3)));
     }
   }
-  factory.lumps = factory.lumps.filter(l => !l.done);
+  out.push(pts[pts.length - 1]); return out;
 }
-function drawFactory() {
-  const j = factory.shake > 0 ? Math.round(rnd(-1, 1)) : 0;
-  spr(g, 'factory', 0, FACTORY.x + j, FACTORY.y, false);
-  // the hose, a ring a few pixels apart; it swells into a metal lump wherever a seal is on its way up
-  const P = HOSE_PTS;
-  for (let i = 0; i < P.length; i += 3) {
-    let k = 1.1;
-    for (const l of factory.lumps) { const d = Math.abs(i - l.p); if (d < 11) k = Math.max(k, 1.1 + .85 * Math.cos(d / 11 * Math.PI / 2)); }
-    sprK(g, 'hose', 0, P[i][0], P[i][1], false, k);
+function evenly(raw) {                    // the same curve, one point a pixel apart
+  const out = [raw[0]]; let acc = 0;
+  for (let i = 1; i < raw.length; i++) {
+    acc += Math.hypot(raw[i][0] - raw[i - 1][0], raw[i][1] - raw[i - 1][1]);
+    if (acc >= 1) { out.push(raw[i]); acc = 0; }
   }
+  return out;
+}
+function buildTube(px) {
+  TUBE_HEAD = evenly(catmull(TUBE_FIXED, 16));
+  const [ax, ay] = TUBE_FIXED[TUBE_FIXED.length - 1];
+  for (let y = 102; y < 141; y += 3) for (let x = 64; x < 196; x += 3)   // the near water only: up by the horizon it would hang in the sky
+    if (isWater(x, y) && isWater(x - 6, y) && isWater(x + 6, y) && isWater(x, y + 3) && Math.hypot(x - ax, (y - ay) * .8) < 110) REACH.push([x, y]);
+  for (let y = 96; y < H - 4; y += 4) for (let x = 4; x < W - 4; x += 4)
+    if (isWater(x, y) && isWater(x - 6, y) && isWater(x + 6, y)) SEA_PTS.push([x, y]);
+  // the background at each tier: the sea a little greener every time, and by the last the snow is grubby too
+  for (let t = 0; t < 4; t++) {
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'), im = x.createImageData(W, H), d = im.data, a = POLLUTE[t];
+    d.set(px);
+    if (a) for (let y = 0; y < H; y++) for (let xx = 0; xx < W; xx++) {
+      const i = (y * W + xx) * 4, r = d[i], gg = d[i + 1], b = d[i + 2];
+      const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b);
+      const sea = gg > r + 30 && (y >= 66 ? water[y * W + xx] === 1 : y > 34 && b > r + 35 && b > 95 && (mx - mn) / mx > .3);   // teal, not the blue of snow in shadow
+      const k = sea ? a : t === 3 ? .14 : 0; if (!k) continue;
+      const L = .3 * r + .59 * gg + .11 * b;
+      d[i] = lerp(r, L * .42 + 12, k); d[i + 1] = lerp(gg, Math.min(255, L * 1.08 + 46), k); d[i + 2] = lerp(b, L * .32, k);
+    }
+    x.putImageData(im, 0, 0); bgTier.push(c);
+  }
+}
+function pollute() {                      // sludge, dead fish and barrels for the tier the machine is at
+  const n = [0, 4, 10, 24][S.factory];
+  slicks = [];
+  for (let i = 0; i < n && SEA_PTS.length; i++) {
+    const [x, y] = pick(SEA_PTS), r = Math.random();
+    slicks.push({ x, y, ph: Math.random() * 6, kind: S.factory >= 2 && r < .18 ? 'deadfish' : S.factory >= 2 && r < .27 ? 'barrel' : 'sludge' });
+  }
+}
+function tubePath() {                     // the fixed loop, then a loose length that hangs from it into the nozzle
+  const [ax, ay] = TUBE_FIXED[TUBE_FIXED.length - 1], nx = tube.nx, ny = tube.ny - 25, sway = Math.sin(now * 1.4) * 3;
+  const c1 = [ax + 16, ay + 6], c2 = [nx + sway, ny - 30], raw = [[ax, ay]];
+  for (let i = 1; i <= 60; i++) {
+    const t = i / 60, u = 1 - t;
+    raw.push([u * u * u * ax + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * nx,
+              u * u * u * ay + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * ny]);
+  }
+  return TUBE_HEAD.concat(evenly(raw).slice(1));
+}
+function moveNozzle(tx, ty, sp, dt) {
+  const dx = tx - tube.nx, dy = ty - tube.ny, d = Math.hypot(dx, dy);
+  if (d <= sp * dt) { tube.nx = tx; tube.ny = ty; return true; }
+  tube.nx += dx / d * sp * dt; tube.ny += dy / d * sp * dt; return false;
+}
+function updateContraption(dt) {
+  if (!S.factory || !REACH.length) return;
+  tube.t += dt; tube.shake = Math.max(0, tube.shake - dt);
+  if (preys.length < 2 + S.factory && Math.random() < dt / (tierGap() * .8)) {
+    const [x, y] = pick(REACH);
+    preys.push({ x, y, t: 0, at: Math.random() * 3, st: 'up', type: S.apoc ? 'mut' : rollType(false) });
+  }
+  for (const p of preys) { p.t += dt; p.at += dt; if (p.st === 'up' && p.t > 10) p.st = 'gone'; }
+  switch (tube.st) {
+    case 'roam': {
+      const p = preys.filter(p => p.st === 'up' && p.t > .5).sort((a, b) => Math.hypot(a.x - tube.nx, a.y - tube.ny) - Math.hypot(b.x - tube.nx, b.y - tube.ny))[0];
+      if (p) { tube.prey = p; p.st = 'chased'; tube.st = 'chase'; break; }
+      if (Math.hypot(tube.tx - tube.nx, tube.ty - tube.ny) < 2) [tube.tx, tube.ty] = pick(REACH);
+      moveNozzle(tube.tx, tube.ty, 18, dt);
+      break;
+    }
+    case 'chase':
+      if (moveNozzle(tube.prey.x, tube.prey.y, 60 + 30 * S.factory, dt)) {
+        tube.st = 'suck'; tube.t = 0; tube.prey.st = 'sucked'; tube.prey.t = 0;
+        addFx('fx_splash', tube.nx, tube.ny + 2, { fps: 18 });
+        if (now - tube.slurpT > .7) { tube.slurpT = now; Snd.play('slurp', { vol: .55, rate: rnd(.9, 1.1) }); }
+      }
+      break;
+    case 'suck':
+      if (tube.t > .45) {
+        tube.lumps.push({ d: 0, type: tube.prey.type }); tube.prey.st = 'gone'; tube.prey = null;
+        tube.st = 'roam'; [tube.tx, tube.ty] = pick(REACH);
+      }
+      break;
+  }
+  preys = preys.filter(p => p.st !== 'gone');
+  tube.path = tubePath();
+  const L = tube.path.length;
+  for (const l of tube.lumps) { l.d += 85 * dt; if (l.d >= L - 1 && !l.done) { l.done = true; slurped(l.type); } }
+  tube.lumps = tube.lumps.filter(l => !l.done);
+  for (const c of coinFx) { c.t += dt; c.x += c.vx * dt; c.vz -= 220 * dt; c.z = Math.max(0, c.z + c.vz * dt); }
+  coinFx = coinFx.filter(c => c.t < .9);
+  if (tube.acc && now - tube.coinT > .6) {
+    tube.coinT = now; say('+' + fmt(tube.acc) + ' coins', CHUTE[0], CHUTE[1] - 10, { color: '#ffe08a', size: 6, life: 1.2, rise: 12 });
+    Snd.play('coins', { vol: .4, rate: rnd(.95, 1.1) }); tube.acc = 0;
+  }
+}
+function slurped(type) {                  // out of the chute it comes, as money
+  const v = type === 'mut' ? 30 + 5 * S.wave : TYPES[type].value;
+  S.coins += v; S.total += v; income.push([now, v]); tube.acc += v; dirtyPanel = true;
+  tube.shake = .14; S.stats.slurped++;
+  for (let i = 0; i < 2; i++) coinFx.push({ x: CHUTE[0], y: CHUTE[1] + 2, z: 4, vx: rnd(4, 26), vz: rnd(40, 70), t: 0 });
+  addFx('fx_poof', STACK[0] + rnd(-3, 3), STACK[1], { fps: 8 });
+  if (Math.random() < .5) for (let i = 0; i < 4; i++)
+    drops.push({ x: CHUTE[0], y: CHUTE[1] + 6, z: 6, vx: rnd(-10, 30), vy: rnd(-4, 6), vz: rnd(5, 30), c: S.factory >= 2 && Math.random() < .5 ? '#7bd84a' : pick(REDS), s: 1, any: true });
+}
+function drawSlicks() {
+  for (const s of slicks) {
+    const b = Math.sin(now * 1.1 + s.ph);
+    g.globalAlpha = s.kind === 'sludge' ? [0, .45, .6, .6][S.factory] : 1;
+    sprK(g, s.kind, 0, s.x + b * 1.5, s.y + (s.kind === 'barrel' ? Math.round(b) : 0), s.ph > 3, s.kind === 'sludge' ? [1, .5, .65, .7][S.factory] : 1);
+  }
+  g.globalAlpha = 1;
+}
+function drawContraption() {
+  const j = tube.shake > 0 ? Math.round(rnd(-1, 1)) : 0;
+  spr(g, 'contraption' + Math.min(3, S.factory), 0, CONTRAPTION.x + j, CONTRAPTION.y, false);
+  for (const p of preys) {                // heads bobbing up, and the one going up the nozzle
+    if (p.st === 'sucked') {
+      const k = Math.max(.15, 1 - p.t / .45);
+      g.globalAlpha = k; sprK(g, 'seal_swim', 1, lerp(p.x, tube.nx, 1 - k), lerp(p.y, tube.ny - 8, 1 - k), false, k); g.globalAlpha = 1;
+    } else {
+      g.globalAlpha = Math.min(1, p.t / .5);
+      spr(g, 'seal_swim', [0, 1, 2, 1][Math.floor(p.at * 4) % 4], p.x, p.y, p.x > tube.nx, p.type === 'gold' ? atlasGold : p.type === 'grey' ? atlasGrey : p.type === 'mut' ? atlasToxic : atlas);
+      g.globalAlpha = 1;
+    }
+  }
+  const P = tube.path, L = P.length;
+  for (let i = 0; i < L; i += 2) {        // candy stripes, swelling wherever a seal is on its way up
+    let k = 1;
+    for (const l of tube.lumps) { const d = Math.abs(i - (L - 1 - l.d)); if (d < 10) k = Math.max(k, 1 + .75 * Math.cos(d / 10 * Math.PI / 2)); }
+    sprK(g, (i >> 3) % 2 ? 'ball_cream' : 'ball_red', 0, P[i][0], P[i][1], false, k);
+  }
+  spr(g, 'nozzle', 0, tube.nx, tube.ny + 3, false);
+  for (const c of coinFx) sprK(g, 'i_coin', 0, c.x, c.y - c.z, false, .3);
+}
+
+// ---------------------------------------------------------------- the sealocalypse
+// The third tier poisons the sea and the seals come back wrong. From here it is a survival game: waves of mutants,
+// hearts instead of a sled, guns instead of gear, Big Mama on waves 5 and 10 and Sealthulu after wave 10. Killing
+// Sealthulu wins. The score is the waves cleared, times a bonus for getting there in few days.
+const MUT = {
+  frog:   { sprite: 'mut_frog', hp: 6, value: 15, r: 11, top: 26 },
+  bat:    { sprite: 'mut_bat', hp: 5, value: 18, r: 12, top: 30, flies: true },
+  bloat:  { sprite: 'mut_bloat', hp: 10, value: 20, r: 13, top: 30 },
+  kraken: { sprite: 'mut_kraken', hp: 8, value: 22, r: 13, top: 24, swims: true },
+  mama:   { sprite: 'mut_mama', hp: 150, value: 400, r: 28, top: 70, boss: true },
+  thulu:  { sprite: 'mut_thulu', hp: 900, value: 3000, r: 34, top: 100, boss: true, flies: true },
+};
+const LAST_WAVE = 11;                    // wave 11 is Sealthulu
+const APOC_UPG = [
+  { id: 'harpoon', base: 600, grow: 2.3, max: 5, name: () => 'Harpoon Gun', icon: () => 'i_harpoon',
+    ds: () => S.lv.harpoon ? `Hits for ${harpoonDmg(S.lv.harpoon + 1)} and goes through ${S.lv.harpoon + 1}. Pins them to the ice.` : 'Fires a barbed harpoon that goes through a mutant. Tap one to shoot.' },
+  { id: 'flamer', base: 1000, grow: 2.3, max: 5, name: () => 'Flamethrower', icon: () => 'i_flamer',
+    ds: () => S.lv.flamer ? `Hotter and longer. Hold to keep burning. Smells like roast seal.` : 'A short cone of fire that keeps them burning. Hold to keep it going.' },
+  { id: 'gundrone', base: 1800, grow: 3, max: 3, name: () => 'Gun Drone', icon: () => 'i_gundrone',
+    ds: () => ['A drone with a machine gun that circles you and shoots on its own.', 'A second gun drone.', 'A third gun drone. It is very loud up there.', 'Three gun drones.'][S.lv.gundrone] },
+  { id: 'hearts', base: 500, grow: 1.9, max: 7, name: () => 'Heart Container', icon: () => 'i_heartup',
+    ds: () => `One more heart, and every heart filled back up.` },
+  { id: 'parka', base: 700, grow: 2.1, max: 5, name: () => 'Armored Parka', icon: () => 'i_parka',
+    ds: () => `Take ${Math.round(100 - 100 * Math.pow(.8, S.lv.parka + 1))}% less damage. Bits of the factory sewn in.` },
+  { id: 'aid', base: 0, grow: 1, max: 999, name: () => 'First Aid', icon: () => 'heart_full', price: () => 150 + 100 * S.wave,
+    ds: () => 'Two hearts back. Mostly duct tape.' },
+];
+const harpoonDmg = lv => 4 + 3 * (lv - 1);
+const maxHp = () => 6 + 2 * S.lv.hearts;          // in half hearts
+const hurtMult = () => Math.pow(.8, S.lv.parka);
+let mutants = [], shots = [], orbs = [], acids = [], rings = [], tongues = [], flames = [];
+const apoc = { st: 'calm', t: 0, queue: [], spawnT: 0, inv: 0, hold: null, fireCd: 0, gunT: [], banner: 0, dead: false, flash: 0, keys: {} };
+const bigTmp = document.createElement('canvas'); bigTmp.width = 180; bigTmp.height = 180;
+const bg2 = bigTmp.getContext('2d');
+
+function apocCost(u) { return u.price ? u.price() : Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id])); }
+function startApocalypse() {
+  S.apoc = 1; S.wave = 0; S.hp = maxHp(); S.weapon = 'club';
+  const sold = S.load + S.heap + sled.cargo;   // the sled's last load goes for whatever the trader will pay
+  if (sold) { S.coins += sold; S.load = S.heap = sled.cargo = 0; }
+  apoc.st = 'intro'; apoc.t = 0; apoc.banner = 0; shake = 1.2;
+  for (const s of seals) if (s.state !== 'gone') { addFx('fx_toxic', s.x, s.y - 8); addFx('fx_splash', s.x, s.y); }
+  seals = []; bundles = []; S.tipShop = true; S.tipSled = true; $('#toast').classList.remove('show');
+  for (const d of drones) d.st = 'flee';
+  $('#banner').hidden = false; $('#banner').classList.remove('go'); void $('#banner').offsetWidth; $('#banner').classList.add('go');
+  Snd.play('sting', { vol: 1 }); setTimeout(() => Snd.voice('apoc', 3), 900);
+  enterApocUI(); save();
+}
+function enterApocUI() {
+  $('#game').classList.add('apoc'); document.body.classList.add('apoc');
+  $('#panel h1').textContent = 'SEALOCALYPSE';
+  buildApocPanel(); dirtyPanel = true;
+}
+function rosterFor(w) {
+  if (w === LAST_WAVE) return ['thulu'];
+  const out = [], n = 3 + 2 * w;
+  for (let i = 0; i < n; i++) {
+    const r = Math.random();
+    out.push(w >= 4 && r < .16 ? 'kraken' : w >= 3 && r < .34 ? 'bloat' : w >= 2 && r < .58 ? 'bat' : 'frog');
+  }
+  if (w === 5 || w === 10) out.splice(2, 0, 'mama');
+  return out;
+}
+function startWave() {
+  S.wave++; S.inWave = 1; apoc.queue = rosterFor(S.wave); apoc.st = 'wave'; apoc.t = 0; apoc.spawnT = 1;
+  toast(S.wave === LAST_WAVE ? 'SEALTHULU RISES' : `Wave ${S.wave}`, 2400);
+  Snd.play('horn', { vol: .8 });
+  if (S.wave === LAST_WAVE) Snd.voice('thulu', 3); else if (S.wave === 5 || S.wave === 10) setTimeout(() => Snd.voice('mama', 3), 2500);
+  dirtyPanel = true;
+}
+function spawnMutant(kind) {
+  const T = MUT[kind], hpK = 1 + .18 * (S.wave - 1);
+  const m = { kind, T, hp: T.hp * (T.boss ? 1 : hpK), x: 0, y: 0, z: 0, st: 'in', t: 0, at: Math.random() * 5, dir: -1, cd: rnd(1, 2.5), flash: 0, burn: 0, id: ++sid };
+  m.maxHp = m.hp;
+  if (kind === 'bat') { m.x = Math.random() < .5 ? -16 : W + 16; m.y = rnd(120, 190); m.z = 30; m.ang = Math.random() * 6; }
+  else if (kind === 'thulu') { m.x = W / 2; m.y = 70; m.z = 170; m.phase = 1; m.ang = 0; }
+  else if (kind === 'kraken') { const p = krakenSpot(); if (!p) return false; [m.x, m.y] = p; m.st = 'under'; m.t = rnd(0, .6); }
+  else {                                   // up out of the sea at the rim of a floe
+    const fl = FLOES.filter(f => exitsOf[f.id].length && (f.id === 'main' || f.id === 'south'));   // the machines have the other floes
+    let e = null;
+    for (let i = 0; i < 12 && !e; i++) { const c = pick(exitsOf[pick(fl).id]); if (Math.hypot(c.ex - hunter.x, c.ey - hunter.y) > 60) e = c; }
+    e = e || pick(exitsOf.main);
+    Object.assign(m, { x: e.wx, y: e.wy, hx: e.wx, hy: e.wy, lx: e.ex, ly: e.ey });
+    addFx('fx_splash', e.wx, e.wy + 2, { fps: 16 });
+  }
+  mutants.push(m);
+  return true;
+}
+function krakenSpot() {                    // a bit of open water near where the hunter stands
+  const c = SEA_PTS.filter(([x, y]) => { const d = Math.hypot(x - hunter.x, y - hunter.y); return d > 22 && d < 70; });
+  return c.length ? pick(c) : (SEA_PTS.length ? pick(SEA_PTS) : null);
+}
+const near = (m, r) => Math.hypot(m.x - hunter.x, m.y - hunter.y) < r;
+function hurtHunter(n, x, y) {
+  if (apoc.inv > 0 || apoc.dead) return;
+  S.hp -= n * hurtMult(); apoc.inv = 1; apoc.flash = .25; shake = .2; dirtyPanel = true;
+  Snd.play('hurt', { vol: .9 }); if (Math.random() < .3) quip('ow', 1, true);
+  bleed(hunter.x, hunter.y - 14, 8);
+  if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * 8, hunter.y + (hunter.y - y) / d * 4); hunter.x = px; hunter.y = py; hunter.path = null; }
+  if (S.hp <= .01) die();
+}
+function hitMutant(m, n, opts = {}) {
+  if (m.dead || (m.kind === 'kraken' && m.st === 'under')) return false;
+  if (m.kind === 'thulu' && m.st === 'in') return false;
+  m.hp -= n; m.flash = .08;
+  if (opts.burn) m.burn = Math.max(m.burn, 2.2);
+  if (!opts.quiet) { Snd.play('splat', { vol: .5, rate: rnd(.9, 1.2) }); bleed(m.x, m.y - (m.z || 0) - 10, 4); }
+  if (m.hp <= 0) killMutant(m);
+  return true;
+}
+function killMutant(m) {
+  m.dead = true; S.stats.kills = (S.stats.kills || 0) + 1;
+  const v = Math.round(m.T.value * (1 + .12 * S.wave));
+  earn(v, m.x, m.y - (m.z || 0) - m.T.top);
+  Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
+  addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
+  for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
+  if (m.kind === 'bloat') blast(m.x, m.y, 26, false);
+  if (m.kind === 'mama') { shake = .8; toast('Big Mama is down.'); for (let i = 0; i < 6; i++) setTimeout(() => addFx('fx_toxic', m.x + rnd(-24, 24), m.y - rnd(0, 50)), i * 120); }
+  if (m.kind === 'thulu') win();
+}
+function blast(x, y, r, hurtsHunter) {   // a bloater going off: it hurts everything close, mutants included
+  addFx('fx_toxic', x, y - 10, { fps: 14 }); addFx('fx_toxic', x + rnd(-8, 8), y - 18, { fps: 12 });
+  Snd.play('pop', { vol: .9 }); shake = .3;
+  if (hurtsHunter && Math.hypot(hunter.x - x, hunter.y - y) < r) hurtHunter(2, x, y);
+  for (const o of mutants) if (!o.dead && o.kind !== 'bloat' && Math.hypot(o.x - x, o.y - y) < r + 6) hitMutant(o, 8, { quiet: true });
+  for (let i = 0; i < 14; i++) drops.push({ x, y, z: 8, vx: rnd(-60, 60), vy: rnd(-25, 25), vz: rnd(20, 80), c: '#7bd84a', s: 2, any: true });
+}
+function updateMutant(m, dt) {
+  m.t += dt; m.at += dt; m.cd -= dt; m.flash = Math.max(0, m.flash - dt);
+  if (m.burn > 0) { m.burn -= dt; m.hp -= (3 + S.lv.flamer) * dt; if (Math.random() < dt * 8) addFx('fx_flame', m.x + rnd(-6, 6), m.y - (m.z || 0) - rnd(4, 16), { fps: 18 }); if (m.hp <= 0 && !m.dead) killMutant(m); }
+  if (m.dead) return;
+  const hx = hunter.x, hy = hunter.y, dx = hx - m.x, dy = hy - m.y, d = Math.hypot(dx, dy) || 1;
+  if (Math.abs(dx) > 2) m.dir = dx < 0 ? -1 : 1;
+  const sp = 1 + .04 * (S.wave - 1);
+  switch (m.kind) {
+    case 'frog': case 'bloat': case 'mama': {
+      if (m.st === 'in') {                 // hopping up out of the water
+        const p = Math.min(1, m.t / .7); m.x = lerp(m.hx, m.lx, p); m.y = lerp(m.hy, m.ly, p); m.z = Math.sin(Math.PI * p) * 14;
+        if (p >= 1) { m.st = 'go'; m.t = 0; m.z = 0; }
+        break;
+      }
+      if (m.kind === 'frog') {
+        if (m.st === 'go') {               // hop, hop, then a tongue when close
+          if (!m.hop || m.t > .75) { m.t = 0; const step = Math.min(30, d - 20); m.hop = { ax: m.x, ay: m.y, bx: m.x + dx / d * step, by: m.y + dy / d * step * .9 }; }
+          const p = Math.min(1, m.t / .45); m.x = lerp(m.hop.ax, m.hop.bx, ease(p)); m.y = lerp(m.hop.ay, m.hop.by, ease(p)); m.z = Math.sin(Math.PI * p) * 7;
+          if (p >= 1 && d < 66 && m.cd <= 0) { m.st = 'aim'; m.t = 0; m.aim = [hx, hy - 12]; Snd.play('croak', { vol: .6, rate: rnd(.9, 1.15) }); }
+        } else if (m.st === 'aim') { m.z = 0; if (m.t > .45) { m.st = 'lick'; m.t = 0; tongues.push({ m, x: m.x + m.dir * 6, y: m.y - 10, tx: m.aim[0], ty: m.aim[1], t: 0, hit: false }); Snd.play('tongue', { vol: .7 }); } }
+        else if (m.st === 'lick') { if (m.t > .55) { m.st = 'go'; m.t = 0; m.hop = null; m.cd = rnd(1.8, 2.6) / sp; } }
+      } else if (m.kind === 'bloat') {
+        if (m.st === 'go') { m.x += dx / d * 17 * sp * dt; m.y += dy / d * 17 * sp * dt; if (d < 17) { m.st = 'fuse'; m.t = 0; Snd.play('hiss', { vol: .7 }); } }
+        else if (m.st === 'fuse') { m.flash = Math.sin(m.t * 30) > 0 ? .05 : 0; if (m.t > .6) { m.dead = true; blast(m.x, m.y, 30, true); } }
+      } else {                             // Big Mama: a slow advance, a slam that sends a ring out, and babies
+        if (m.st === 'go') {
+          m.x += dx / d * 11 * dt; m.y += dy / d * 11 * dt;
+          if (m.cd <= 0) { m.st = 'slam'; m.t = 0; Snd.play('roar', { vol: .9 }); }
+          if (m.t > 7) { m.t = 0; for (let i = 0; i < 2; i++) { const b = { kind: 'frog', T: MUT.frog, hp: MUT.frog.hp, maxHp: MUT.frog.hp, x: m.x + rnd(-20, 20), y: m.y + rnd(-4, 6), z: 0, st: 'go', t: 0, at: 0, dir: -1, cd: 2, flash: 0, burn: 0, id: ++sid }; mutants.push(b); } }
+        } else if (m.st === 'slam') { if (m.t > .7) { rings.push({ x: m.x, y: m.y, r: 8, hit: false }); shake = .35; m.st = 'go'; m.t = 0; m.cd = rnd(3.5, 5); } }
+      }
+      break;
+    }
+    case 'bat': {                          // circles at a distance and throws up on you
+      m.ang += dt * .6; const R = 72;
+      const tx = clamp(hx + Math.cos(m.ang) * R, 10, W - 10), ty = clamp(hy + Math.sin(m.ang) * R * .5, 80, H - 10);
+      flyTo(m, tx, ty, 42 * sp, dt); m.z = 28 + Math.sin(m.at * 3) * 4;
+      if (m.st === 'in' && m.x > 4 && m.x < W - 4) m.st = 'go';
+      if (m.st === 'go' && m.cd <= 0) {
+        m.cd = rnd(2.2, 3.2) / sp; Snd.play('retch', { vol: .6, rate: rnd(.9, 1.1) });
+        shots.push({ kind: 'acid', x: m.x, y: m.y, z: m.z + 8, sx: m.x, sy: m.y, sz: m.z + 8, tx: hx + rnd(-6, 6), ty: hy + rnd(-3, 3), t: 0, dur: .9 });
+      }
+      break;
+    }
+    case 'kraken': {                       // under, up for a few seconds to slap at you, and down again
+      if (m.st === 'under') {
+        if (Math.random() < dt * 5) sparkles.push({ x: m.x + rnd(-8, 8), y: m.y + rnd(-1, 2), t: 0, life: .5, c: '#a6ff8a', ring: true });
+        if (m.t > 1.4) { m.st = 'up'; m.t = 0; addFx('fx_splash', m.x, m.y + 2, { fps: 16 }); Snd.play('gurgle', { vol: .7 }); m.cd = .6; }
+      } else if (m.st === 'up') {
+        if (m.cd <= 0 && d < 40) { m.st = 'wind'; m.t = 0; m.aim = [hx, hy]; }
+        if (m.t > 3.2) { m.st = 'under'; m.t = 0; const p = krakenSpot(); if (p) [m.x, m.y] = p; }
+      } else if (m.st === 'wind') {
+        m.flash = Math.sin(m.t * 25) > 0 ? .05 : 0;
+        if (m.t > .5) { addFx('fx_splash', m.aim[0], m.aim[1], { fps: 18 }); if (Math.hypot(hx - m.aim[0], hy - m.aim[1]) < 18) hurtHunter(2, m.x, m.y); m.st = 'up'; m.t = 1; m.cd = 1.4; }
+      }
+      break;
+    }
+    case 'thulu': updateThulu(m, dt, d); break;
+  }
+  if (!MUT[m.kind].flies && m.kind !== 'kraken' && m.st !== 'in' && m.kind !== 'thulu') {   // shoved apart a little
+    for (const o of mutants) if (o !== m && !o.dead && !o.T.flies && o.kind !== 'kraken') {
+      const ox = m.x - o.x, oy = m.y - o.y, od = Math.hypot(ox, oy);
+      if (od > 0 && od < (m.T.r + o.T.r) * .8) { m.x += ox / od * 20 * dt; m.y += oy / od * 10 * dt; }
+    }
+    m.x = clamp(m.x, 6, W - 6); m.y = clamp(m.y, 100, H - 6);
+  }
+}
+function updateThulu(m, dt, d) {          // the finale: three phases of bullets, and a dive now and then
+  const hpf = m.hp / m.maxHp;
+  if (m.st === 'in') { m.z = Math.max(34, m.z - 50 * dt); if (m.z <= 34) { m.st = 'go'; m.t = 0; m.cd = 1.5; } return; }
+  m.phase = hpf > .66 ? 1 : hpf > .33 ? 2 : 3;
+  m.ang += dt;
+  if (m.st === 'go') {
+    const tx = W / 2 + Math.sin(m.at * .45) * 64, ty = 156 + Math.sin(m.at * .7) * 10;   // centre stage, the whole of him in view
+    flyTo(m, tx, ty, 34, dt); m.z = lerp(m.z, 34 + Math.sin(m.at) * 5, dt * 2);
+    const ox = m.x, oy = m.y - m.z - 62;
+    if (m.cd <= 0) {
+      if (m.phase === 1) { const n = 14, off = m.at; for (let i = 0; i < n; i++) orb(ox, oy, off + i / n * Math.PI * 2, 58); m.cd = 1.4; }
+      else if (m.phase === 2) { orb(ox, oy, m.at * 5.2, 56); orb(ox, oy, m.at * 5.2 + Math.PI, 56); m.cd = .095; if (Math.random() < dt * .12) spawnMutant('bat'); }
+      else { const n = 18, off = -m.at; for (let i = 0; i < n; i++) orb(ox, oy, off + i / n * Math.PI * 2, 66); const a = Math.atan2(hunter.y - 14 - oy, hunter.x - ox); for (let i = -2; i <= 2; i++) orb(ox, oy, a + i * .14, 82); m.cd = 1.15; }
+    }
+    if (m.t > 9 && m.phase >= 2) { m.st = 'dive'; m.t = 0; Snd.play('roar', { vol: 1, rate: .8 }); }
+  } else if (m.st === 'dive') {           // down low over the ice, where a club can reach
+    flyTo(m, clamp(hunter.x + 30 * Math.sign(m.x - hunter.x || 1), 30, W - 30), clamp(hunter.y, 150, 200), 60, dt);
+    m.z = Math.max(4, m.z - 80 * dt);
+    if (m.t > 2.8) { m.st = 'go'; m.t = 0; m.cd = 1; }
+    if (d < 22 && m.z < 10) hurtHunter(2, m.x, m.y);
+  }
+}
+function orb(x, y, a, sp) { if (orbs.length < 420) orbs.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t: 0 }); }
+function updateShots(dt) {
+  for (const s of shots) {
+    s.t += dt;
+    if (s.kind === 'acid') {
+      const p = Math.min(1, s.t / s.dur); s.x = lerp(s.sx, s.tx, p); s.y = lerp(s.sy, s.ty, p); s.z = lerp(s.sz, 0, p) + Math.sin(Math.PI * p) * 20;
+      if (p >= 1) { s.done = true; acids.push({ x: s.tx, y: s.ty, t: 0, tick: 0 }); addFx('fx_acid', s.tx, s.ty, { fps: 16 }); Snd.play('splat', { vol: .5 }); }
+    } else if (s.kind === 'harpoon') {
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      for (const m of mutants) if (!m.dead && !s.hits.includes(m) && Math.hypot(m.x - s.x, (m.y - (m.z || 0) - m.T.top * .4) - s.y) < m.T.r + 3) {
+        if (hitMutant(m, s.dmg)) { s.hits.push(m); if (s.hits.length >= s.pierce) s.done = true; }
+      }
+      if (s.t > .9 || s.x < -10 || s.x > W + 10 || s.y < -10 || s.y > H + 10) s.done = true;
+    } else if (s.kind === 'bullet') {
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      for (const m of mutants) if (!m.dead && Math.hypot(m.x - s.x, (m.y - (m.z || 0) - m.T.top * .4) - s.y) < m.T.r) { if (hitMutant(m, s.dmg, { quiet: true })) { s.done = true; break; } }
+      if (s.t > .8) s.done = true;
+    }
+  }
+  shots = shots.filter(s => !s.done);
+  const hbx = hunter.x, hby = hunter.y - 14;
+  for (const o of orbs) {
+    o.t += dt; o.x += o.vx * dt; o.y += o.vy * dt;
+    if (Math.hypot(o.x - hbx, o.y - hby) < 6) { o.done = true; hurtHunter(1); }
+    if (o.x < -8 || o.x > W + 8 || o.y < -8 || o.y > H + 8) o.done = true;
+  }
+  orbs = orbs.filter(o => !o.done);
+  for (const a of acids) {
+    a.t += dt; a.tick -= dt;
+    if (a.tick <= 0 && Math.hypot(hunter.x - a.x, (hunter.y - a.y) * 1.6) < 11) { a.tick = .7; hurtHunter(1); }
+  }
+  acids = acids.filter(a => a.t < 4.5);
+  for (const r of rings) {
+    r.r += 75 * dt;
+    const hd = Math.hypot(hunter.x - r.x, (hunter.y - r.y) * 1.5);
+    if (!r.hit && Math.abs(hd - r.r) < 6 && hunter.z === 0) { r.hit = true; hurtHunter(2, r.x, r.y); }
+  }
+  rings = rings.filter(r => r.r < 70);
+  for (const t of tongues) {
+    t.t += dt;
+    const out = t.t < .25 ? t.t / .25 : Math.max(0, 1 - (t.t - .25) / .3);
+    t.px = lerp(t.x, t.tx, out); t.py = lerp(t.y, t.ty, out);
+    if (!t.hit && Math.hypot(hunter.x - t.px, hunter.y - 12 - t.py) < 8) { t.hit = true; hurtHunter(1, t.x, t.y); }
+    if (t.m.dead) t.done = true;
+  }
+  tongues = tongues.filter(t => !t.done && t.t < .6);
+  for (const f of flames) { f.t += dt; f.x += f.vx * dt; f.y += f.vy * dt; }
+  flames = flames.filter(f => f.t < f.life);
+}
+// ---- the hunter's side of it
+function fireAt(x, y) {                   // the equipped gun, aimed at a point
+  if (apoc.dead) return;
+  const w = S.weapon;
+  if (Math.abs(x - hunter.x) > 2) hunter.dir = x < hunter.x ? -1 : 1;
+  const ax = hunter.x + hunter.dir * 30, ay = hunter.y - 19;   // the muzzle, held at the hip
+  const a = Math.atan2(y - ay, x - ax);
+  if (w === 'harpoon' && apoc.fireCd <= 0) {
+    const lv = S.lv.harpoon;
+    shots.push({ kind: 'harpoon', x: ax, y: ay, vx: Math.cos(a) * 290, vy: Math.sin(a) * 290, a, t: 0, dmg: harpoonDmg(lv), pierce: lv, hits: [] });
+    apoc.fireCd = .75 * Math.pow(.88, lv - 1); hunter.cheer = 0; hunter.recoil = .15;
+    Snd.play('harpoon', { vol: .7, rate: rnd(.95, 1.08) });
+  } else if (w === 'flamer') {
+    const lv = S.lv.flamer, range = 42 + 5 * lv;
+    if (apoc.fireCd <= 0) {
+      apoc.fireCd = .09;
+      for (let i = 0; i < 2; i++) { const aa = a + rnd(-.3, .3), sp = rnd(90, 130); flames.push({ x: ax, y: ay, vx: Math.cos(aa) * sp, vy: Math.sin(aa) * sp, t: 0, life: range / sp }); }
+      for (const m of mutants) {
+        if (m.dead) continue;
+        const mx = m.x - ax, my = (m.y - (m.z || 0) - m.T.top * .4) - ay, md = Math.hypot(mx, my);
+        let da = Math.abs(Math.atan2(my, mx) - a); if (da > Math.PI) da = Math.PI * 2 - da;
+        if (md < range + m.T.r && da < .45) hitMutant(m, (10 + 5 * (lv - 1)) * .09, { burn: true, quiet: true });
+      }
+      if (now - (apoc.flameSnd || -9) > .5) { apoc.flameSnd = now; Snd.play('flame', { vol: .5, rate: rnd(.95, 1.05) }); }
+    }
+  }
+}
+function autoFire() {                    // FIRE held: the gun picks the closest mutant, so the other thumb can steer
+  const m = nearestMutant(hunter.x, hunter.y - 14, S.weapon === 'flamer' ? 110 : 260);
+  if (!m) return;
+  if (S.weapon === 'club') { if (hunter.target !== m || !hunter.pending) { hunter.target = m; hunter.pending = 1; } }
+  else fireAt(m.x, m.y - (m.z || 0) - m.T.top * .4);
+}
+function nearestMutant(x, y, r = 1e9, hittable = true) {
+  let best = null, bd = r;
+  for (const m of mutants) {
+    if (m.dead || (hittable && m.kind === 'kraken' && m.st === 'under')) continue;
+    const d = Math.hypot(m.x - x, m.y - (m.z || 0) - y); if (d < bd) { bd = d; best = m; }
+  }
+  return best;
+}
+function mutantAt(x, y) {
+  return mutants.filter(m => !m.dead && !(m.kind === 'kraken' && m.st === 'under')).find(m => {
+    const top = m.y - (m.z || 0) - m.T.top, half = m.T.r + 4;
+    return x > m.x - half && x < m.x + half && y > top - 4 && y < m.y - (m.z || 0) + 4;
+  });
+}
+function updateApoc(dt) {
+  apoc.t += dt; apoc.inv = Math.max(0, apoc.inv - dt); apoc.fireCd -= dt; apoc.flash = Math.max(0, apoc.flash - dt);
+  hunter.recoil = Math.max(0, (hunter.recoil || 0) - dt);
+  if (apoc.st === 'intro') { if (apoc.t > 5) { apoc.st = 'break'; apoc.t = 0; toast('Tap the ice to move. Hold FIRE (or Space) to hit the nearest mutant.', 5000); } }
+  else if (apoc.st === 'break') { if (apoc.t > 8 && !apoc.dead) startWave(); }
+  else if (apoc.st === 'wave') {
+    apoc.spawnT -= dt;
+    const alive = mutants.filter(m => !m.dead).length;
+    if (apoc.queue.length && apoc.spawnT <= 0 && alive < 6 + S.wave) { if (spawnMutant(apoc.queue[0])) apoc.queue.shift(); apoc.spawnT = Math.max(.5, 1.7 - .1 * S.wave); }
+    if (!apoc.queue.length && !alive && !apoc.dead) {
+      if (S.wave >= LAST_WAVE) return;
+      apoc.st = 'break'; apoc.t = 0; S.inWave = 0; S.hp = Math.min(maxHp(), S.hp + 2);
+      toast(`Wave ${S.wave} cleared. A heart back, and a breather.`, 3000); Snd.voice('cleared', 2); dirtyPanel = true; save();
+    }
+  }
+  for (const m of mutants) updateMutant(m, dt);
+  mutants = mutants.filter(m => !m.dead);
+  updateShots(dt);
+  // keys move the hunter directly, for dodging
+  const k = apoc.keys, kx = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0), ky = (k.s || k.arrowdown ? 1 : 0) - (k.w || k.arrowup ? 1 : 0);
+  if ((kx || ky) && !apoc.dead && hunter.swing < 0) {
+    const l = Math.hypot(kx, ky), nx = hunter.x + kx / l * RUN * dt, ny = hunter.y + ky / l * RUN * .8 * dt;
+    if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; } else if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;
+    hunter.path = null; hunter.target = null; hunter.walking = .1; if (kx) hunter.dir = kx;
+  }
+  hunter.walking = Math.max(0, (hunter.walking || 0) - dt);
+  if ((apoc.fireHeld || apoc.keys[' ']) && !apoc.dead && apoc.st !== 'intro') autoFire();
+  if (apoc.press && !apoc.hold && performance.now() - apoc.press.t > 220 && S.weapon !== 'club') { apoc.hold = [apoc.press.x, apoc.press.y]; hunter.path = null; }
+  if (apoc.hold && !apoc.dead && S.weapon !== 'club') fireAt(apoc.hold[0], apoc.hold[1]);
+  else if (apoc.burst && now < apoc.burst.until && S.weapon === 'flamer') fireAt(apoc.burst.x, apoc.burst.y);
+  // gun drones circle and shoot at whatever is closest
+  for (let i = 0; i < S.lv.gundrone; i++) {
+    apoc.gunT[i] = (apoc.gunT[i] || 0) - dt;
+    const gx = hunter.x + Math.cos(now * 1.6 + i * 2.1) * 34, gy = hunter.y - 62 + Math.sin(now * 1.6 + i * 2.1) * 8;
+    const m = nearestMutant(gx, gy + 20, 150);
+    if (m && apoc.gunT[i] <= 0) {
+      apoc.gunT[i] = .2; const a = Math.atan2(m.y - (m.z || 0) - m.T.top * .4 - gy, m.x - gx);
+      shots.push({ kind: 'bullet', x: gx, y: gy, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, t: 0, dmg: 1 + .4 * (S.lv.gundrone - 1) });
+      if (now - (apoc.gunSnd || -9) > .25) { apoc.gunSnd = now; Snd.play('gun', { vol: .35, rate: rnd(.95, 1.1) }); }
+    }
+  }
+}
+// ---- the end
+function score(won) {
+  const cleared = won ? LAST_WAVE : Math.max(0, S.wave - 1), mult = Math.max(1, Math.round(400 / Math.max(1, S.day)) / 10);   // 40 / days, never below 1
+  return { cleared, mult, points: Math.round((cleared * 1000 + (won ? 10000 : 0)) * mult) };
+}
+function endGame(won) {
+  apoc.dead = true; apoc.hold = null; hunter.path = null; hunter.target = null;
+  const sc = score(won); let best = null;
+  try { best = JSON.parse(localStorage.getItem('cozy-pelts-best') || 'null'); } catch (e) {}
+  const isBest = !best || sc.points > best.points;
+  if (isBest) { best = { points: sc.points, wave: S.wave, days: S.day, won }; try { localStorage.setItem('cozy-pelts-best', JSON.stringify(best)); } catch (e) {} }
+  $('#overTitle').textContent = won ? 'YOU WON' : 'YOU WERE EATEN';
+  $('#overText').textContent = won
+    ? `Sealthulu is dead. The sea is quiet. Too quiet. All ${LAST_WAVE} waves in ${S.day} day${S.day === 1 ? '' : 's'}.`
+    : `The mutants got you on wave ${S.wave}, ${S.day} day${S.day === 1 ? '' : 's'} after you started the camp.`;
+  $('#overScore').textContent = `${fmt(sc.cleared)} waves × 1,000${won ? ' + 10,000 for the win' : ''}, × ${sc.mult.toFixed(1)} for ${S.day} day${S.day === 1 ? '' : 's'} = ${fmt(sc.points)}`;
+  $('#overBest').textContent = isBest ? 'A new best score!' : `Your best: ${fmt(best.points)} (wave ${best.wave}${best.won ? ', won' : ''}, ${best.days} days)`;
+  setTimeout(() => { $('#over').hidden = false; }, won ? 2200 : 1400);
+  S.over = 1; save();
+}
+function die() { S.hp = 0; Snd.play('dead', { vol: 1 }); Snd.voice('eaten', 3); shake = .6; for (let i = 0; i < 3; i++) setTimeout(() => bleed(hunter.x, hunter.y - 12, 20, 1.4), i * 150); endGame(false); }
+function win() { shake = 1.5; Snd.play('win', { vol: 1 }); setTimeout(() => Snd.voice('won', 3), 1200); for (let i = 0; i < 10; i++) setTimeout(() => addFx('fx_toxic', rnd(60, 200), rnd(60, 180)), i * 150); orbs = []; endGame(true); }
+// ---- drawing
+function drawFlashy(name, fi, x, y, flip, flash, k = 1) {   // a sprite that flashes white when hit
+  if (flash <= 0) return sprK(g, name, fi, x, y, flip, k);
+  bg2.clearRect(0, 0, 180, 180); sprK(bg2, name, fi, 90, 150, flip, k);
+  bg2.globalCompositeOperation = 'source-atop'; bg2.fillStyle = 'rgba(255,255,255,.85)'; bg2.fillRect(0, 0, 180, 180); bg2.globalCompositeOperation = 'source-over';
+  g.drawImage(bigTmp, Math.round(x) - 90, Math.round(y) - 150);
+}
+function drawMutant(m) {
+  const name = m.T.sprite, n = A[name] ? A[name].f.length : 1, fps = m.kind === 'bloat' ? 8 : m.kind === 'mama' ? 7 : 11;
+  let fi = Math.floor(m.at * fps) % n;
+  if (m.kind === 'frog' && m.st !== 'go') fi = 0;
+  if (m.kind === 'kraken' && m.st === 'under') { g.globalAlpha = .25; sprK(g, name, fi, m.x, m.y + 6, m.dir > 0, .8); g.globalAlpha = 1; return; }
+  if (m.z > 1 && !m.T.swims) { g.fillStyle = 'rgba(20,40,30,.28)'; const w = Math.round(m.T.r * 1.4); g.fillRect(Math.round(m.x) - (w >> 1), Math.round(m.y) - 1, w, 2); }
+  const k = m.kind === 'bloat' && m.st === 'fuse' ? 1 + .25 * m.t : 1;
+  drawFlashy(name, fi, m.x, m.y - (m.z || 0), m.dir > 0, m.flash, k);
+  if (m.burn > 0 && Math.random() < .3) sparkles.push({ x: m.x + rnd(-6, 6), y: m.y - (m.z || 0) - rnd(4, 18), t: 0, life: .3, c: '#ffb347' });
+  if (m.T.boss) {                          // a health bar across the top of the screen
+    const w = 160, x = (W - w) >> 1, y = 26;
+    g.fillStyle = 'rgba(20,10,30,.8)'; g.fillRect(x - 1, y - 1, w + 2, 5);
+    g.fillStyle = m.kind === 'thulu' ? '#c03cff' : '#7bd84a'; g.fillRect(x, y, Math.max(0, Math.round(w * m.hp / m.maxHp)), 3);
+  } else if (m.hp < m.maxHp) {
+    const w = 16, x = Math.round(m.x - 8), y = Math.round(m.y - (m.z || 0) - m.T.top - 4);
+    g.fillStyle = 'rgba(20,30,20,.75)'; g.fillRect(x - 1, y - 1, w + 2, 4); g.fillStyle = '#9dff7a'; g.fillRect(x, y, Math.max(1, Math.round(w * m.hp / m.maxHp)), 2);
+  }
+}
+function drawApocAir() {                   // everything above the ice: shots, bullets, tongues, flames, gun drones
+  for (const a of acids) { g.globalAlpha = Math.min(1, (4.5 - a.t) / 1); spr(g, 'sludge', 0, a.x, a.y, false); }
+  g.globalAlpha = 1;
+  for (const r of rings) {
+    g.globalAlpha = 1 - r.r / 70; g.strokeStyle = '#9dff7a'; g.lineWidth = 2;
+    g.beginPath(); g.ellipse(Math.round(r.x), Math.round(r.y), r.r, r.r / 1.5, 0, 0, Math.PI * 2); g.stroke();
+  }
+  g.globalAlpha = 1;
+  for (const t of tongues) {
+    g.strokeStyle = '#e8708a'; g.lineWidth = 2; g.beginPath(); g.moveTo(Math.round(t.x), Math.round(t.y)); g.lineTo(Math.round(t.px), Math.round(t.py)); g.stroke();
+    spr(g, 'tongue', 0, t.px, t.py, false);
+  }
+  for (const s of shots) {
+    if (s.kind === 'acid') { g.fillStyle = 'rgba(20,40,30,.25)'; g.fillRect(Math.round(s.x) - 3, Math.round(s.y), 6, 2); sprK(g, 'sludge', 0, s.x, s.y - s.z, false, .4); }
+    else if (s.kind === 'harpoon') { g.save(); g.translate(Math.round(s.x), Math.round(s.y)); g.rotate(s.a); const m = A.harpoon, f = m.f[0]; g.drawImage(atlas, f[0], f[1], m.w, m.h, -m.w + 4, -(m.h >> 1), m.w, m.h); g.restore(); }
+    else { g.fillStyle = '#fff3a0'; g.fillRect(Math.round(s.x), Math.round(s.y), 2, 1); }
+  }
+  for (const f of flames) { const p = f.t / f.life; g.globalAlpha = 1 - p * .6; g.fillStyle = p < .3 ? '#fff3a0' : p < .6 ? '#ffb347' : '#e8384b'; const s = 2 + Math.round(p * 3); g.fillRect(Math.round(f.x) - (s >> 1), Math.round(f.y) - (s >> 1), s, s); }
+  g.globalAlpha = 1;
+  for (let i = 0; i < S.lv.gundrone; i++) {
+    const gx = hunter.x + Math.cos(now * 1.6 + i * 2.1) * 34, gy = hunter.y - 62 + Math.sin(now * 1.6 + i * 2.1) * 8;
+    spr(g, 'gundrone', Math.floor(now * 16 + i * 3) % 9, gx, gy + 12, false);
+  }
+  for (const o of orbs) spr(g, 'orb', 0, o.x, o.y, false);
 }
 
 // ---------------------------------------------------------------- day and night
@@ -1418,10 +2045,19 @@ let dirtyPanel = true, lastSpawn = 0, spawnGap = 1.6, last = 0, lastSave = 0, sm
 function update(dt) {
   now += dt;
   S.dayT += dt / 210;
-  if (S.dayT >= 1) { S.dayT -= 1; S.day++; toast(`Day ${S.day}. The seals are back.`); Snd.voice('dawn', 2); }
+  if (S.dayT >= 1) { S.dayT -= 1; S.day++; toast(S.apoc ? `Day ${S.day}. They're still coming.` : `Day ${S.day}. The seals are back.`); if (!S.apoc) Snd.voice('dawn', 2); }
   const dark = night() > .5;
-  if (dark !== wasDark) { if (dark && wasDark === false) { Snd.voice('dusk', 2); toast('Night falls. Napping seals take sneak bonks.', 3200); } wasDark = dark; }
+  if (dark !== wasDark) { if (dark && wasDark === false && !S.apoc) { Snd.voice('dusk', 2); toast('Night falls. Napping seals take sneak bonks.', 3200); } wasDark = dark; }
   Snd.mix(night());
+  if (!S.apoc) cozyUpdate(dt);
+  updateHunter(dt);
+  for (const d of drones) updateDrone(d, dt);
+  for (let i = drones.length - 1; i >= 0; i--) if (drones[i].gone) drones.splice(i, 1);
+  updateContraption(dt);
+  if (S.apoc) updateApoc(dt);
+  commonUpdate(dt);
+}
+function cozyUpdate(dt) {
   // seals arrive
   const active = seals.filter(s => s.state !== 'gone' && s.state !== 'ko').length;
   lastSpawn += dt;
@@ -1429,18 +2065,17 @@ function update(dt) {
     rush -= dt;
     if (lastSpawn > .45 && active < 12) { if (spawnSeal(true)) lastSpawn = 0; }
   } else if (lastSpawn > spawnGap && active < maxSeals()) {
-    if (spawnSeal(false)) { lastSpawn = 0; spawnGap = rnd(3.2, 5.8) * (1 - .08 * S.lv.bucket - .06 * S.lv.drones); }
+    if (spawnSeal(false)) { lastSpawn = 0; spawnGap = rnd(3.2, 5.8) / lure() * (1 - .06 * S.lv.drones); }
   }
   for (const s of seals) updateSeal(s, dt);
   seals = seals.filter(s => s.state !== 'gone');
-  updateHunter(dt);
   updateGull(dt);
   updateSled(dt);
-  for (const d of drones) updateDrone(d, dt);
   updateChipper(dt);
-  updateFactory(dt);
   if (combo.n && now - combo.t > COMBO_WINDOW) combo.n = 0;
   S.fishCd = Math.max(0, S.fishCd - dt);
+}
+function commonUpdate(dt) {
   // bundles fly onto the sled, or onto the heap beside where it stands
   for (const b of bundles) {
     b.t += dt; const p = Math.min(1, b.t / b.dur);
@@ -1497,7 +2132,7 @@ function update(dt) {
   income = income.filter(([t]) => now - t < 30);
   if (now - lastSave > 5) { lastSave = now; save(); }
 }
-let fadeT = 0, fadeN = 0, wasDark = null, lastQuip = -9;
+let fadeT = 0, fadeN = 0, wasDark = null, lastQuip = -9, goldSaid = -99;
 function quip(name, chance, force) {      // the hunter talks now and then, not on every bonk
   if (Math.random() > chance || (!force && now - lastQuip < 6)) return;
   if (Snd.voice(name, 1)) lastQuip = now;
@@ -1505,7 +2140,10 @@ function quip(name, chance, force) {      // the hunter talks now and then, not 
 
 function render() {
   g.imageSmoothingEnabled = false;
-  g.drawImage(bg, 0, 0);
+  const tier = Math.min(3, S.factory);
+  if (S.apoc && apoc.st === 'intro' && apoc.t < 3) { g.drawImage(bgTier[2], 0, 0); g.globalAlpha = apoc.t / 3; g.drawImage(bgTier[3], 0, 0); g.globalAlpha = 1; }
+  else g.drawImage(bgTier[tier] || bg, 0, 0);
+  if (slicks.length) drawSlicks();
   for (const p of sparkles) {
     const a = Math.sin(Math.PI * p.t / p.life);
     g.globalAlpha = a; g.fillStyle = p.c;
@@ -1525,18 +2163,21 @@ function render() {
   }
   list.push([hunter.y, drawHunter]);
   list.push([roadAt(sled.d)[1], drawSled]);
-  for (let i = 0; i < dogs(); i++) list.push([dogPos(i)[1] + .1, () => drawDog(i)]);
+  if (!S.apoc) for (let i = 0; i < dogs(); i++) list.push([dogPos(i)[1] + .1, () => drawDog(i)]);
+  for (const m of mutants) list.push([m.y + (m.T.flies ? 80 : 0), () => drawMutant(m)]);
   if (S.heap > 0) list.push([SLED.y + 6, drawHeap]);
   if (S.lv.drones) list.push([CHIPPER.y, drawChipper]);
-  if (S.factory) list.push([FACTORY.y, drawFactory]);
-  if (gull.state === 'perch') list.push([gull.y, drawGull]);
+  if (S.lv.decoy) list.push([DECOY.y, () => spr(g, 'decoy', 0, DECOY.x, DECOY.y, false)]);
+  if (S.factory) list.push([CONTRAPTION.y, drawContraption]);
+  if (gull.state === 'perch' && !S.apoc) list.push([gull.y, drawGull]);
   list.sort((a, b) => a[0] - b[0]);
   for (const [, fn] of list) fn();
   for (const d of drops) { g.fillStyle = d.c; g.fillRect(Math.round(d.x), Math.round(d.y - d.z), d.s, d.s); }
   for (const f of fx) spr(g, f.name, Math.floor(f.t * f.fps), f.x, f.y, f.flip);
   for (const b of bundles) spr(g, 'pelt', 0, b.x, b.y, false);
   for (const d of drones) drawDrone(d);
-  if (gull.state !== 'perch') drawGull();
+  if (S.apoc) drawApocAir();
+  if (gull.state !== 'perch' && !S.apoc) drawGull();
   // light
   const gr = grade(), n = night();
   if (gr.a > 0) {
@@ -1560,13 +2201,9 @@ function render() {
       r.addColorStop(0, `rgba(255,190,90,${.55 * n})`); r.addColorStop(1, 'rgba(255,190,90,0)');
       g.globalAlpha = 1; g.fillStyle = r; g.fillRect(x - 9, y - 9, 18, 18);
     }
-    if (S.factory) for (const [x, y] of FACTORY_WINDOWS) {     // the night shift
-      const r = g.createRadialGradient(x, y, 0, x, y, 10);
-      r.addColorStop(0, `rgba(255,170,70,${.6 * n})`); r.addColorStop(1, 'rgba(255,170,70,0)');
-      g.globalAlpha = 1; g.fillStyle = r; g.fillRect(x - 10, y - 10, 20, 20);
-    }
     g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
   }
+  if (apoc.flash > 0) { g.fillStyle = `rgba(210,20,40,${apoc.flash})`; g.fillRect(0, 0, W, H); }
   for (const f of flakes) { g.globalAlpha = f.a * .9; g.fillStyle = '#ffffff'; g.fillRect(Math.round(f.x + Math.sin(f.sw) * 2), Math.round(f.y), 1, 1); }
   g.globalAlpha = 1;
   // to the screen
@@ -1595,7 +2232,8 @@ function drawDebug() {
 // ---------------------------------------------------------------- panel
 const cardEls = {};
 function buildPanel(icons) {
-  const wrap = $('#cards');
+  const wrap = $('#cards'); wrap.innerHTML = '';
+  for (const k in cardEls) delete cardEls[k];
   for (const u of UPG) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.id = 'up-' + u.id;
     b.innerHTML = `<span class="ico"><img alt=""></span><span class="txt"><span class="nm"><i></i><small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.i_coin}"><span></span></span>`;
@@ -1618,30 +2256,83 @@ function buy(u) {
     Snd.bark(); Snd.voice('husky', 2);
     toast(S.lv.dogs === 2 ? 'Three dogs. They set off on their own once the sled is full.' : 'Another husky joins the team.', 3200);
   } else if (u.id === 'club') { toast(`${CLUBS[S.lv.club].name} in hand.`); quip('bought', .6); }
+  else if (u.id === 'decoy' && S.lv.decoy === 1) { toast("A wooden seal on the ice. It tells the others it's safe up here.", 3600); addFx('fx_poof', DECOY.x, DECOY.y - 4); }
   else quip('bought', .5);
   if (S.tut < 3) S.tut = 3;
   dirtyPanel = true; save();
 }
-function buyFactory() {
+function buyFactory() {                  // the big button: the contraption's tiers, then the waves
   Snd.init();
-  if (!S.factory) {
-    if (S.coins < FACTORY_COST) return;
-    S.coins -= FACTORY_COST; S.factory = 1; syncMachines(); Snd.hum(); Snd.chime(); Snd.voice('factory', 2); hunter.cheer = .75;
-    for (let i = 0; i < 6; i++) addFx('fx_poof', FACTORY.x + rnd(-34, 34), FACTORY.y - rnd(4, 60), { fps: 7 });
-    toast('The factory is open. It drinks the sea, and the sea is mostly seals.', 4200);
-  } else {
-    if (S.pump >= PUMP_MAX || S.coins < pumpCost()) return;
-    S.coins -= pumpCost(); S.pump++; Snd.buy(); factory.shake = .3;
-    toast(`Pump Lv ${S.pump}. A seal up the hose every ${pumpGap().toFixed(1)} s.`);
-  }
+  if (S.apoc) { if (apoc.st === 'break' && !apoc.dead) startWave(); return; }
+  const c = TIER_COST[S.factory]; if (c == null || S.coins < c) return;
+  S.coins -= c; S.factory++; syncMachines(); pollute(); Snd.hum(); hunter.cheer = .75; tube.shake = .4;
+  for (let i = 0; i < 6; i++) addFx('fx_poof', CONTRAPTION.x + rnd(-34, 34), CONTRAPTION.y - rnd(4, 70), { fps: 7 });
+  if (S.factory === 1) { Snd.chime(); Snd.voice('factory', 2); toast('The contraption is running. It drinks the sea, and the sea is mostly seals.', 4200); }
+  else if (S.factory === 2) { Snd.buy(); toast('Tier 2. Twice the slurp. The sea is a funny colour now.', 3600); }
+  else startApocalypse();
   dirtyPanel = true; save();
 }
+function buildApocPanel() {
+  const wrap = $('#cards'); wrap.innerHTML = '';
+  for (const k in cardEls) delete cardEls[k];
+  for (const u of APOC_UPG) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.id = 'up-' + u.id;
+    b.innerHTML = `<span class="ico"><img alt=""></span><span class="txt"><span class="nm"><i></i><small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.i_coin}"><span></span></span>`;
+    b.addEventListener('click', () => buyApoc(u));
+    wrap.appendChild(b);
+    cardEls[u.id] = { b, ico: b.querySelector('.ico img'), nm: b.querySelector('.nm i'), lv: b.querySelector('small'), ds: b.querySelector('.ds'), pr: b.querySelector('.price span') };
+  }
+  const bar = $('#weaponBar'); bar.innerHTML = '';
+  for (const [i, w, ic] of [[1, 'club', 'i_club'], [2, 'harpoon', 'i_harpoon'], [3, 'flamer', 'i_flamer']]) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.w = w; b.title = `${w === 'club' ? CLUBS[S.lv.club].name : w === 'harpoon' ? 'Harpoon Gun' : 'Flamethrower'} (${i})`;
+    b.innerHTML = `<img alt="" src="${icons[w === 'club' ? CLUBS[S.lv.club].icon : ic]}"><span>${i}</span>`;
+    b.addEventListener('click', () => { S.weapon = w; dirtyPanel = true; });
+    bar.appendChild(b);
+  }
+}
+function buyApoc(u) {
+  Snd.init();
+  const c = apocCost(u);
+  if ((S.lv[u.id] || 0) >= u.max || S.coins < c || (u.id === 'aid' && S.hp >= maxHp())) return;
+  S.coins -= c; Snd.buy();
+  if (u.id === 'aid') S.hp = Math.min(maxHp(), S.hp + 4);
+  else {
+    S.lv[u.id]++;
+    if (u.id === 'hearts') S.hp = maxHp();
+    if ((u.id === 'harpoon' || u.id === 'flamer') && S.lv[u.id] === 1) { S.weapon = u.id; toast(`${u.name()} ready. Hold FIRE to shoot the nearest mutant, or hold on the scene to aim.`, 3800); }
+  }
+  const el = cardEls[u.id].b; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  dirtyPanel = true; save();
+}
+function refreshApocPanel() {
+  $('#coinCount').textContent = fmt(S.coins);
+  for (const u of APOC_UPG) {
+    const e = cardEls[u.id]; if (!e) continue;
+    const lv = S.lv[u.id] || 0, maxed = lv >= u.max, c = apocCost(u), full = u.id === 'aid' && S.hp >= maxHp(), ico = icons[u.icon()];
+    if (e.ico.src !== ico) e.ico.src = ico;
+    e.nm.textContent = u.name(); e.lv.textContent = u.id === 'aid' ? '' : `Lv ${lv}`; e.ds.textContent = u.ds();
+    e.pr.textContent = maxed ? 'MAX' : fmt(c);
+    e.b.disabled = maxed || full || S.coins < c;
+    e.b.classList.toggle('poor', !maxed && S.coins < c); e.b.classList.toggle('maxed', maxed);
+    e.b.setAttribute('aria-label', `${u.name()}. ${u.ds()} ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' coins'}`);
+  }
+  const fb = $('#factBtn'), alive = mutants.length + apoc.queue.length;
+  $('#factIcon').src = icons.i_harpoon;
+  if (apoc.dead) { $('#factName').textContent = 'GAME OVER'; $('#factInfo').textContent = 'Start a new camp from the score card.'; fb.disabled = true; }
+  else if (apoc.st === 'wave') { $('#factName').textContent = S.wave === LAST_WAVE ? 'SEALTHULU' : `WAVE ${S.wave}`; $('#factInfo').textContent = `${alive} mutants left. Shop while you can.`; fb.disabled = true; }
+  else { $('#factName').textContent = `START WAVE ${S.wave + 1}`; $('#factInfo').textContent = S.wave + 1 === LAST_WAVE ? 'Sealthulu. Beat him and you win.' : (S.wave + 1) % 5 === 0 ? 'Big Mama is coming with this one.' : 'Or wait a few seconds and it starts by itself.'; fb.disabled = apoc.st !== 'break'; }
+  let best = null; try { best = JSON.parse(localStorage.getItem('cozy-pelts-best') || 'null'); } catch (e) {}
+  $('#sledLine').textContent = `Wave ${S.wave} of ${LAST_WAVE} · day ${S.day}` + (best ? ` · best score ${fmt(best.points)}` : '');
+  $('#stats').textContent = `Mutants killed ${fmt(S.stats.kills || 0)} · Seals before that ${fmt(S.stats.kos + S.stats.chipped)} · Slurped ${fmt(S.stats.slurped)}`;
+  for (const b of $('#weaponBar').children) { const w = b.dataset.w; b.hidden = w !== 'club' && !S.lv[w]; b.classList.toggle('on', S.weapon === w); }
+}
 function refreshPanel() {
+  if (S.apoc) return refreshApocPanel();
   $('#coinCount').textContent = fmt(S.coins);
   for (const u of UPG) {
     const e = cardEls[u.id], lv = S.lv[u.id], maxed = lv >= u.max, c = cost(u), name = u.name(), ico = icons[u.icon()];
     if (e.ico.src !== ico) e.ico.src = ico;
-    e.nm.textContent = name; e.lv.textContent = `Lv ${lv}`; e.ds.textContent = u.ds();
+    e.nm.textContent = name; e.lv.textContent = u.tag ? u.tag() : `Lv ${lv}`; e.ds.textContent = u.ds();
     e.pr.textContent = maxed ? 'MAX' : fmt(c);
     e.b.disabled = maxed || S.coins < c;
     e.b.classList.toggle('poor', !maxed && S.coins < c);
@@ -1649,20 +2340,12 @@ function refreshPanel() {
     e.b.setAttribute('aria-label', `${name}, level ${lv}. ${u.ds()} ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' coins'}`);
   }
   if (S.tut < 3 && !S.tipShop && S.coins >= UPG[0].base) { S.tipShop = true; toast(`You can afford a ${UPG[0].name()}. Upgrades are in the ledger.`, 3400); }
-  const fb = $('#factBtn');
-  if (!S.factory) {
-    $('#factName').textContent = 'BUILD THE FACTORY';
-    $('#factInfo').textContent = `A steel hose sucks seals straight out of the sea · ${fmt(FACTORY_COST)} coins`;
-    fb.disabled = S.coins < FACTORY_COST;
-  } else if (S.pump >= PUMP_MAX) {
-    $('#factName').textContent = 'PUMP AT FULL TILT';
-    $('#factInfo').textContent = `A seal up the hose every ${pumpGap().toFixed(1)} s. The sea is getting quieter.`;
-    fb.disabled = true;
-  } else {
-    $('#factName').textContent = 'PUMP HARDER';
-    $('#factInfo').textContent = `Lv ${S.pump} · a seal every ${pumpGap().toFixed(1)} s, next ${(Math.max(.3, 2.4 * Math.pow(.82, S.pump + 1))).toFixed(1)} s · ${fmt(pumpCost())} coins`;
-    fb.disabled = S.coins < pumpCost();
-  }
+  const fb = $('#factBtn'), c = TIER_COST[S.factory];
+  $('#factIcon').src = icons.i_factory;
+  $('#factName').textContent = S.factory ? 'UPGRADE THE CONTRAPTION' : 'BUILD THE CONTRAPTION';
+  $('#factInfo').textContent = [`A loop-the-loop tube that slurps seals out of the sea and spits out coins · ${fmt(c)} coins`,
+    `Tier 2: twice the slurp. The sea won't like it · ${fmt(c)} coins`, `Tier 3: maximum slurp. What could possibly go wrong? · ${fmt(c)} coins`][S.factory] || '';
+  fb.disabled = c == null || S.coins < c;
   const cap = sledCap();
   $('#sledLine').textContent = ({
     home: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`, turn: `On the sled: ${fmt(S.load)} / ${fmt(cap)} pelts`,
@@ -1670,10 +2353,25 @@ function refreshPanel() {
     down: 'The sled is coming back',
   })[sled.st] + (S.heap > 0 ? ` · ${fmt(S.heap)} on the ice` : '');
   const st = S.stats;
-  $('#stats').textContent = `Bonks ${fmt(st.bonks)} · Seals ${fmt(st.kos)} · Chipped ${fmt(st.chipped)} · Slurped ${fmt(st.slurped)} · Golden ${st.golden} · Got away ${st.escaped} · Trips ${st.trips} · Best combo x${st.best.toFixed(1)}`;
+  $('#stats').textContent = `Seals ${fmt(st.kos + st.chipped + st.slurped)} · Golden ${st.golden} · Got away ${st.escaped} · Trips ${st.trips} · Best combo x${st.best.toFixed(1)}`;
 }
-let hudLast = 0;
+let hudLast = 0, heartsShown = '';
+function apocHud() {
+  $('#dayText').textContent = `DAY ${S.day} · WAVE ${S.wave}`;
+  const key = `${Math.ceil(S.hp)}/${maxHp()}`;
+  if (key !== heartsShown) {               // whole hearts, a half, and the empty containers
+    heartsShown = key; const hb = $('#heartsBadge'), hp = Math.max(0, Math.ceil(S.hp)); hb.innerHTML = '';
+    for (let i = 0; i < maxHp() / 2; i++) { const im = document.createElement('img'); im.alt = ''; im.src = hp >= i * 2 + 2 ? icons.heart_full : hp === i * 2 + 1 ? halfHeart : icons.heart_empty; hb.appendChild(im); }
+    hb.setAttribute('aria-label', `${hp / 2} of ${maxHp() / 2} hearts`);
+  }
+  const wb = $('#waveBtn'), alive = mutants.length + apoc.queue.length;
+  wb.disabled = apoc.st !== 'break' || apoc.dead;
+  wb.textContent = apoc.dead ? 'Game over' : apoc.st === 'wave' ? `${alive} mutant${alive === 1 ? '' : 's'} left` : apoc.st === 'break' ? `Wave ${S.wave + 1} in ${Math.max(0, Math.ceil(8 - apoc.t))} s` : 'Here they come...';
+}
 function refreshHud() {
+  const ap = !!S.apoc;
+  $('#heartsBadge').hidden = !ap; $('#rateBadge').hidden = ap; $('#fishBtn').hidden = ap; $('#sledBtn').hidden = ap; $('#weaponBar').hidden = !ap; $('#waveBtn').hidden = !ap; $('#fireBtn').hidden = !ap;
+  if (ap) { apocHud(); const cb = $('#combo'); cb.hidden = true; return; }
   const perMin = income.reduce((a, [, n]) => a + n, 0) * 2;
   $('#rateText').textContent = `${fmt(perMin)} pelts / min`;
   $('#dayText').textContent = `DAY ${S.day}`;
@@ -1694,7 +2392,7 @@ function refreshHud() {
   $('#sledFill').style.transform = `scaleX(${home ? Math.min(1, S.load / cap) : sled.st === 'up' ? sled.d / ROAD_LEN : sled.st === 'down' ? sled.d / ROAD_LEN : 1})`;
   $('#sledText').textContent = home ? (S.load ? `Send sled ${fmt(S.load)}/${fmt(cap)}` : 'Sled empty') : sled.st === 'sell' ? 'Selling...' : sled.st === 'up' ? 'Hauling up...' : 'Coming back...';
 }
-let icons = {};
+let icons = {}, halfHeart = '';
 
 // ---------------------------------------------------------------- input
 function worldPoint(e) {
@@ -1702,12 +2400,28 @@ function worldPoint(e) {
   return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H];
 }
 function inBox([x0, y0, w, h], x, y, pad = 3) { return x >= x0 - pad && x <= x0 + w + pad && y >= y0 - pad && y <= y0 + h + pad; }
+function apocTap(x, y) {
+  if (apoc.dead || apoc.st === 'intro') return;
+  const m = mutantAt(x, y);
+  if (m) {
+    if (S.weapon === 'club') { if (hunter.target === m) hunter.pending = Math.min(3, hunter.pending + 1); else { hunter.target = m; hunter.pending = 1; } }
+    else { const ty = m.y - (m.z || 0) - m.T.top * .4; fireAt(m.x, ty); if (S.weapon === 'flamer') apoc.burst = { x: m.x, y: ty, until: now + .45 }; }
+    return;
+  }
+  hunter.target = null; hunter.pending = 0;
+  const [tx, ty] = nearestIce(x, y); planPath(tx, ty);
+}
 function tap(x, y) {
   Snd.init();
+  if (S.apoc) return apocTap(x, y);
   if (gull.state !== 'away' && inBox(gullBox(), x, y)) { shooGull(); return; }
   for (let i = 0; i < dogs(); i++) {        // a pat for a good dog
     const [dx, dy, , , a] = dogPos(i);
     if (a > 0 && Math.hypot(x - dx, y - (dy - 12)) < 11) { Snd.bark(); say('♥', dx, dy - 30, { size: 8, color: '#ff8fa0' }); return; }
+  }
+  if (S.lv.decoy && Math.abs(x - DECOY.x) < 20 && y > DECOY.y - 26 && y < DECOY.y + 2) {   // knock knock
+    Snd.bonk(1.6); say(pick(['wooden.', 'knock knock', "it's a decoy"]), DECOY.x, DECOY.y - 28, { size: 6, color: '#f3dcb4', edge: '#5a3a22', life: .9 });
+    return;
   }
   const under = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && s.state !== 'hooked' && s.state !== 'drop' && inBox(sealBox(s), x, y));
   const hit = under.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - x, a.y - 10 - y) - Math.hypot(b.x - x, b.y - 10 - y))[0] || under[0];
@@ -1741,14 +2455,14 @@ function serialize() {                    // a sled still out on the road is sav
   if (sled.st !== 'home' && sled.st !== 'turn') o.load += sled.cargo;
   return o;
 }
-const machineRate = () => S.lv.drones * 1.6 + (S.factory ? 14 / pumpGap() : 0);   // pelts a second, near enough
+const machineRate = () => (S.apoc ? 0 : S.lv.drones * 1.6) + (S.factory ? 18 / tierGap() : 0);   // coins a second, near enough
 function save() { try { localStorage.setItem('cozy-pelts', JSON.stringify(serialize())); } catch (e) {} }
 function migrate(o) {                    // a save from before the sled run: every coin spent on gear that is gone comes back
   const spent = (base, grow, n) => { let t = 0; for (let i = 0; i < (n || 0); i++) t += Math.ceil(base * Math.pow(grow, i)); return t; };
   const lv = o.lv || {}, n = fresh();
   n.coins = Math.floor((o.pelts || 0) + spent(50, 1.55, lv.club) + spent(100, 1.5, lv.sled) + spent(75, 1.65, lv.mittens)
-    + spent(250, 1.8, lv.cocoa) + spent(1000, 12, o.camp));
-  n.lv.boots = Math.min(6, lv.boots || 0); n.lv.bucket = Math.min(6, lv.bucket || 0);
+    + spent(250, 1.8, lv.cocoa) + spent(1000, 12, o.camp) + spent(60, 1.6, lv.boots));
+  n.lv.bucket = Math.min(6, lv.bucket || 0);
   Object.assign(n.stats, o.stats || {});
   for (const k of ['sound', 'day', 'dayT', 'total', 't']) if (o[k] != null) n[k] = o[k];
   n.tut = 3; n.tipShop = true; n.migrated = n.coins;
@@ -1761,6 +2475,15 @@ function restore(data) {
   if (!d.v) d = migrate(d);
   const base = fresh();
   S = Object.assign(base, d, { lv: Object.assign(base.lv, d.lv), stats: Object.assign(base.stats, d.stats), sound: Object.assign(base.sound, d.sound) });
+  if (S.pump) {                            // pump levels became the contraption's tiers
+    let back = 0; for (let i = 0; i < S.pump; i++) back += Math.ceil(5000 * Math.pow(2.2, i));
+    S.coins += back; delete S.pump;
+  }
+  if (S.over) { const snd = S.sound, day = S.day; S = fresh(); S.sound = snd; S.lostCamp = day; }   // that camp fell; start a fresh one
+  if (S.lv.boots) {                       // snow boots made way for the decoy; their price comes back
+    let back = 0; for (let i = 0; i < S.lv.boots; i++) back += Math.ceil(60 * Math.pow(2.2, i));
+    S.coins += back; S.bootsBack = back; delete S.lv.boots;
+  }
   const away = clamp((Date.now() - (d.t || Date.now())) / 1000, 0, 7200);
   return data && data.save ? 0 : away;
 }
@@ -1794,18 +2517,29 @@ async function start(data) {
   [atlas, bg] = await Promise.all([loadImg('__ATLAS_PNG__'), loadImg('__BG_PNG__')]);
   atlasGrey = tinted('#aeb8cc');
   atlasGold = tinted('#ffc94f', '#3a2600');
+  atlasToxic = tinted('#a8ff7a', '#0a3000');
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const cx = c.getContext('2d'); cx.drawImage(bg, 0, 0);
-  buildMaps(cx.getImageData(0, 0, W, H).data);
-  buildHose();
+  const px = cx.getImageData(0, 0, W, H).data;
+  buildMaps(px);
+  buildTube(px);
   for (let i = 1; i < ROAD.length; i++) { SEG.push(Math.hypot(ROAD[i][0] - ROAD[i - 1][0], ROAD[i][1] - ROAD[i - 1][1])); ROAD_LEN += SEG[i - 1]; }
   for (const n in A) if (n.startsWith('i_')) icons[n] = iconURL(n);
-  icons.pelt = iconURL('pelt');
+  icons.pelt = iconURL('pelt'); icons.heart_full = iconURL('heart_full'); icons.heart_empty = iconURL('heart_empty');
+  { const c = document.createElement('canvas'), m = A.heart_full; c.width = m.w; c.height = m.h; const x = c.getContext('2d'), e = A.heart_empty;
+    x.drawImage(atlas, e.f[0][0], e.f[0][1], e.w, e.h, 0, 0, m.w, m.h); x.drawImage(atlas, m.f[0][0], m.f[0][1], m.w >> 1, m.h, 0, 0, m.w >> 1, m.h); halfHeart = c.toDataURL(); }
   $('#rateIcon').src = icons.i_seal; $('#coinIcon').src = icons.i_coin; $('#fishIcon').src = icons.i_fish; $('#dayIcon').src = icons.i_sun;
   $('#sledIcon').src = icons.i_sled; $('#factIcon').src = icons.i_factory;
   const away = restore(data);
-  syncMachines();
+  syncMachines(); pollute();
   buildPanel(icons);
+  if (S.apoc) { enterApocUI(); apoc.st = 'break'; apoc.t = 0; S.hp = Math.max(S.hp, 2); if (S.inWave) { S.wave--; S.inWave = 0; } }   // a wave cut short by a reload plays again
+  if (location.hash === '#sealocalypse' && !S.apoc) {   // a shortcut for trying the ending without an hour of seals
+    S.factory = Math.max(S.factory, 2); S.coins = Math.max(S.coins, TIER_COST[2] + 4000); syncMachines(); pollute();
+    setTimeout(() => toast('Test shortcut: the contraption is at tier 2, and you have the coins for tier 3.', 4200), 800);
+  }
+  if (S.lostCamp) { const d = S.lostCamp; delete S.lostCamp; setTimeout(() => toast(`Your last camp fell on day ${d}. A fresh one on the ice.`, 4200), 800); }
+  $('#againBtn').addEventListener('click', () => newCamp());
   $('#factBtn').addEventListener('click', buyFactory);
   $('#fishBtn').addEventListener('click', tossFish);
   $('#sledBtn').addEventListener('click', () => { Snd.init(); sendSled(); });
@@ -1815,15 +2549,59 @@ async function start(data) {
   $('#sfxTog').addEventListener('click', () => { Snd.init(); S.sound.sfx = !S.sound.sfx; setTog(); save(); });
   setTog();
   let armed = 0;
+  const newCamp = () => {
+    const snd = S.sound; S = fresh(); S.sound = snd; seals = []; bundles = []; combo.n = 0; sg.clearRect(0, 0, W, H);
+    Object.assign(sled, { st: 'home', d: 0, t: 0, cargo: 0, warned: false }); chipper.queue = []; chipper.grind = 0;
+    Object.assign(tube, { lumps: [], st: 'roam', prey: null }); preys = []; slicks = []; coinFx = [];
+    mutants = []; shots = []; orbs = []; acids = []; rings = []; tongues = []; flames = []; drones.length = 0;
+    Object.assign(apoc, { st: 'calm', t: 0, queue: [], dead: false, hold: null, press: null, inv: 0, flash: 0 });
+    $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS';
+    $('#over').hidden = true; $('#banner').hidden = true; heartsShown = '';
+    hunter.x = 112; hunter.y = 172; hunter.path = null; hunter.target = null;
+    gull.state = 'perch'; gull.x = PERCH.x; gull.y = PERCH.y;
+    buildPanel(icons); syncMachines(); Snd.hum(); save(); dirtyPanel = true; toast('A fresh camp on the ice.');
+  };
+  window.__newCamp = newCamp;
   $('#resetBtn').addEventListener('click', e => {
     if (Date.now() - armed > 2500) { armed = Date.now(); e.target.textContent = 'Tap again to start over'; setTimeout(() => e.target.textContent = 'New camp', 2500); return; }
-    const snd = S.sound; S = fresh(); S.sound = snd; seals = []; bundles = []; combo.n = 0; sg.clearRect(0, 0, W, H);
-    Object.assign(sled, { st: 'home', d: 0, t: 0, cargo: 0, warned: false }); factory.lumps = []; chipper.queue = []; chipper.grind = 0;
-    syncMachines(); Snd.hum();
-    e.target.textContent = 'New camp'; save(); dirtyPanel = true; toast('A fresh camp on the ice.');
+    e.target.textContent = 'New camp'; newCamp();
   });
-  view.addEventListener('pointerdown', e => { e.preventDefault(); const [x, y] = worldPoint(e); tap(x, y); });
+  view.addEventListener('pointerdown', e => {
+    e.preventDefault(); const [x, y] = worldPoint(e);
+    if (S.apoc) {                          // a press that is held, or a right click, keeps the gun going at the pointer
+      apoc.press = { x, y, x0: x, y0: y, t: performance.now(), id: e.pointerId };
+      if (e.button === 2) { Snd.init(); apoc.hold = [x, y]; return; }
+      if (e.pointerType === 'mouse' && S.weapon !== 'club' && !mutantAt(x, y)) { Snd.init(); apoc.press.wait = true; return; }   // a click walks when it lifts; a hold fires
+      // on a touchscreen a tap on the ice walks at once: the other thumb is on FIRE
+    }
+    tap(x, y);
+  });
+  view.addEventListener('pointermove', e => {
+    if (!apoc.press) return;
+    const [x, y] = worldPoint(e); apoc.press.x = x; apoc.press.y = y; if (apoc.hold) apoc.hold = [x, y];
+  });
+  const release = e => {
+    const p = apoc.press;
+    if (p && p.wait && !apoc.hold && e.type === 'pointerup') tap(p.x0, p.y0);
+    apoc.press = null; apoc.hold = null;
+  };
+  view.addEventListener('pointerup', release); view.addEventListener('pointercancel', release); view.addEventListener('pointerleave', release);
+  const fb = $('#fireBtn'), fireOff = () => { apoc.fireHeld = false; fb.classList.remove('on'); };
+  fb.addEventListener('pointerdown', e => { e.preventDefault(); Snd.init(); try { fb.setPointerCapture(e.pointerId); } catch (_) {} apoc.fireHeld = true; fb.classList.add('on'); });
+  fb.addEventListener('pointerup', fireOff); fb.addEventListener('pointercancel', fireOff); fb.addEventListener('lostpointercapture', fireOff);
+  fb.addEventListener('contextmenu', e => e.preventDefault());
+  view.addEventListener('contextmenu', e => { if (S.apoc) e.preventDefault(); });
+  addEventListener('keyup', e => { delete apoc.keys[e.key.toLowerCase()]; });
+  addEventListener('blur', () => { apoc.keys = {}; apoc.hold = null; apoc.press = null; apoc.fireHeld = false; $('#fireBtn').classList.remove('on'); });
   addEventListener('keydown', e => {
+    if (S.apoc) {
+      const k = e.key.toLowerCase();
+      if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { apoc.keys[k] = true; if (k.startsWith('arrow')) e.preventDefault(); }
+      const pickW = { 1: 'club', 2: 'harpoon', 3: 'flamer' }[e.key];
+      if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; }
+      if (e.key === ' ' && (e.target === document.body || e.target === $('#fireBtn'))) { e.preventDefault(); Snd.init(); apoc.keys[' '] = true; }   // held, like FIRE
+      return;
+    }
     if (e.key === 'f' || e.key === 'F') tossFish();
     if (e.key === 's' || e.key === 'S') { Snd.init(); sendSled(); }
     if (e.key === ' ' && e.target === document.body) {
@@ -1843,6 +2621,9 @@ async function start(data) {
   if (S.migrated) {
     const n = S.migrated; delete S.migrated;
     setTimeout(() => toast(`New gear in the ledger. Your old pelts and upgrades came back as ${fmt(n)} coins.`, 5200), 900);
+  } else if (S.bootsBack) {
+    const n = S.bootsBack; delete S.bootsBack;
+    setTimeout(() => toast(`The Snow Boots made way for a Seal Decoy. Their ${fmt(n)} coins came back.`, 5200), 900);
   }
   let hiddenAt = 0;
   document.addEventListener('visibilitychange', () => {
@@ -1858,7 +2639,7 @@ async function start(data) {
   layout();
   for (let i = 0; i < 2; i++) spawnSeal(false);
   for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
-  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, sled, drones, factory, chipper, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
+  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, sled, drones, tube, chipper, apoc, mutants: () => mutants, orbs: () => orbs, spawnMutant, startWave, startApocalypse, hitMutant, fireAt, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
     refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
   last = performance.now();
   let faults = 0;

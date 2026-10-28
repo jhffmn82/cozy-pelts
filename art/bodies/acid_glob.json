@@ -1,0 +1,10 @@
+{
+ "description": "a glob of glowing green acid vomit flying through the air, dripping, game projectile sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail"
+}

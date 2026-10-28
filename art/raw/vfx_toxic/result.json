@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_toxic",
+ "files": {
+  "vfx-toxic.gif": "https://api.pixellab.ai/mcp/pixel-tools/2cab1293-9aa4-42f3-a7b3-43759b54a178/vfx-toxic.gif",
+  "vfx-toxic.png": "https://api.pixellab.ai/mcp/pixel-tools/2cab1293-9aa4-42f3-a7b3-43759b54a178/vfx-toxic.png",
+  "vfx-toxic.json": "https://api.pixellab.ai/mcp/pixel-tools/2cab1293-9aa4-42f3-a7b3-43759b54a178/vfx-toxic.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 24,
+  "y": 20,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 48,
+  "w": 48
+ },
+ "frames": 8,
+ "message": "A 48x48, 8-frame one-shot: a bright green flash, a lumpy toxic burst that bursts outward, slime droplets flung out and falling back, and small bubbles rising as it fades. The slime droplets can touch the bottom edge on the last frame, so nudge the origin up if you see clipping. Try the size of the burst (boom radius) and the slime speed and gravity to tune it.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=c787ea8b-07bc-4e3b-90a1-16be4098c69f",
+ "effect_id": "c787ea8b-07bc-4e3b-90a1-16be4098c69f",
+ "gif_exact": true,
+ "result_id": "2cab1293-9aa4-42f3-a7b3-43759b54a178",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "373a0aa4-f518-48b7-aaf8-4be745b7f00f",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

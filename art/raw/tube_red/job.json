@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/tube_red.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABiklEQVR4nM2SQUgUYRzFf9/n2oyIoDury7ChB81LRu6hWxDLKq6HRSQwukR5E5SKvCQIEki3kvDUyYsEgXiqQEL0IOUpQeoUC2FhQYkKiYrN6xA7OM3u3Xf8eL/H9x5/OLMqJLJyrCfXpuTWpFTNZyqBQ+kkzbV/6Mv1cXJwxNN3JR59fQXAUfDLVA3oMZc1f7WFltU37PeOs/5lE4DF7R8M+mmWd+qY2X3PYfAz5OzpgH6vMYQXtgKKpQ2KpQ28xiztfhPnk62IKm0KiayWOvLay9/T885ROdYLnW5NSpOZmxqp79LcxfuVNykksjq4MaXp1lsRuCzHejq+81hLHflIQFhhRVvM+oe8bfqIiW+L9I85MUHk3f5v7M/1xuBzJqnh9uvcfTnPd3Op8gblriP1XXryYCK8Acd6msoM6ffAQ72+kIvVS0T/CUpfAWC4zmfQTwOwuP2JmQ8umYZuDJsRJFbWtSlh4HZbkWfXOgGYW/vG2OcXSOJYO9UP6bQc66k8ZqAgBp4d/QXFVY9NDTYv4wAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

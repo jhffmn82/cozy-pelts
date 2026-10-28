@@ -1,0 +1,12 @@
+{
+ "description": "a carved wooden seal decoy lying on its belly, a seal-shaped wooden statue painted white with simple painted black eyes and visible wood grain, a little chipped paint, side view facing left, cozy pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 48,
+  "height": 48
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side",
+ "direction": "west"
+}

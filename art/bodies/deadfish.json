@@ -1,0 +1,11 @@
+{
+ "description": "a small dead grey fish floating belly up with x eyes, seen from above, cartoon, game sprite",
+ "image_size": {
+  "width": 16,
+  "height": 16
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "high top-down"
+}

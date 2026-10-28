@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/heart_empty.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABDElEQVR4nNWSTUrDUBSFv2udJ/OkEexUE5oVtX0kaZekBXETQnERgoJDi4obcCi1OQ7ea4RaxB8QPMPD+w7vnnvh38u2jaacCqBdr5lfz23jCQFwenXygXmHhzMlUV9gAlMznKkpp0qiTJj3qqLSbricKon6SuNML8tVCEJ1USuNMx8CAlNd1F3IXpfQtpgZy5s7BuUAw0iijIv7hccM0jgDxH6vx4eAVkISh/mAMO5WQdb5q/XrzhLlcsfi4RILtjYPzEDi6fmRydGYs9tzkHaVaXK5811Efu40PlAa+/ld7kIPn8l8SBoHOGxgdDwK2/maVBVVt4lx8T24+0ldNnLDSbiBH8l+A/+R3gC1QHstnpPl1wAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

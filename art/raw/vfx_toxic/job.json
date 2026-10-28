@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_toxic.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "d6296e49-7bc6-49c6-988c-f492d886ee3c",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}
