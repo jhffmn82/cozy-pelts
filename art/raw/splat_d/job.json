@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/splat_d.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA7klEQVR4nN2RvU4CQRSFv9mh1H0CrHgKjCYwPsQWBhIbNVoplL4CATsqC6j0KYhCYtTOxgewtcCfcudQsEgIs66diaebc++555478Ncwv+xTnqZogAASDMqar+fUty4KCBZuOm+ccLddo2o3ae86ys2j4lWfd+oCdLZ/qKlzmjqnno3VjTaUrBrkRlCrcczF6wtgGYwe8cYz8Z9EGG4KIgCYzrCPpbRCVg5OgyuXApx6Nubq9mH+MJ57/0U5TdfcAxGM3vbqDEdPjNN3bFYWBMUhQpcmZqIPtrKLdwb9vN7wgATQ8li5wp+w9lX/HDNCR1CWgtj9BQAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

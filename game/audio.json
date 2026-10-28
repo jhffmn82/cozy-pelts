@@ -1,0 +1,194 @@
+{
+ "squeal_1": {
+  "kind": "sfx",
+  "secs": 0.72
+ },
+ "squeal_2": {
+  "kind": "sfx",
+  "secs": 0.72
+ },
+ "squeal_3": {
+  "kind": "sfx",
+  "secs": 0.74
+ },
+ "squeal_4": {
+  "kind": "sfx",
+  "secs": 0.8
+ },
+ "wail_1": {
+  "kind": "sfx",
+  "secs": 1.51
+ },
+ "wail_2": {
+  "kind": "sfx",
+  "secs": 1.09
+ },
+ "bonk_1": {
+  "kind": "sfx",
+  "secs": 0.19
+ },
+ "bonk_2": {
+  "kind": "sfx",
+  "secs": 0.15
+ },
+ "bonk_3": {
+  "kind": "sfx",
+  "secs": 0.21
+ },
+ "whoosh": {
+  "kind": "sfx",
+  "secs": 0.29
+ },
+ "splash_1": {
+  "kind": "sfx",
+  "secs": 0.73
+ },
+ "splash_2": {
+  "kind": "sfx",
+  "secs": 0.57
+ },
+ "plop": {
+  "kind": "sfx",
+  "secs": 0.19
+ },
+ "hop": {
+  "kind": "sfx",
+  "secs": 0.48
+ },
+ "arf_1": {
+  "kind": "sfx",
+  "secs": 0.51
+ },
+ "arf_2": {
+  "kind": "sfx",
+  "secs": 0.6
+ },
+ "squawk": {
+  "kind": "sfx",
+  "secs": 0.75
+ },
+ "bark": {
+  "kind": "sfx",
+  "secs": 0.25
+ },
+ "ding": {
+  "kind": "sfx",
+  "secs": 0.57
+ },
+ "buy": {
+  "kind": "sfx",
+  "secs": 1.11
+ },
+ "golden": {
+  "kind": "sfx",
+  "secs": 1.6
+ },
+ "fish": {
+  "kind": "sfx",
+  "secs": 0.5
+ },
+ "shore": {
+  "kind": "sfx",
+  "secs": 22.0
+ },
+ "nightair": {
+  "kind": "sfx",
+  "secs": 22.0
+ },
+ "ko_1": {
+  "kind": "voice",
+  "secs": 1.06
+ },
+ "ko_2": {
+  "kind": "voice",
+  "secs": 1.77
+ },
+ "ko_3": {
+  "kind": "voice",
+  "secs": 1.71
+ },
+ "ko_4": {
+  "kind": "voice",
+  "secs": 2.19
+ },
+ "ko_5": {
+  "kind": "voice",
+  "secs": 1.95
+ },
+ "sneak": {
+  "kind": "voice",
+  "secs": 1.84
+ },
+ "goldko": {
+  "kind": "voice",
+  "secs": 2.42
+ },
+ "escape_1": {
+  "kind": "voice",
+  "secs": 2.33
+ },
+ "escape_2": {
+  "kind": "voice",
+  "secs": 2.03
+ },
+ "shoo_1": {
+  "kind": "voice",
+  "secs": 1.88
+ },
+ "shoo_2": {
+  "kind": "voice",
+  "secs": 2.1
+ },
+ "bought_1": {
+  "kind": "voice",
+  "secs": 1.82
+ },
+ "bought_2": {
+  "kind": "voice",
+  "secs": 1.53
+ },
+ "fishy": {
+  "kind": "voice",
+  "secs": 1.77
+ },
+ "roll": {
+  "kind": "voice",
+  "secs": 1.42
+ },
+ "welcome": {
+  "kind": "voice",
+  "secs": 3.97
+ },
+ "goldseal": {
+  "kind": "voice",
+  "secs": 3.05
+ },
+ "rush": {
+  "kind": "voice",
+  "secs": 1.01
+ },
+ "gull": {
+  "kind": "voice",
+  "secs": 2.16
+ },
+ "stolen": {
+  "kind": "voice",
+  "secs": 2.32
+ },
+ "dusk": {
+  "kind": "voice",
+  "secs": 4.9
+ },
+ "dawn": {
+  "kind": "voice",
+  "secs": 1.6
+ },
+ "camp": {
+  "kind": "voice",
+  "secs": 1.75
+ },
+ "husky": {
+  "kind": "voice",
+  "secs": 2.64
+ }
+}

@@ -1,0 +1,1475 @@
+<title>Cozy Pelts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: the ice scene on the left, a wood-framed parchment ledger on the right; stacked on phones.
+   One deliberate look (a dusky arctic evening), so there is no light/dark switch. */
+:root {
+  --dusk: #2a2550;
+  --dusk-2: #3b3470;
+  --wood: #6e4127;
+  --wood-dark: #3d2315;
+  --wood-light: #a2703f;
+  --parch: #f7e9d2;
+  --parch-2: #ead2ae;
+  --ink: #4b2a2b;
+  --ink-soft: #81594a;
+  --berry: #c9333f;
+  --berry-dark: #8c1e2a;
+  --snow: #fffaf3;
+  --ice: #a7dcf2;
+  --gold: #f4c64f;
+  --font: "Pixelify Sans", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(120% 90% at 20% 0%, var(--dusk-2), var(--dusk) 70%);
+  color: var(--ink);
+  font-family: var(--font);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+#game { display: flex; gap: 14px; justify-content: center; align-items: flex-start; margin: 0 auto; }
+#game:not(.stacked) { height: 100%; align-items: center; }
+#game.stacked { flex-direction: column; align-items: center; }
+
+/* ---------- the scene ---------- */
+#stage {
+  position: relative; flex: none; container-type: inline-size;
+  border-radius: 6px; overflow: hidden; background: #6c79c8;
+  box-shadow: 0 0 0 3px var(--wood-dark), 0 0 0 6px var(--wood), 0 14px 40px rgba(10, 6, 30, .55);
+  touch-action: manipulation; user-select: none;
+}
+#view { display: block; width: 100%; height: 100%; image-rendering: pixelated; cursor: pointer; }
+.hud { position: absolute; left: 2cqw; top: 2cqw; display: flex; gap: 1.6cqw; pointer-events: none; }
+.badge {
+  display: flex; align-items: center; gap: 1.2cqw; height: 6.4cqw; padding: 0 2cqw 0 .6cqw;
+  background: var(--parch); color: var(--ink); font-weight: 600; font-size: 3.4cqw; letter-spacing: .04em;
+  border: .7cqw solid var(--wood); border-radius: 1.2cqw; box-shadow: 0 0 0 .4cqw var(--wood-dark);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.badge img { width: 5.2cqw; height: 5.2cqw; image-rendering: pixelated; background: #6fa7e0; border-radius: .6cqw; }
+#rateBadge img { background: transparent; }
+#combo {
+  position: absolute; right: 2cqw; top: 2cqw; pointer-events: none; text-align: right;
+  color: var(--snow); font-weight: 700; font-size: 4.2cqw; letter-spacing: .05em;
+  text-shadow: 0 .5cqw 0 var(--berry-dark), 0 0 1.2cqw rgba(201, 51, 63, .8);
+}
+#combo .bar { height: 1cqw; margin-top: .6cqw; margin-left: auto; width: 18cqw; background: rgba(40, 20, 40, .45); border-radius: 1cqw; overflow: hidden; }
+#combo .bar i { display: block; height: 100%; background: var(--gold); transform-origin: left; }
+#fishBtn {
+  position: absolute; left: 2cqw; bottom: 2cqw; display: flex; align-items: center; gap: 1cqw;
+  height: 8cqw; padding: 0 2.2cqw 0 .8cqw; font: 600 3.3cqw var(--font); color: var(--ink); cursor: pointer;
+  background: var(--parch); border: .7cqw solid var(--wood); border-radius: 1.4cqw; box-shadow: 0 0 0 .4cqw var(--wood-dark);
+  overflow: hidden;
+}
+#fishBtn img { width: 6cqw; height: 6cqw; image-rendering: pixelated; position: relative; }
+#fishBtn span { position: relative; }
+#fishBtn .cd { position: absolute; inset: 0; background: rgba(75, 42, 43, .28); transform-origin: left; }
+#fishBtn:disabled { cursor: default; color: var(--ink-soft); }
+#fishBtn:not(:disabled):hover { background: #fff3df; }
+#fishBtn:focus-visible, .card:focus-visible, #campBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+#toast {
+  position: absolute; left: 50%; top: 11cqw; transform: translateX(-50%); pointer-events: none;
+  padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); white-space: nowrap;
+  background: var(--parch); border: .6cqw solid var(--wood); border-radius: 1.2cqw; box-shadow: 0 0 0 .4cqw var(--wood-dark);
+  transition: opacity .25s, transform .25s; opacity: 0;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(.6cqw); }
+#intro {
+  position: absolute; inset: 0; display: grid; place-items: center; background: rgba(30, 24, 70, .38);
+}
+#intro .card-in {
+  width: min(76cqw, 520px); padding: 4cqw 5cqw; background: var(--parch); color: var(--ink);
+  border: 1cqw solid var(--wood); border-radius: 2cqw; box-shadow: 0 0 0 .6cqw var(--wood-dark), 0 2cqw 4cqw rgba(0, 0, 0, .35);
+  display: grid; gap: 2cqw; font-size: 3.4cqw; line-height: 1.35;
+}
+#intro h2 { margin: 0; font-size: 7cqw; font-weight: 700; letter-spacing: .03em; text-wrap: balance; color: var(--berry-dark); }
+#intro p { margin: 0; }
+#intro ul { margin: 0; padding-left: 4cqw; display: grid; gap: .8cqw; }
+#startBtn {
+  justify-self: start; margin-top: 1cqw; padding: 1.6cqw 5cqw; font: 700 4cqw var(--font); color: var(--snow); cursor: pointer;
+  background: var(--berry); border: .6cqw solid var(--berry-dark); border-radius: 1.4cqw; letter-spacing: .06em;
+  text-shadow: 0 .4cqw 0 var(--berry-dark);
+}
+
+/* ---------- the ledger ---------- */
+#panel {
+  flex: none; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 12px 12px 10px;
+  background:
+    repeating-linear-gradient(0deg, rgba(160, 110, 60, .06) 0 2px, transparent 2px 6px),
+    linear-gradient(var(--parch), var(--parch-2));
+  border-radius: 6px; overflow: auto;
+  box-shadow: 0 0 0 3px var(--wood-dark), 0 0 0 9px var(--wood), 0 0 0 12px var(--wood-dark), 0 14px 40px rgba(10, 6, 30, .55);
+}
+#game:not(.stacked) #panel { margin: 9px; }
+#game.stacked #panel { margin-top: 12px; }
+#panel h1 {
+  margin: 0; text-align: center; font-weight: 700; font-size: 31px; line-height: 1; letter-spacing: .02em; color: #5a2b2e;
+  text-shadow: 0 3px 0 #e2b98b; text-wrap: balance;
+}
+.trees { height: 10px; margin: -2px 6px 0;
+  background: repeating-linear-gradient(90deg, transparent 0 4px, #6aa392 4px 12px, transparent 12px 16px, #e7a3a6 16px 22px, transparent 22px 26px);
+  clip-path: polygon(0 100%, 3% 0, 6% 100%, 9% 0, 12% 100%, 15% 0, 18% 100%, 21% 0, 24% 100%, 27% 0, 30% 100%, 33% 0, 36% 100%, 39% 0, 42% 100%, 45% 0, 48% 100%, 51% 0, 54% 100%, 57% 0, 60% 100%, 63% 0, 66% 100%, 69% 0, 72% 100%, 75% 0, 78% 100%, 81% 0, 84% 100%, 87% 0, 90% 100%, 93% 0, 96% 100%, 100% 0, 100% 100%);
+}
+#peltBox {
+  display: flex; align-items: center; justify-content: center; gap: 10px; padding: 5px 10px;
+  border: 2px dashed #c79f74; border-radius: 10px; background: rgba(255, 250, 240, .55);
+  font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+#peltBox img { width: 36px; height: 36px; image-rendering: pixelated; }
+#peltBox b { font-size: 30px; color: #2f3a6b; min-width: 3ch; }
+#cards { display: grid; gap: 6px; }
+#game.stacked #cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card {
+  display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 9px; padding: 5px 7px; text-align: left;
+  font: inherit; color: var(--ink); cursor: pointer;
+  background: #fbf1e0; border: 2px solid #d9b98f; border-radius: 9px; box-shadow: 0 2px 0 #c9a272;
+}
+.card .ico { width: 44px; height: 44px; border-radius: 7px; background: #9ccbe3; display: grid; place-items: center; box-shadow: inset 0 0 0 2px #7fb1cc; }
+.card .ico img { width: 36px; height: 36px; image-rendering: pixelated; }
+.card .txt { min-width: 0; display: grid; gap: 1px; }
+.card .nm { font-weight: 700; font-size: 14px; letter-spacing: .03em; text-transform: uppercase; }
+.card .nm small { font-weight: 500; font-size: 12px; color: var(--ink-soft); text-transform: none; letter-spacing: 0; margin-left: 4px; }
+.card .ds { font-size: 12px; color: var(--ink-soft); line-height: 1.25; }
+.price {
+  display: flex; align-items: center; gap: 4px; padding: 4px 8px 4px 4px; font-weight: 700; font-size: 15px; color: var(--snow);
+  background: linear-gradient(var(--wood-light), var(--wood)); border: 2px solid var(--wood-dark); border-radius: 6px;
+  font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 1px 0 var(--wood-dark);
+}
+.price img { width: 22px; height: 22px; image-rendering: pixelated; }
+.card:not(:disabled):hover { background: #fff7ea; transform: translateY(-1px); }
+.card:not(:disabled):active { transform: translateY(1px); box-shadow: 0 1px 0 #c9a272; }
+.card:disabled { cursor: default; }
+.card.poor .price { filter: saturate(.3) brightness(.92); opacity: .75; }
+.card.maxed .price { background: #8fae7d; border-color: #5d7a4e; }
+.card.flash { animation: buy .35s ease-out; }
+@keyframes buy { 0% { background: #fff; } 100% { background: #fbf1e0; } }
+#campBtn {
+  display: grid; gap: 1px; justify-items: center; padding: 7px 8px 6px; cursor: pointer; font: inherit; color: var(--snow);
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .09) 0 6px, transparent 6px 12px),
+    linear-gradient(var(--berry), var(--berry-dark));
+  border: 3px solid #5d1119; border-radius: 12px; box-shadow: 0 3px 0 #5d1119, inset 0 0 0 3px rgba(255, 230, 230, .25);
+  text-shadow: 0 2px 0 #5d1119;
+}
+#campBtn b { font-size: 22px; letter-spacing: .08em; }
+#campBtn span { font-size: 12px; font-variant-numeric: tabular-nums; }
+#campBtn:disabled { cursor: default; filter: saturate(.45) brightness(.9); }
+#campBtn:not(:disabled):hover { filter: brightness(1.08); }
+#foot { display: grid; gap: 5px; font-size: 11px; color: var(--ink-soft); }
+#stats { font-variant-numeric: tabular-nums; line-height: 1.35; }
+.togs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tog {
+  font: 600 12px var(--font); color: var(--ink); cursor: pointer; padding: 4px 9px;
+  background: #fbf1e0; border: 2px solid #d9b98f; border-radius: 6px;
+}
+.tog[aria-pressed="false"] { color: var(--ink-soft); text-decoration: line-through; }
+@media (prefers-reduced-motion: reduce) { .card, #toast { transition: none; animation: none; } }
+</style>
+
+<main id="game">
+  <div id="stage">
+    <canvas id="view" width="256" height="231" aria-label="The ice floes. Tap a seal to bonk it, or tap the ice to walk there."></canvas>
+    <div class="hud">
+      <div class="badge" id="dayBadge"><img id="dayIcon" alt=""><span id="dayText">DAY 1</span></div>
+      <div class="badge" id="rateBadge"><img id="rateIcon" alt=""><span id="rateText">0 pelts / min</span></div>
+    </div>
+    <div id="combo" hidden><div id="comboText">COMBO x1.0</div><div class="bar"><i id="comboBar"></i></div></div>
+    <button id="fishBtn" type="button" title="Toss a fish to lure a seal rush (F)"><div class="cd" id="fishCd"></div><img id="fishIcon" alt=""><span id="fishText">Toss fish</span></button>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="intro">
+      <div class="card-in">
+        <h2>Cozy Pelts</h2>
+        <p>Seals hop up onto the ice to lounge. Tap one and your hunter runs over to bonk it.</p>
+        <ul>
+          <li>Hurt seals scoot for the water. Finish them for a pelt bundle.</li>
+          <li>Napping seals take sneak bonks: double damage, triple pelts.</li>
+          <li>Keep bonking to build a combo. Golden seals are rare and skittish.</li>
+          <li>Watch the gull. It has its eye on your sled.</li>
+        </ul>
+        <button id="startBtn" type="button">Start</button>
+      </div>
+    </div>
+  </div>
+  <aside id="panel" aria-label="Pelts and upgrades">
+    <h1>COZY PELTS</h1>
+    <div class="trees" aria-hidden="true"></div>
+    <div id="peltBox"><img id="peltIcon" alt=""><span>PELTS:</span><b id="peltCount">0</b></div>
+    <div id="cards"></div>
+    <button id="campBtn" type="button"><b>UPGRADE CAMP</b><span id="campInfo">Doubles every pelt</span></button>
+    <div id="foot">
+      <div id="stats"></div>
+      <div class="togs">
+        <button class="tog" id="musicTog" type="button" aria-pressed="true">Music</button>
+        <button class="tog" id="sfxTog" type="button" aria-pressed="true">Sounds</button>
+        <button class="tog" id="voxTog" type="button" aria-pressed="true">Voices</button>
+        <button class="tog" id="resetBtn" type="button">New camp</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<script>
+(() => {
+'use strict';
+const A = /*ATLAS_JSON*/{};
+const AUDIO = /*AUDIO_JSON*/{};   // ElevenLabs effects and voice lines, base64 MP3
+const W = 256, H = 231;
+const $ = s => document.querySelector(s);
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t * t * (3 - 2 * t);
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function fmt(n) {
+  n = Math.floor(n);
+  if (n < 100000) return n.toLocaleString('en-US');
+  const u = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx'];
+  let i = -1;
+  while (n >= 1000 && i < u.length - 1) { n /= 1000; i++; }
+  return (n < 100 ? n.toFixed(1) : Math.floor(n)) + u[i];
+}
+function loadImg(src) { return new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = src; }); }
+
+// ---------------------------------------------------------------- the ice
+// Floe tops traced on the background; the first four are where seals haul out.
+const FLOES = [
+  { id: 'west', seals: 3, pts: [[6,122],[14,118],[40,116],[66,117],[80,120],[82,126],[74,131],[60,129],[30,130],[8,130]] },
+  { id: 'main', seals: 6, pts: [[20,158],[30,153],[70,152],[110,153],[150,150],[190,148],[214,149],[226,160],[256,164],[256,196],[232,200],[205,205],[180,204],[160,200],[146,192],[140,186],[110,184],[84,184],[68,181],[66,166],[40,165],[22,164]] },
+  { id: 'south', seals: 1, pts: [[91,195],[100,192],[128,192],[136,195],[132,200],[96,200]] },
+  { id: 'shelf', seals: 2, pts: [[146,115],[160,110],[200,108],[212,111],[212,117],[170,119],[148,119]] },
+  { id: 'step', seals: 0, pts: [[89,135],[95,132],[106,132],[110,135],[106,138],[92,138]] },
+];
+const SLED = { x: 207, y: 184 }, HUSKY = { x: 157, y: 193 }, PERCH = { x: 221, y: 207 }, CHIMNEY = { x: 220, y: 27 };
+const WINDOWS = [[198,58],[213,58],[226,59],[188,60],[205,61]];
+let walk, water, exitDist, exitsOf = {};
+
+function inPoly(x, y, p) {
+  let c = false;
+  for (let i = 0, j = p.length - 1; i < p.length; j = i++) {
+    const [xi, yi] = p[i], [xj, yj] = p[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+const at = (m, x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? 0 : m[(y | 0) * W + (x | 0)];
+const onIce = (x, y) => at(walk, x, y) > 0;
+const isWater = (x, y) => at(water, x, y) === 1;
+
+function buildMaps(bgPixels) {
+  walk = new Uint8Array(W * H); water = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+    for (let f = 0; f < FLOES.length; f++) if (inPoly(x + .5, y + .5, FLOES[f].pts)) { walk[y * W + x] = f + 1; break; }
+  for (let y = 66; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 4, r = bgPixels[i], g = bgPixels[i + 1], b = bgPixels[i + 2];
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    if (!(b > r + 35 && b > 95 && (mx - mn) / mx > .3)) continue;
+    let cliff = false;                     // the blue faces under each floe are ice, not sea
+    for (let k = 1; k <= 15 && !cliff; k++) if (at(walk, x, y - k)) cliff = true;
+    if (!cliff && !walk[y * W + x]) water[y * W + x] = 1;
+  }
+  // exits: points on a floe's rim with open water a short hop away
+  FLOES.forEach((fl, fi) => {
+    const ex = []; const p = fl.pts;
+    for (let i = 0; i < p.length; i++) {
+      const [ax, ay] = p[i], [bx, by] = p[(i + 1) % p.length];
+      const len = Math.hypot(bx - ax, by - ay);
+      let nx = (by - ay) / len, ny = -(bx - ax) / len;
+      const mx = (ax + bx) / 2, my = (ay + by) / 2;
+      if (inPoly(mx + nx * 2, my + ny * 2, p)) { nx = -nx; ny = -ny; }
+      for (let s = 2; s < len - 2; s += 4) {
+        const x = ax + (bx - ax) * s / len, y = ay + (by - ay) * s / len;
+        for (const [dx, dy] of [[nx, ny], [0, 1], [Math.sign(nx) || 1, 0]]) {
+          let found = null;
+          for (let k = 3; k <= 28 && !found; k++) {
+            const wx = x + dx * k, wy = y + dy * k;
+            if (isWater(wx, wy) && isWater(wx + 3, wy) && isWater(wx - 3, wy) && isWater(wx, wy + 2)) found = [wx, wy, k];
+          }
+          if (found) {
+            const ix = x - nx * 5, iy = y - ny * 4;
+            if (at(walk, ix, iy) === fi + 1) ex.push({ ex: ix, ey: iy, wx: found[0], wy: found[1], dx, dy });
+            break;
+          }
+        }
+      }
+    }
+    exitsOf[fl.id] = ex;
+  });
+  exitDist = new Uint8Array(W * H);
+  FLOES.forEach(fl => fl.deepest = 0);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const f = walk[y * W + x]; if (!f) continue;
+    let d = 255;
+    for (const e of exitsOf[FLOES[f - 1].id]) d = Math.min(d, Math.hypot(e.ex - x, (e.ey - y) * 1.6));
+    exitDist[y * W + x] = d;
+    FLOES[f - 1].deepest = Math.max(FLOES[f - 1].deepest, d);
+  }
+}
+function nearestIce(x, y) {
+  if (onIce(x, y)) return [x, y];
+  for (let r = 1; r < 60; r++) for (let a = 0; a < 24; a++) {
+    const px = x + Math.cos(a / 24 * Math.PI * 2) * r, py = y + Math.sin(a / 24 * Math.PI * 2) * r * .7;
+    if (onIce(px, py)) return [px, py];
+  }
+  return [110, 170];
+}
+function roomy(x, y, fi) {
+  return at(walk, x - 13, y) === fi && at(walk, x + 13, y) === fi && at(walk, x, y - 3) === fi && at(walk, x, y + 2) === fi;
+}
+function deep(x, y, fi) {                 // as far from open water as this floe allows, where a seal lounges
+  return roomy(x, y, fi) && at(exitDist, x, y) >= Math.min(14, FLOES[fi - 1].deepest * .7);
+}
+function spotOn(fl, tries = 40) {
+  const fi = FLOES.indexOf(fl) + 1, xs = fl.pts.map(p => p[0]), ys = fl.pts.map(p => p[1]);
+  for (let i = 0; i < tries; i++) {
+    const x = rnd(Math.min(...xs), Math.max(...xs)), y = rnd(Math.min(...ys), Math.max(...ys));
+    if (roomy(x, y, fi)) return [x, y];
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------- state
+const UPG = [
+  { id: 'club', name: 'Sturdier Club', icon: 'i_club', base: 50, grow: 1.55, max: 60,
+    ds: () => '+1 pelt per bonk', now: () => `${fmt(perBonk())} a bonk, hits for ${dmg()}` },
+  { id: 'sled', name: 'Helper Sled', icon: 'i_sled', base: 100, grow: 1.5, max: 60,
+    ds: () => '+2 pelts / sec', now: () => `${fmt(passive())} / sec` },
+  { id: 'mittens', name: 'Warmer Mittens', icon: 'i_mittens', base: 75, grow: 1.65, max: 8,
+    ds: () => 'Swing faster', now: () => `${swingTime().toFixed(2)} s a swing` },
+  { id: 'boots', name: 'Snow Boots', icon: 'i_boots', base: 60, grow: 1.6, max: 6,
+    ds: () => 'Run and hop faster', now: () => `${Math.round(runSpeed())} paces a sec` },
+  { id: 'bucket', name: 'Fish Bucket', icon: 'i_bucket', base: 150, grow: 1.75, max: 6,
+    ds: () => 'More seals, quicker fish tosses', now: () => `${maxSeals()} seals, toss every ${fishCooldown()} s` },
+  { id: 'cocoa', name: 'Hot Cocoa', icon: 'i_cocoa', base: 250, grow: 1.8, max: 5,
+    ds: () => 'Bigger bundles, longer combos', now: () => `bundles x${bundleMult().toFixed(1)}` },
+];
+const TYPES = {
+  pup: { hp: 3, speed: 12, mult: 1, pitch: 1.15, stay: [24, 40] },
+  grey: { hp: 6, speed: 15, mult: 3, pitch: .78, stay: [20, 32] },
+  gold: { hp: 4, speed: 24, mult: 20, pitch: 1.4, stay: [11, 15], skittish: true },
+};
+function fresh() {
+  return { pelts: 0, total: 0, lv: { club: 0, sled: 0, mittens: 0, boots: 0, bucket: 0, cocoa: 0 }, camp: 0,
+    day: 1, dayT: .04, pile: 0, fishCd: 8, gullCd: 70, tut: 0,
+    stats: { bonks: 0, kos: 0, escaped: 0, golden: 0, best: 1 }, sound: { music: true, sfx: true, voice: true }, t: Date.now() };
+}
+let S = fresh();
+const campMult = () => Math.pow(2, S.camp);
+const dmg = () => 1 + Math.floor(S.lv.club / 2);
+const perBonk = () => (1 + S.lv.club) * campMult();
+const passive = () => 2 * S.lv.sled * campMult();
+const swingTime = () => Math.max(.2, .5 * Math.pow(.87, S.lv.mittens));
+const runSpeed = () => 115 * (1 + .18 * S.lv.boots);
+const maxSeals = () => Math.min(9, 3 + S.lv.bucket);
+const comboWindow = () => 2.6 + .4 * S.lv.cocoa;
+const bundleMult = () => 1 + .5 * S.lv.cocoa;
+const fishCooldown = () => 45 - 4 * S.lv.bucket;
+const campCost = () => 1000 * Math.pow(12, S.camp);
+const cost = u => Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id]));
+const comboMult = () => 1 + .1 * Math.min(Math.max(combo.n - 1, 0), 30);
+
+let seals = [], fx = [], drops = [], texts = [], bundles = [], sparkles = [], flakes = [], pools = [];
+let combo = { n: 0, t: 0 }, income = [], shake = 0, now = 0, rush = 0, sid = 0;
+const hunter = { x: 112, y: 172, dir: 1, path: null, target: null, pending: 0, swing: -1, struck: false, cheer: 0, at: 0, z: 0 };
+const gull = { state: 'perch', x: PERCH.x, y: PERCH.y, t: 0, dir: -1, at: 0, carry: 0, tx: 0, ty: 0 };
+let husky = { at: 0, pet: 0 };
+
+// ---------------------------------------------------------------- drawing setup
+const world = document.createElement('canvas'); world.width = W; world.height = H;
+const g = world.getContext('2d');
+const stains = document.createElement('canvas'); stains.width = W; stains.height = H;
+const sg = stains.getContext('2d');
+const tmp = document.createElement('canvas'); tmp.width = 80; tmp.height = 80;
+const tg = tmp.getContext('2d');
+const view = $('#view'); const v = view.getContext('2d');
+let atlas, atlasGrey, atlasGold, bg, scale = 3;
+
+function tinted(color, glow) {
+  const c = document.createElement('canvas'); c.width = atlas.width; c.height = atlas.height;
+  const x = c.getContext('2d');
+  x.drawImage(atlas, 0, 0);
+  x.globalCompositeOperation = 'multiply'; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+  if (glow) { x.globalCompositeOperation = 'lighter'; x.fillStyle = glow; x.fillRect(0, 0, c.width, c.height); }
+  x.globalCompositeOperation = 'destination-in'; x.drawImage(atlas, 0, 0);
+  return c;
+}
+function spr(ctx, name, fi, x, y, flip, src) {
+  const m = A[name]; if (!m) return;
+  const n = m.f.length, f = m.f[(((fi | 0) % n) + n) % n];
+  x = Math.round(x); y = Math.round(y);
+  if (flip) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(-1, 1);
+    ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, m.ox, m.oy, m.w, m.h);
+    ctx.restore();
+  } else ctx.drawImage(src || atlas, f[0], f[1], m.w, m.h, x + m.ox, y + m.oy, m.w, m.h);
+}
+function iconURL(name) {
+  const m = A[name]; const c = document.createElement('canvas'); c.width = m.w; c.height = m.h;
+  c.getContext('2d').drawImage(atlas, m.f[0][0], m.f[0][1], m.w, m.h, 0, 0, m.w, m.h);
+  return c.toDataURL();
+}
+
+// ---------------------------------------------------------------- sound (all synthesised)
+const Snd = {
+  c: null,
+  init() {
+    if (this.c) { if (this.c.state === 'suspended') this.c.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const c = this.c = new C();
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.connect(c.destination);
+    this.sfx = c.createGain(); this.sfx.connect(comp);
+    this.mus = c.createGain(); this.mus.connect(comp);
+    this.amb = c.createGain(); this.amb.gain.value = .5; this.amb.connect(comp);
+    this.vox = c.createGain(); this.vox.connect(comp);
+    const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    this.noise = buf;
+    this.apply();
+    this.loadSamples().then(() => { if (!this.loops()) this.ambient(); });
+    this.nextBeat = c.currentTime + .3; this.beat = 0;
+    setInterval(() => this.music(), 120);
+  },
+  apply() {
+    if (!this.c) return;
+    this.sfx.gain.value = S.sound.sfx ? .9 : 0;
+    this.amb.gain.value = S.sound.sfx ? .5 : 0;
+    this.mus.gain.value = S.sound.music ? .55 : 0;
+    this.vox.gain.value = S.sound.voice ? 1 : 0;
+  },
+  buf: {}, loaded: false, speaking: null, pending: null,
+  async loadSamples() {
+    await Promise.all(Object.entries(AUDIO).map(async ([name, b64]) => {
+      try {
+        const bin = atob(b64), u = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+        const ab = await this.c.decodeAudioData(u.buffer);
+        const group = name.replace(/_\d+$/, '');
+        (this.buf[group] = this.buf[group] || []).push(ab);
+      } catch (e) { /* that clip stays on the synthesised fallback */ }
+    }));
+    this.loaded = true;
+    if (this.pending) { const [n, p] = this.pending; this.pending = null; this.voice(n, p); }
+  },
+  play(name, { vol = 1, rate = 1, bus } = {}) {
+    const list = this.buf[name]; if (!this.c || !list || !list.length) return null;
+    const src = this.c.createBufferSource(); src.buffer = pick(list); src.playbackRate.value = rate;
+    const gn = this.c.createGain(); gn.gain.value = vol; src.connect(gn); gn.connect(bus || this.sfx); src.start();
+    return src;
+  },
+  loops() {                               // the shore by day, wind and a campfire by night
+    if (!this.buf.shore || !this.buf.nightair) return false;
+    this.dayAmb = this.c.createGain(); this.nightAmb = this.c.createGain();
+    for (const [name, gn] of [['shore', this.dayAmb], ['nightair', this.nightAmb]]) {
+      const src = this.c.createBufferSource(); src.buffer = this.buf[name][0]; src.loop = true;
+      src.connect(gn); gn.connect(this.amb); src.start();
+    }
+    this.mix(night());
+    return true;
+  },
+  mix(n) {
+    if (!this.dayAmb) return;
+    const t = this.c.currentTime;
+    this.dayAmb.gain.setTargetAtTime(.5 * (1 - n) + .08, t, .5);
+    this.nightAmb.gain.setTargetAtTime(.55 * n, t, .5);
+  },
+  voice(name, prio = 1) {                 // one speaker at a time; the narrator outranks the hunter
+    if (!this.c || !S.sound.voice) return false;
+    if (!this.loaded) { if (!this.pending || prio >= this.pending[1]) this.pending = [name, prio]; return false; }
+    const t = this.c.currentTime, sp = this.speaking;
+    if (sp && t < sp.end) { if (prio <= sp.prio) return false; try { sp.src.stop(); } catch (e) {} }
+    const src = this.play(name, { bus: this.vox }); if (!src) return false;
+    const end = t + src.buffer.duration;
+    this.speaking = { src, prio, end };
+    if (S.sound.music) { this.mus.gain.setTargetAtTime(.22, t, .08); this.mus.gain.setTargetAtTime(.55, end, .4); }
+    return true;
+  },
+  env(node, t, a, peak, hold, rel) {
+    const gn = this.c.createGain(); gn.gain.setValueAtTime(.0001, t);
+    gn.gain.exponentialRampToValueAtTime(peak, t + a);
+    gn.gain.setValueAtTime(peak, t + a + hold);
+    gn.gain.exponentialRampToValueAtTime(.0001, t + a + hold + rel);
+    node.connect(gn); return gn;
+  },
+  noiseSrc(t, dur) { const n = this.c.createBufferSource(); n.buffer = this.noise; n.start(t, Math.random()); n.stop(t + dur); return n; },
+  filt(type, f, q) { const b = this.c.createBiquadFilter(); b.type = type; b.frequency.value = f; if (q) b.Q.value = q; return b; },
+  ok() { return this.c && S.sound.sfx; },
+  squeal(p = 1, len = .34, vol = .32, wail = false) {
+    if (!this.ok()) return;
+    if (this.play(wail ? 'wail' : 'squeal', { vol: wail ? 1 : .9, rate: p / 1.15 * rnd(.94, 1.07) })) return;
+    const c = this.c, t = c.currentTime + .01;
+    p *= rnd(.93, 1.08);
+    const bp = this.filt('bandpass', 2100 * p, 1.1), out = this.env(bp, t, .015, vol, len * .5, len * .5);
+    out.connect(this.sfx);
+    const vib = c.createOscillator(); vib.frequency.value = rnd(18, 30);
+    const vg = c.createGain(); vg.gain.value = 70 * p; vib.connect(vg);
+    for (const [type, k, gn] of [['sawtooth', 1, 1], ['square', 1.5, .35]]) {
+      const o = c.createOscillator(); o.type = type;
+      const f = o.frequency;
+      if (wail) { f.setValueAtTime(1300 * p * k, t); f.exponentialRampToValueAtTime(1750 * p * k, t + .12); f.exponentialRampToValueAtTime(420 * p * k, t + len); }
+      else { f.setValueAtTime(760 * p * k, t); f.exponentialRampToValueAtTime(1650 * p * k, t + len * .28); f.exponentialRampToValueAtTime(1050 * p * k, t + len); }
+      vg.connect(f);
+      const og = c.createGain(); og.gain.value = gn; o.connect(og); og.connect(bp);
+      o.start(t); o.stop(t + len + .05);
+    }
+    vib.start(t); vib.stop(t + len + .05);
+  },
+  bonk(heavy = 1) {
+    if (!this.ok()) return; const c = this.c, t = c.currentTime + .005;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(190 * heavy, t); o.frequency.exponentialRampToValueAtTime(52, t + .14);
+    const sampled = this.play('bonk', { vol: 1, rate: rnd(.9, 1.1) });
+    this.env(o, t, .004, sampled ? .45 : .8, .02, .14).connect(this.sfx); o.start(t); o.stop(t + .2);
+    if (sampled) return;
+    const n = this.noiseSrc(t, .06), bp = this.filt('bandpass', 1700, .8); n.connect(bp);
+    this.env(bp, t, .002, .5, .01, .05).connect(this.sfx);
+    const n2 = this.noiseSrc(t + .02, .2), sq = this.filt('bandpass', 900, 3.5);
+    sq.frequency.setValueAtTime(950, t + .02); sq.frequency.exponentialRampToValueAtTime(260, t + .2);
+    n2.connect(sq); this.env(sq, t + .02, .01, .55, .02, .15).connect(this.sfx);
+  },
+  whiff() {
+    if (!this.ok() || this.play('whoosh', { vol: .55, rate: rnd(.9, 1.15) })) return; const t = this.c.currentTime;
+    const n = this.noiseSrc(t, .18), bp = this.filt('bandpass', 600, 1.5);
+    bp.frequency.setValueAtTime(500, t); bp.frequency.exponentialRampToValueAtTime(1800, t + .15);
+    n.connect(bp); this.env(bp, t, .03, .18, .02, .1).connect(this.sfx);
+  },
+  splash(vol = .35) {
+    if (!this.ok() || this.play('splash', { vol: vol * 2.4, rate: rnd(.92, 1.08) })) return; const c = this.c, t = c.currentTime;
+    const n = this.noiseSrc(t, .5), hp = this.filt('highpass', 700), lp = this.filt('lowpass', 4200);
+    n.connect(hp); hp.connect(lp); this.env(lp, t, .01, vol, .04, .38).connect(this.sfx);
+    const o = c.createOscillator(); o.frequency.setValueAtTime(240, t); o.frequency.exponentialRampToValueAtTime(620, t + .1);
+    this.env(o, t, .005, vol * .4, .02, .08).connect(this.sfx); o.start(t); o.stop(t + .15);
+  },
+  boing() {
+    if (!this.ok() || this.play('hop', { vol: .6 })) return; const c = this.c, t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(700, t + .12);
+    this.env(o, t, .005, .14, .03, .1).connect(this.sfx); o.start(t); o.stop(t + .2);
+  },
+  plop() {
+    if (!this.ok() || this.play('plop', { vol: .8 })) return; const c = this.c, t = c.currentTime;
+    const n = this.noiseSrc(t, .12), lp = this.filt('lowpass', 520); n.connect(lp);
+    this.env(lp, t, .005, .35, .01, .09).connect(this.sfx);
+  },
+  arf(p = 1) {
+    if (!this.ok() || this.play('arf', { vol: .7, rate: p / 1.25 })) return; const c = this.c;
+    for (let k = 0; k < 2; k++) {
+      const t = c.currentTime + k * .16, o = c.createOscillator(); o.type = 'square';
+      o.frequency.setValueAtTime(560 * p, t); o.frequency.exponentialRampToValueAtTime(400 * p, t + .1);
+      const lp = this.filt('lowpass', 1500); o.connect(lp); this.env(lp, t, .01, .09, .03, .07).connect(this.sfx);
+      o.start(t); o.stop(t + .14);
+    }
+  },
+  ding(hi = 1) {
+    if (!this.ok() || this.play('ding', { vol: .65, rate: hi })) return; const c = this.c, t = c.currentTime;
+    for (const [f, d] of [[1318, 0], [1976, .07]]) {
+      const o = c.createOscillator(); o.frequency.value = f * hi;
+      this.env(o, t + d, .005, .14, .02, .45).connect(this.sfx); o.start(t + d); o.stop(t + d + .55);
+    }
+  },
+  chime() {
+    if (!this.ok() || this.play('golden', { vol: .8 })) return; const c = this.c, t = c.currentTime;
+    [1046, 1318, 1568, 2093, 2637].forEach((f, i) => {
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      this.env(o, t + i * .07, .005, .12, .02, .5).connect(this.sfx); o.start(t + i * .07); o.stop(t + i * .07 + .6);
+    });
+  },
+  buy() {
+    if (!this.ok() || this.play('buy', { vol: .75 })) return; const c = this.c, t = c.currentTime;
+    [523, 659, 784, 1046].forEach((f, i) => {
+      const o = c.createOscillator(); o.type = 'triangle'; o.frequency.value = f;
+      this.env(o, t + i * .06, .005, .16, .03, .2).connect(this.sfx); o.start(t + i * .06); o.stop(t + i * .06 + .3);
+    });
+  },
+  squawk() {
+    if (!this.ok() || this.play('squawk', { vol: .9 })) return; const c = this.c;
+    for (let k = 0; k < 2; k++) {
+      const t = c.currentTime + k * .2, o = c.createOscillator(); o.type = 'sawtooth';
+      o.frequency.setValueAtTime(900, t); o.frequency.exponentialRampToValueAtTime(1350, t + .05); o.frequency.exponentialRampToValueAtTime(700, t + .17);
+      const bp = this.filt('bandpass', 2300, 2); o.connect(bp); this.env(bp, t, .01, .3, .05, .11).connect(this.sfx);
+      o.start(t); o.stop(t + .2);
+    }
+  },
+  bark() {
+    if (!this.ok() || this.play('bark', { vol: .9 })) return; const c = this.c;
+    for (let k = 0; k < 2; k++) {
+      const t = c.currentTime + k * .18, o = c.createOscillator(); o.type = 'square';
+      o.frequency.setValueAtTime(430, t); o.frequency.exponentialRampToValueAtTime(300, t + .09);
+      const lp = this.filt('lowpass', 1300); o.connect(lp); this.env(lp, t, .008, .22, .03, .07).connect(this.sfx);
+      o.start(t); o.stop(t + .14);
+    }
+  },
+  ambient() {
+    const c = this.c;
+    const mk = (f, q, base, depth, rate) => {
+      const n = c.createBufferSource(); n.buffer = this.noise; n.loop = true;
+      const lp = this.filt('lowpass', f, q); const gn = c.createGain(); gn.gain.value = base;
+      const lfo = c.createOscillator(); lfo.frequency.value = rate; const lg = c.createGain(); lg.gain.value = depth;
+      lfo.connect(lg); lg.connect(gn.gain); n.connect(lp); lp.connect(gn); gn.connect(this.amb); n.start(); lfo.start();
+    };
+    mk(650, .4, .07, .05, .11);   // waves
+    mk(380, 1.2, .035, .025, .05); // wind
+  },
+  music() {
+    const c = this.c; if (!c) return;
+    const beatLen = night() > .5 ? .62 : .48;
+    const scale = [523, 587, 659, 784, 880, 1046, 1175, 1318];
+    const chords = [[262, 330, 392], [220, 262, 330], [175, 220, 262], [196, 247, 294]];
+    while (this.nextBeat < c.currentTime + .4) {
+      const t = this.nextBeat, b = this.beat++;
+      if (b % 8 === 0) chords[(b / 8) % 4 | 0].forEach(f => {
+        const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f / 2;
+        this.env(o, t, .3, .05, .5, 2.6).connect(this.mus); o.start(t); o.stop(t + 3.6);
+      });
+      if (Math.random() < (b % 2 ? .35 : .7)) {
+        this.melody = clamp((this.melody ?? 3) + pick([-2, -1, -1, 1, 1, 2, 0]), 0, scale.length - 1);
+        const f = scale[this.melody];
+        for (const [k, gn] of [[1, .07], [2, .025]]) {
+          const o = c.createOscillator(); o.type = k === 1 ? 'triangle' : 'sine'; o.frequency.value = f * k;
+          this.env(o, t, .005, gn, .02, 1.1).connect(this.mus); o.start(t); o.stop(t + 1.2);
+        }
+      }
+      this.nextBeat += beatLen;
+    }
+  },
+};
+
+// ---------------------------------------------------------------- effects
+function addFx(name, x, y, opts = {}) { if (A[name]) fx.push({ name, x, y, t: 0, fps: opts.fps || 14, flip: !!opts.flip, top: opts.top !== false }); }
+function say(text, x, y, opts = {}) {
+  texts.push({ text, x, y, t: 0, life: opts.life || 1.1, color: opts.color || '#fffaf3', size: opts.size || 8, rise: opts.rise ?? 16, edge: opts.edge || '#4b2a2b' });
+}
+function bleed(x, y, n, spread = 1) {
+  const reds = ['#d4213a', '#b0172c', '#e8384b', '#8f1022', '#ff5468'];
+  for (let i = 0; i < n; i++) {
+    const a = rnd(0, Math.PI * 2), sp = rnd(15, 55) * spread;
+    drops.push({ x, y, z: rnd(6, 14), vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * .45, vz: rnd(25, 75), c: pick(reds), s: Math.random() < .3 ? 2 : 1 });
+  }
+}
+function stamp(name, x, y, alpha = 1) {
+  const m = A[name]; if (!m) return;
+  sg.globalAlpha = alpha; spr(sg, name, 0, x, y, Math.random() < .5); sg.globalAlpha = 1;
+}
+function drawPool(ctx, x, y, k) {          // the puddle lies flat on the ice, so it is drawn half as tall
+  const m = A.pool, f = m.f[0];
+  const w = Math.max(2, Math.round(m.w * k)), h = Math.max(1, Math.round(m.h * k * .5));
+  ctx.drawImage(atlas, f[0], f[1], m.w, m.h, Math.round(x - w / 2), Math.round(y - h / 2), w, h);
+}
+function toast(msg, ms = 2600) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), ms);
+}
+function addPelts(n, x, y, label) {
+  S.pelts += n; S.total += n; income.push([now, n]);
+  if (x != null) say((label || '+') + fmt(n), x, y, { color: label && label.length > 2 ? '#ffe08a' : '#fffaf3' });
+  dirtyPanel = true;
+}
+
+// ---------------------------------------------------------------- seals
+function rollType(rushy) {
+  const r = Math.random();
+  if (r < (rushy ? .1 : .03)) return 'gold';
+  if (r < .2 + .03 * S.lv.bucket) return 'grey';
+  return 'pup';
+}
+function pickFloe() {
+  const list = FLOES.filter(f => f.seals && exitsOf[f.id].length);
+  let total = list.reduce((s, f) => s + f.seals, 0), r = Math.random() * total;
+  for (const f of list) { r -= f.seals; if (r <= 0) return f; }
+  return list[0];
+}
+function spawnSeal(rushy) {
+  const fl = pickFloe(); const fi = FLOES.indexOf(fl) + 1;
+  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && Math.hypot(s.lx - x, s.ly - y) < 26);
+  let ex = null;
+  for (let i = 0; i < 12; i++) {
+    const e = pick(exitsOf[fl.id]);
+    let lx = e.ex, ly = e.ey;
+    for (let k = 0; k < 10 && !roomy(lx, ly, fi); k++) { lx -= e.dx * 2; ly -= e.dy * 2; }
+    if (roomy(lx, ly, fi) && !crowded(lx, ly)) { ex = { ...e, lx, ly }; break; }
+  }
+  if (!ex) return false;
+  let sx = ex.wx, sy = ex.wy;
+  for (let k = 0; k < 16; k++) { const nx = sx + ex.dx * 1.5, ny = sy + ex.dy * 1.5; if (!isWater(nx, ny) || !isWater(nx + 4, ny) || !isWater(nx - 4, ny)) break; sx = nx; sy = ny; }
+  const type = rollType(rushy), T = TYPES[type], hp = Math.ceil(T.hp * (1 + .6 * S.camp));
+  const s = { id: ++sid, type, T, hp, maxHp: hp, x: sx, y: sy, wx: ex.wx, wy: ex.wy, lx: ex.lx, ly: ex.ly, floe: fl, fi,
+    dir: ex.lx < sx ? -1 : 1, state: 'surface', t: 0, at: Math.random() * 5, dur: 0, next: rnd(1.5, 3),
+    stay: rnd(T.stay[0], T.stay[1]), marks: [], flash: 0, alpha: 0, hurtOnce: false, tx: 0, ty: 0 };
+  seals.push(s);
+  if (type === 'gold') { toast('A golden seal surfaced!'); Snd.chime(); Snd.voice('goldseal', 2); }
+  return true;
+}
+function setState(s, st, extra) { s.state = st; s.t = 0; if (extra) Object.assign(s, extra); }
+const ON_ICE = { idle: 1, scoot: 1, look: 1, roll: 1, nap: 1, hurt: 1, flee: 1, leave: 1, startle: 1 };
+function nearestExit(s) {
+  let best = null, bd = 1e9;
+  for (const e of exitsOf[s.floe.id]) { const d = Math.hypot(e.ex - s.x, e.ey - s.y); if (d < bd) { bd = d; best = e; } }
+  return best;
+}
+function deepSpot(s) {                    // somewhere comfortably inland, so a seal is not one scoot from the sea
+  const fi = s.fi, xs = s.floe.pts.map(p => p[0]), ys = s.floe.pts.map(p => p[1]);
+  let best = null, bd = 1e9;
+  for (let i = 0; i < 60; i++) {
+    const x = rnd(Math.min(...xs), Math.max(...xs)), y = rnd(Math.min(...ys), Math.max(...ys));
+    if (!deep(x, y, fi)) continue;
+    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, o.y - y) < 24)) continue;
+    const d = Math.hypot(x - s.x, y - s.y);
+    if (d < bd && d < 60) { bd = d; best = [x, y]; }
+  }
+  return best;
+}
+function chooseBehaviour(s) {
+  const nap = night() > .5 ? 45 : 14;
+  const r = Math.random() * (35 + 20 + 14 + nap + 16);
+  if (r < 35) {
+    for (let i = 0; i < 8; i++) {
+      const tx = s.x + rnd(-30, 30), ty = s.y + rnd(-8, 8);
+      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, o.y - ty) < 22)) {
+        setState(s, 'scoot', { tx, ty }); return;
+      }
+    }
+    setState(s, 'idle', { next: rnd(1, 2) });
+  } else if (r < 55) setState(s, 'look');
+  else if (r < 69) setState(s, 'roll');
+  else if (r < 69 + nap) setState(s, 'nap', { dur: rnd(6, 13) });
+  else { setState(s, 'idle', { next: rnd(2, 4) }); Snd.arf(s.T.pitch * 1.1); say('arf!', s.x, s.y - 26, { size: 5, color: '#e9f4ff', life: .8, rise: 8 }); }
+}
+function moveToward(s, tx, ty, speed, dt) {
+  const dx = tx - s.x, dy = ty - s.y, d = Math.hypot(dx, dy);
+  if (d < 1) return true;
+  const st = Math.min(d, speed * dt);
+  const nx = s.x + dx / d * st, ny = s.y + dy / d * st;
+  if (Math.abs(dx) > .5) s.dir = dx < 0 ? -1 : 1;
+  s.x = nx; s.y = ny;
+  return d - st < 1;
+}
+function updateSeal(s, dt) {
+  s.t += dt; s.at += dt; s.flash = Math.max(0, s.flash - dt);
+  const hd = Math.hypot(hunter.x - s.x, hunter.y - s.y);
+  switch (s.state) {
+    case 'surface':
+      s.alpha = Math.min(1, s.t / .6);
+      if (s.t > .9) setState(s, 'swimIn');
+      break;
+    case 'swimIn':
+      if (moveToward(s, s.wx, s.wy, 15, dt)) {
+        setState(s, 'hopIn', { dur: .8, hx: s.x, hy: s.y });
+        addFx('fx_splash', s.x, s.y + 2); Snd.splash(.22); Snd.boing();
+      }
+      break;
+    case 'hopIn': case 'hopOut': {
+      const p = s.t / s.dur, m = ease(clamp((p - .18) / .62, 0, 1));
+      const [ax, ay, bx, by] = s.state === 'hopIn' ? [s.hx, s.hy, s.lx, s.ly] : [s.hx, s.hy, s.wx, s.wy];
+      s.x = lerp(ax, bx, m); s.y = lerp(ay, by, m); s.dir = bx < ax ? -1 : 1;
+      if (p >= 1) {
+        if (s.state === 'hopIn') {
+          Snd.plop(); addFx('fx_poof', s.x, s.y - 2);
+          const d = deepSpot(s);
+          if (d) setState(s, 'scoot', { tx: d[0], ty: d[1] }); else setState(s, 'idle', { next: rnd(1.5, 3) });
+        }
+        else { addFx('fx_splash', s.x, s.y + 2); Snd.splash(.3); setState(s, 'swimAway', { ox: s.x, oy: s.y }); }
+      }
+      break;
+    }
+    case 'idle':
+      if (s.t > s.next) chooseBehaviour(s);
+      break;
+    case 'scoot':
+      if (moveToward(s, s.tx, s.ty, 9, dt) || !roomy(s.x, s.y, s.fi)) setState(s, 'idle', { next: rnd(1.5, 4) });
+      break;
+    case 'look': case 'roll':
+      if (s.t > 1) setState(s, 'idle', { next: rnd(1, 3) });
+      break;
+    case 'nap':
+      if (Math.random() < dt * .9) say('z', s.x + s.dir * 8 + rnd(-2, 2), s.y - 18, { size: 5, color: '#dfe6ff', life: 1.4, rise: 12, edge: '#5260a8' });
+      if (s.t > s.dur) setState(s, 'idle', { next: rnd(1, 2) });
+      break;
+    case 'hurt':                           // a stagger just longer than a swing: keep bonking and it never gets going
+      if (s.t > (s.T.skittish ? .4 : .58)) setState(s, 'flee', { exit: nearestExit(s) });
+      break;
+    case 'startle':
+      if (s.t > .9) setState(s, 'leave', { exit: nearestExit(s) });
+      break;
+    case 'flee': case 'leave': {
+      const e = s.exit; if (!e) { setState(s, 'idle'); break; }
+      const sp = s.state === 'flee' ? s.T.speed : 9;
+      if (s.state === 'flee' && Math.random() < dt * 3) say('!', s.x - s.dir * 6, s.y - 24, { size: 5, color: '#bfe3ff', life: .5, rise: 6, edge: '#3a4f8a' });
+      if (moveToward(s, e.ex, e.ey, sp, dt)) setState(s, 'hopOut', { dur: .65, hx: s.x, hy: s.y, wx: e.wx, wy: e.wy });
+      break;
+    }
+    case 'swimAway': {
+      const ax = s.wx - s.ox, ay = s.wy - s.oy, d = Math.hypot(ax, ay) || 1;
+      const nx = s.x + ax / d * 16 * dt, ny = s.y + ay / d * 16 * dt;
+      if (isWater(nx, ny)) { s.x = nx; s.y = ny; }
+      s.alpha = clamp(1 - (s.t - .9) / .9, 0, 1);
+      if (s.t > 1.8) {
+        s.state = 'gone';
+        if (s.hurtOnce) {
+          S.stats.escaped++; combo.n = 0;
+          say('got away', s.x, s.y - 14, { size: 6, color: '#cfe8ff', edge: '#2d4a7a' });
+          quip('escape', .5);
+          if (S.tut === 1) { S.tut = 2; toast('Finish hurt seals before they reach the water.', 3200); }
+        }
+      }
+      break;
+    }
+    case 'ko':
+      if (s.t > 1.35 && !s.bundled) {
+        s.bundled = true; s.state = 'gone';
+        addFx('fx_poof', s.x, s.y - 6); Snd.plop();
+        const value = 5 * (1 + S.lv.club) * s.T.mult * campMult() * bundleMult() * comboMult();
+        bundles.push({ x: s.x, y: s.y - 8, sx: s.x, sy: s.y - 8, t: 0, dur: .75, value, gold: s.type === 'gold' });
+      }
+      break;
+  }
+  if (ON_ICE[s.state] && s.state !== 'hurt' && s.state !== 'flee' && s.state !== 'leave' && s.state !== 'startle') {
+    s.stay -= dt;
+    if (s.type === 'gold' && hd < 46 && s.state !== 'nap') {   // skittish: edges away from the hunter
+      const k = (s.x < hunter.x ? -1 : 1) * 22 * dt;
+      if (roomy(s.x + k, s.y, s.fi)) { s.x += k; s.dir = Math.sign(k); if (s.state !== 'scoot') setState(s, 'scoot', { tx: s.x + k * 8, ty: s.y }); }
+      else if (s.stay > 3) s.stay = 2;
+    }
+    if (s.stay < 0) setState(s, 'leave', { exit: nearestExit(s) });
+  }
+}
+function hitSeal(s) {
+  const sneak = s.state === 'nap';
+  const d = dmg() * (sneak ? 2 : 1);
+  s.hp -= d; s.flash = .09; s.hurtOnce = true;
+  combo.n = now - combo.t < comboWindow() ? combo.n + 1 : 1; combo.t = now;
+  if (combo.n === 11) quip('roll', 1);
+  if (sneak) quip('sneak', .6);
+  S.stats.best = Math.max(S.stats.best, comboMult());
+  S.stats.bonks++;
+  const gain = perBonk() * comboMult() * (sneak ? 3 : 1) * (s.type === 'gold' ? 3 : 1);
+  addPelts(gain, s.x, s.y - 26, sneak ? 'SNEAK BONK +' : '+');
+  const hx = s.x + s.dir * 9, hy = s.y - 12;
+  addFx('fx_bonk', hx, hy, { fps: 18 }); addFx('fx_blood', s.x, s.y - 10, { fps: 16, flip: Math.random() < .5 });
+  bleed(hx, s.y - 2, 9 + d * 3);
+  stamp('drop', s.x + rnd(-10, 10), s.y + rnd(-2, 2), .9);
+  for (let i = 0; i < 3; i++) s.marks.push([rnd(-14, 14) | 0, rnd(-16, -3) | 0, Math.random() < .4 ? 2 : 1]);
+  if (!REDUCED) shake = .12;
+  Snd.bonk(); Snd.squeal(s.T.pitch, .3 + Math.random() * .12, .3);
+  if (S.tut === 0) S.tut = 1;
+  for (const o of seals) {                // the racket startles the neighbours, who make for the water
+    if (o === s || !{ idle: 1, scoot: 1, look: 1, roll: 1 }[o.state] || Math.hypot(o.x - s.x, o.y - s.y) > 48 || Math.random() < .4) continue;
+    setState(o, 'startle'); o.dir = o.x < s.x ? 1 : -1;
+    say('!', o.x, o.y - 26, { size: 7, color: '#bfe3ff', life: .7, rise: 6, edge: '#3a4f8a' });
+  }
+  if (s.hp <= 0) {
+    setState(s, 'ko');
+    S.stats.kos++; if (s.type === 'gold') S.stats.golden++;
+    setTimeout(() => Snd.squeal(s.T.pitch * .95, .75, .34, true), 90);
+    bleed(s.x, s.y - 6, 26, 1.3);
+    addFx('fx_blood', s.x - 6, s.y - 8, { fps: 12 });
+    pools.push({ x: s.x, y: s.y + 1, t: 0 });
+    if (s.type !== 'pup') hunter.cheer = .75;
+    if (s.type === 'gold') quip('goldko', 1, true); else quip('ko', .35);
+  } else setState(s, 'hurt');
+}
+function sealFrame(s) {
+  const IDLE = [0, 0, 0, 1, 2, 1, 0, 0, 0, 0, 3, 0], NAP = [4, 5, 6, 7, 8, 7, 6, 5];
+  switch (s.state) {
+    case 'surface': case 'swimIn': return ['seal_swim', [0, 1, 2, 1][Math.floor(s.at * 4) % 4]];
+    case 'swimAway': return ['seal_swim', 3 + Math.min(5, Math.floor(s.t * 5))];
+    case 'hopIn': case 'hopOut': return ['seal_hop', Math.min(8, Math.floor(s.t / s.dur * 9))];
+    case 'idle': return ['seal_idle', IDLE[Math.floor(s.at * 6) % IDLE.length]];
+    case 'startle': return ['seal_look', 2];
+    case 'nap': return ['seal_idle', NAP[Math.floor(s.at * 3) % NAP.length]];
+    case 'scoot': case 'leave': return ['seal_scoot', Math.floor(s.at * 12) % 9];
+    case 'flee': return ['seal_scoot', Math.floor(s.at * 20) % 9];
+    case 'look': return ['seal_look', Math.min(8, Math.floor(s.t * 9))];
+    case 'roll': return ['seal_roll', Math.min(8, Math.floor(s.t * 9))];
+    case 'hurt': return ['seal_hurt', Math.min(6, Math.floor(s.t * 14))];
+    case 'ko': return ['seal_ko', Math.min(8, Math.floor(s.t * 10))];
+  }
+  return ['seal_idle', 0];
+}
+function sealBox(s) {
+  const [name, fi] = sealFrame(s), m = A[name];
+  const flip = s.dir > 0;
+  const x0 = flip ? s.x - m.ox - m.w : s.x + m.ox;
+  return [x0, s.y + m.oy, m.w, m.h];
+}
+function drawSeal(s) {
+  const [name, fi] = sealFrame(s);
+  const src = s.type === 'grey' ? atlasGrey : s.type === 'gold' ? atlasGold : atlas;
+  const flip = s.dir > 0;
+  if (s.alpha < 1) g.globalAlpha = s.alpha;
+  if (s.marks.length || s.flash > 0) {
+    tg.clearRect(0, 0, 80, 80);
+    spr(tg, name, fi, 40, 66, flip, src);
+    tg.globalCompositeOperation = 'source-atop';
+    tg.fillStyle = '#c51d35';
+    for (const [mx, my, sz] of s.marks) tg.fillRect(40 + (flip ? -mx : mx), 66 + my, sz, sz);
+    if (s.flash > 0) { tg.fillStyle = 'rgba(255,255,255,.85)'; tg.fillRect(0, 0, 80, 80); }
+    tg.globalCompositeOperation = 'source-over';
+    g.drawImage(tmp, Math.round(s.x) - 40, Math.round(s.y) - 66);
+  } else spr(g, name, fi, s.x, s.y, flip, src);
+  g.globalAlpha = 1;
+  if (s.type === 'gold' && Math.random() < .25 && s.state !== 'gone') sparkles.push({ x: s.x + rnd(-14, 14), y: s.y - rnd(2, 20), t: 0, life: .5, c: '#fff2b0' });
+  if (s.hurtOnce && s.hp > 0 && ON_ICE[s.state]) {
+    const w = 18, x = Math.round(s.x - w / 2), y = Math.round(s.y - 30);
+    g.fillStyle = 'rgba(60,25,40,.75)'; g.fillRect(x - 1, y - 1, w + 2, 4);
+    g.fillStyle = '#ffeef0'; g.fillRect(x, y, w, 2);
+    g.fillStyle = '#d4213a'; g.fillRect(x, y, Math.max(1, Math.round(w * s.hp / s.maxHp)), 2);
+  }
+}
+
+// ---------------------------------------------------------------- hunter
+function planPath(tx, ty) {
+  const ax = hunter.x, ay = hunter.y, len = Math.hypot(tx - ax, ty - ay);
+  const gaps = []; let open = -1;
+  for (let s = 0; s <= len; s += 2) {
+    const x = ax + (tx - ax) * s / len, y = ay + (ty - ay) * s / len;
+    const ice = onIce(x, y);
+    if (!ice && open < 0) open = Math.max(0, s - 2);
+    if (ice && open >= 0) { gaps.push([open, s]); open = -1; }
+  }
+  if (open >= 0) gaps.push([open, len]);
+  hunter.path = { ax, ay, tx, ty, len, s: 0, gaps };
+  if (gaps.length) Snd.whiff();
+}
+function standPoint(s) {
+  for (const side of hunter.x <= s.x ? [-1, 1] : [1, -1]) {
+    const px = s.x + side * 27, py = s.y + .5;
+    if (onIce(px, py)) return [px, py];
+  }
+  return nearestIce(s.x - 27, s.y);
+}
+function inReach(s) {
+  const dx = s.x - hunter.x, dy = s.y - hunter.y;
+  return Math.abs(dy) <= 7 && Math.abs(dx) >= 12 && Math.abs(dx) <= 38 && hunter.z === 0;
+}
+function updateHunter(dt) {
+  hunter.at += dt; hunter.cheer = Math.max(0, hunter.cheer - dt);
+  const tgt = hunter.target;
+  if (tgt && (tgt.state === 'gone' || tgt.state === 'ko' || !ON_ICE[tgt.state])) { hunter.target = null; hunter.pending = 0; }
+  if (hunter.swing >= 0) {
+    hunter.swing += dt;
+    const T = swingTime();
+    if (!hunter.struck && hunter.swing >= T * .3) {
+      hunter.struck = true;
+      const s = hunter.target;
+      if (s && ON_ICE[s.state] && inReach(s)) hitSeal(s); else Snd.whiff();
+      hunter.pending = Math.max(0, hunter.pending - 1);
+    }
+    if (hunter.swing >= T) hunter.swing = -1;
+    return;
+  }
+  const s = hunter.target;
+  if (s && hunter.pending > 0) {
+    if (inReach(s)) { hunter.path = null; hunter.dir = s.x > hunter.x ? 1 : -1; hunter.swing = 0; hunter.struck = false; return; }
+    const [px, py] = standPoint(s);
+    if (!hunter.path || Math.hypot(hunter.path.tx - px, hunter.path.ty - py) > 5) planPath(px, py);
+  }
+  const p = hunter.path;
+  if (p) {
+    const inGap = p.gaps.find(([a, b]) => p.s >= a && p.s <= b);
+    p.s = Math.min(p.len, p.s + runSpeed() * (inGap ? 1.25 : 1) * dt);
+    const k = p.len ? p.s / p.len : 1;
+    hunter.x = lerp(p.ax, p.tx, k); hunter.y = lerp(p.ay, p.ty, k);
+    if (Math.abs(p.tx - p.ax) > 1) hunter.dir = p.tx > p.ax ? 1 : -1;
+    const gp = p.gaps.find(([a, b]) => p.s >= a && p.s <= b);
+    hunter.z = gp ? Math.sin(Math.PI * (p.s - gp[0]) / Math.max(1, gp[1] - gp[0])) * Math.min(18, (gp[1] - gp[0]) * .55 + 4) : 0;
+    if (p.s >= p.len) { hunter.path = null; hunter.z = 0; if (p.gaps.length) { addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); } }
+  }
+}
+function hunterFrame() {
+  if (hunter.swing >= 0) {
+    const p = hunter.swing / swingTime();
+    return ['hunter_swing', p < .3 ? 0 : p < .42 ? 1 : p < .56 ? 2 : p < .7 ? 3 : p < .85 ? 7 : 8];
+  }
+  if (hunter.z > 0) return ['hunter_walk', 3];
+  if (hunter.path) return ['hunter_walk', 1 + Math.floor(hunter.at * 15) % 8];
+  if (hunter.cheer > 0) return ['hunter_cheer', Math.min(8, Math.floor((.75 - hunter.cheer) * 12))];
+  return ['hunter_idle', Math.floor(hunter.at * 6) % 9];
+}
+function drawHunter() {
+  const [name, fi] = hunterFrame();
+  if (hunter.z > 0) { g.fillStyle = 'rgba(40,50,110,.28)'; g.fillRect(Math.round(hunter.x) - 8, Math.round(hunter.y) - 1, 16, 2); }
+  spr(g, name, fi, hunter.x, hunter.y - hunter.z, hunter.dir < 0);
+}
+
+// ---------------------------------------------------------------- gull, husky, sled
+function updateGull(dt) {
+  gull.at += dt; gull.t += dt;
+  const fly = (tx, ty, sp) => {
+    const dx = tx - gull.x, dy = ty - gull.y, d = Math.hypot(dx, dy);
+    if (Math.abs(dx) > 1) gull.dir = dx < 0 ? -1 : 1;
+    if (d < sp * dt) { gull.x = tx; gull.y = ty; return true; }
+    gull.x += dx / d * sp * dt; gull.y += dy / d * sp * dt; return false;
+  };
+  switch (gull.state) {
+    case 'perch':
+      gull.dir = -1;
+      S.gullCd -= dt;
+      if (S.gullCd <= 0 && S.pelts >= 40 && S.pile > 0) { gull.state = 'swoop'; gull.t = 0; toast('The gull is going for your sled!'); Snd.squawk(); Snd.voice('gull', 2); }
+      break;
+    case 'swoop': if (fly(SLED.x + 6, SLED.y - 22, 70)) { gull.state = 'grab'; gull.t = 0; } break;
+    case 'grab':
+      if (gull.t > .5) { gull.state = 'escape'; gull.t = 0; gull.carry = Math.max(5, Math.floor(S.pelts * .08)); S.pile = Math.max(0, S.pile - 1); gull.tx = -30; gull.ty = rnd(50, 90); }
+      break;
+    case 'escape':
+      if (fly(gull.tx, gull.ty, 34)) {
+        const n = Math.min(gull.carry, Math.floor(S.pelts));
+        S.pelts -= n; dirtyPanel = true;
+        toast(`The gull stole ${fmt(n)} pelts.`); Snd.voice('stolen', 2);
+        gull.state = 'away'; gull.t = 0; gull.carry = 0; S.gullCd = rnd(60, 110);
+      }
+      break;
+    case 'shooed': if (fly(gull.tx, gull.ty, 80)) { gull.state = 'away'; gull.t = 0; S.gullCd = rnd(70, 120); } break;
+    case 'away':
+      if (gull.t > 14) { gull.state = 'return'; gull.x = 280; gull.y = 150; }
+      break;
+    case 'return': if (fly(PERCH.x, PERCH.y, 50)) { gull.state = 'perch'; gull.t = 0; } break;
+  }
+}
+function shooGull() {
+  Snd.squawk();
+  if (gull.state === 'perch') { say('SQUAWK', gull.x, gull.y - 26, { size: 6 }); gull.at = 0; return; }
+  if (gull.state === 'swoop' || gull.state === 'grab' || gull.state === 'escape') {
+    quip('shoo', 1, true);
+    if (gull.carry) {
+      const bonus = Math.ceil(gull.carry * .25);
+      bundles.push({ x: gull.x, y: gull.y, sx: gull.x, sy: gull.y, t: 0, dur: .7, value: bonus, back: true });
+      toast('Saved the bundle!'); S.pile++;
+    } else say('shoo!', gull.x, gull.y - 14, { size: 6 });
+    gull.carry = 0; gull.state = 'shooed'; gull.tx = 300; gull.ty = 20; gull.t = 0;
+  }
+}
+function gullBox() {
+  const name = gull.state === 'perch' ? 'gull_idle' : 'gull_fly', m = A[name];
+  const flip = gull.dir > 0, x0 = flip ? gull.x - m.ox - m.w : gull.x + m.ox;
+  return [x0 - 4, gull.y + m.oy - 4, m.w + 8, m.h + 8];
+}
+function drawGull() {
+  if (gull.state === 'away') return;
+  if (gull.state === 'perch') { const fi = gull.at < 1.4 ? Math.floor(gull.at * 6) % 9 : 0; spr(g, 'gull_idle', fi, gull.x, gull.y, false); return; }
+  spr(g, 'gull_fly', Math.floor(gull.at * 13) % 9, gull.x, gull.y, gull.dir > 0);
+  if (gull.carry) spr(g, 'pelt', 0, gull.x - gull.dir * 2, gull.y + 10, false);
+}
+const PILE = [[-18, -14], [-6, -15], [6, -16], [18, -17], [-12, -19], [0, -20], [12, -21], [-6, -24], [6, -25], [0, -29], [-18, -20], [18, -23]];
+function drawSled() {
+  spr(g, 'sled', 0, SLED.x, SLED.y, false);
+  for (let i = 0; i < Math.min(S.pile, PILE.length); i++) spr(g, 'pelt', 0, SLED.x + PILE[i][0], SLED.y + PILE[i][1], i % 2 === 1);
+}
+function drawHusky() {
+  if (!S.lv.sled) return;
+  husky.at += 1 / 60;
+  spr(g, 'husky_idle', Math.floor(husky.at * 9) % 9, HUSKY.x, HUSKY.y, false);
+}
+
+// ---------------------------------------------------------------- day and night
+function night() {
+  const t = S.dayT;                       // 0 dawn, .2-.55 day, .6-.72 dusk, .75-.97 night
+  if (t < .62) return 0;
+  if (t < .76) return (t - .62) / .14;
+  if (t < .94) return 1;
+  return 1 - (t - .94) / .06;
+}
+function grade() {
+  const t = S.dayT, n = night();
+  if (n > 0) return { c: [44, 50, 140], a: .66 * n, warm: 0 };
+  if (t > .45) return { c: [255, 196, 150], a: .22 * clamp((t - .45) / .17, 0, 1), warm: 0 };
+  return { c: [255, 255, 255], a: 0, warm: 0 };
+}
+const STARS = Array.from({ length: 46 }, () => [Math.random() * W, Math.random() * 44, Math.random() * 6]);
+
+// ---------------------------------------------------------------- frame
+let dirtyPanel = true, lastSpawn = 0, spawnGap = 1.6, last = 0, lastSave = 0, passiveAcc = 0, passiveShow = 0, smokeT = 0;
+function update(dt) {
+  now += dt;
+  S.dayT += dt / 210;
+  if (S.dayT >= 1) { S.dayT -= 1; S.day++; toast(`Day ${S.day}. The seals are back.`); Snd.voice('dawn', 2); }
+  const dark = night() > .5;
+  if (dark !== wasDark) { if (dark && wasDark === false) { Snd.voice('dusk', 2); toast('Night falls. Napping seals take sneak bonks.', 3200); } wasDark = dark; }
+  Snd.mix(night());
+  // seals arrive
+  const active = seals.filter(s => s.state !== 'gone' && s.state !== 'ko').length;
+  lastSpawn += dt;
+  if (rush > 0) {
+    rush -= dt;
+    if (lastSpawn > .45 && active < 12) { if (spawnSeal(true)) lastSpawn = 0; }
+  } else if (lastSpawn > spawnGap && active < maxSeals()) {
+    if (spawnSeal(false)) { lastSpawn = 0; spawnGap = rnd(3.2, 5.8) * (1 - .08 * S.lv.bucket); }
+  }
+  for (const s of seals) updateSeal(s, dt);
+  seals = seals.filter(s => s.state !== 'gone');
+  updateHunter(dt);
+  updateGull(dt);
+  // passive income
+  if (S.lv.sled) {
+    const p = passive() * dt; S.pelts += p; S.total += p; passiveAcc += p; passiveShow += dt;
+    if (passiveShow > 4) { say('+' + fmt(passiveAcc), HUSKY.x, HUSKY.y - 30, { size: 5, color: '#e9f6ff', edge: '#3b4c80' }); passiveAcc = 0; passiveShow = 0; }
+    dirtyPanel = true;
+  }
+  if (combo.n && now - combo.t > comboWindow()) combo.n = 0;
+  S.fishCd = Math.max(0, S.fishCd - dt);
+  // bundles fly to the sled
+  for (const b of bundles) {
+    b.t += dt; const p = Math.min(1, b.t / b.dur);
+    const tx = SLED.x + rnd(-1, 1), ty = SLED.y - 18;
+    b.x = lerp(b.sx, tx, ease(p)); b.y = lerp(b.sy, ty, ease(p)) - Math.sin(Math.PI * p) * 26;
+    if (p >= 1 && !b.done) {
+      b.done = true;
+      if (b.back) addPelts(b.value, SLED.x, SLED.y - 34, 'saved +');
+      else {
+        addPelts(b.value, SLED.x, SLED.y - 34, b.gold ? 'GOLDEN +' : 'bundle +');
+        S.pile = Math.min(PILE.length, S.pile + 1);
+      }
+      Snd.ding(b.gold ? 1.25 : 1); addFx('fx_sparkle', SLED.x, SLED.y - 20);
+    }
+  }
+  bundles = bundles.filter(b => !b.done);
+  // blood drops land and stain the ice
+  for (const d of drops) {
+    d.x += d.vx * dt; d.y += d.vy * dt; d.vz -= 190 * dt; d.z += d.vz * dt;
+    if (d.z <= 0) {
+      d.dead = true;
+      if (onIce(d.x, d.y)) { sg.fillStyle = d.c; sg.globalAlpha = .9; sg.fillRect(Math.round(d.x), Math.round(d.y), d.s, 1); sg.globalAlpha = 1; }
+      else if (isWater(d.x, d.y)) sparkles.push({ x: d.x, y: d.y, t: 0, life: .5, c: '#e2566a', ring: true });
+    }
+  }
+  drops = drops.filter(d => !d.dead);
+  for (const p of pools) {
+    p.t += dt;
+    if (p.t > .9 && !p.done) { p.done = true; sg.globalAlpha = .9; drawPool(sg, p.x, p.y, 1); sg.globalAlpha = 1; }
+  }
+  pools = pools.filter(p => !p.done);
+  for (const f of fx) f.t += dt;
+  fx = fx.filter(f => Math.floor(f.t * f.fps) < A[f.name].f.length);
+  for (const t of texts) t.t += dt;
+  texts = texts.filter(t => t.t < t.life);
+  for (const p of sparkles) p.t += dt;
+  sparkles = sparkles.filter(p => p.t < p.life);
+  // the sea twinkles, the chimney smokes, snow drifts
+  if (Math.random() < dt * 9) {
+    for (let k = 0; k < 6; k++) {
+      const x = Math.random() * W | 0, y = 68 + Math.random() * (H - 68) | 0;
+      if (isWater(x, y)) { sparkles.push({ x, y, t: 0, life: rnd(.4, .9), c: '#ffffff', plus: Math.random() < .4 }); break; }
+    }
+  }
+  if (Math.random() < dt * 4) { const x = rnd(24, 44), y = rnd(72, 124); if (isWater(x, y)) sparkles.push({ x, y, t: 0, life: rnd(.3, .6), c: '#fff4c8', plus: true }); }
+  smokeT += dt; if (smokeT > 1.6) { smokeT = 0; addFx('fx_poof', CHIMNEY.x, CHIMNEY.y, { fps: 5 }); }
+  while (flakes.length < 34) flakes.push({ x: Math.random() * W, y: -2 - Math.random() * H, vy: rnd(5, 11), sw: rnd(0, 6), a: rnd(.5, 1) });
+  for (const f of flakes) { f.y += f.vy * dt; f.sw += dt; if (f.y > H + 2) { f.y = -2; f.x = Math.random() * W; } }
+  // stains fade as fresh snow falls on them
+  fadeT += dt;
+  if (fadeT > 1) {
+    fadeT = 0; sg.globalCompositeOperation = 'destination-out'; sg.fillStyle = 'rgba(0,0,0,.035)'; sg.fillRect(0, 0, W, H); sg.globalCompositeOperation = 'source-over';
+    if (++fadeN % 30 === 0) { const im = sg.getImageData(0, 0, W, H), d = im.data; for (let i = 3; i < d.length; i += 4) if (d[i] < 14) d[i] = 0; sg.putImageData(im, 0, 0); }
+  }
+  shake = Math.max(0, shake - dt);
+  income = income.filter(([t]) => now - t < 30);
+  if (now - lastSave > 5) { lastSave = now; save(); }
+}
+let fadeT = 0, fadeN = 0, wasDark = null, lastQuip = -9;
+function quip(name, chance, force) {      // the hunter talks now and then, not on every bonk
+  if (Math.random() > chance || (!force && now - lastQuip < 6)) return;
+  if (Snd.voice(name, 1)) lastQuip = now;
+}
+
+function render() {
+  g.imageSmoothingEnabled = false;
+  g.drawImage(bg, 0, 0);
+  for (const p of sparkles) {
+    const a = Math.sin(Math.PI * p.t / p.life);
+    g.globalAlpha = a; g.fillStyle = p.c;
+    if (p.ring) { const r = 1 + p.t * 6 | 0; g.fillRect(p.x - r, p.y, 1, 1); g.fillRect(p.x + r, p.y, 1, 1); }
+    else { g.fillRect(p.x, p.y, 1, 1); if (p.plus && a > .5) { g.fillRect(p.x - 1, p.y, 3, 1); g.fillRect(p.x, p.y - 1, 1, 3); } }
+  }
+  g.globalAlpha = 1;
+  g.drawImage(stains, 0, 0);
+  g.globalAlpha = .9;
+  for (const p of pools) drawPool(g, p.x, p.y, ease(Math.min(1, p.t / .9)));
+  g.globalAlpha = 1;
+  // everything standing on the ice, back to front
+  const list = [];
+  for (const s of seals) list.push([s.y, () => drawSeal(s)]);
+  list.push([hunter.y, drawHunter]);
+  list.push([SLED.y, drawSled]);
+  list.push([HUSKY.y, drawHusky]);
+  if (gull.state === 'perch') list.push([gull.y, drawGull]);
+  list.sort((a, b) => a[0] - b[0]);
+  for (const [, fn] of list) fn();
+  for (const d of drops) { g.fillStyle = d.c; g.fillRect(Math.round(d.x), Math.round(d.y - d.z), d.s, d.s); }
+  for (const f of fx) spr(g, f.name, Math.floor(f.t * f.fps), f.x, f.y, f.flip);
+  for (const b of bundles) spr(g, 'pelt', 0, b.x, b.y, false);
+  if (gull.state !== 'perch') drawGull();
+  // light
+  const gr = grade(), n = night();
+  if (gr.a > 0) {
+    g.globalCompositeOperation = 'multiply';
+    g.fillStyle = `rgba(${gr.c[0]},${gr.c[1]},${gr.c[2]},${gr.a})`; g.fillRect(0, 0, W, H);
+    g.globalCompositeOperation = 'source-over';
+  }
+  if (n > 0) {
+    g.globalCompositeOperation = 'lighter';
+    for (const [x, y, ph] of STARS) { g.globalAlpha = n * (.4 + .6 * Math.abs(Math.sin(now * 1.3 + ph))); g.fillStyle = '#fff6e0'; g.fillRect(x | 0, y | 0, 1, 1); }
+    for (let i = 0; i < 3; i++) {
+      g.globalAlpha = n * .1;
+      g.fillStyle = i === 1 ? '#7cf2c8' : '#59c7e8';
+      for (let x = 0; x < W; x += 2) {
+        const y = 14 + i * 7 + Math.sin(x * .03 + now * .4 + i) * 6 + Math.sin(x * .011 - now * .2) * 4;
+        g.fillRect(x, y | 0, 2, 7 + i * 2);
+      }
+    }
+    for (const [x, y] of WINDOWS) {
+      const r = g.createRadialGradient(x, y, 0, x, y, 9);
+      r.addColorStop(0, `rgba(255,190,90,${.55 * n})`); r.addColorStop(1, 'rgba(255,190,90,0)');
+      g.globalAlpha = 1; g.fillStyle = r; g.fillRect(x - 9, y - 9, 18, 18);
+    }
+    if (S.camp > 0) {
+      for (let i = 0; i < 4 + S.camp * 3; i++) {
+        const x = 168 + i * 6, y = 72 + Math.sin(i * .9) * 2;
+        g.globalAlpha = n * (.6 + .4 * Math.sin(now * 2 + i)); g.fillStyle = pick(['#ffd27a', '#ff9aa8', '#9ee7ff']);
+        g.fillRect(x | 0, y | 0, 1, 1);
+      }
+    }
+    g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  }
+  for (const f of flakes) { g.globalAlpha = f.a * .9; g.fillStyle = '#ffffff'; g.fillRect(Math.round(f.x + Math.sin(f.sw) * 2), Math.round(f.y), 1, 1); }
+  g.globalAlpha = 1;
+  // to the screen
+  v.imageSmoothingEnabled = false;
+  const sx = shake > 0 ? Math.round(rnd(-1, 1)) * scale : 0, sy = shake > 0 ? Math.round(rnd(-1, 1)) * scale : 0;
+  v.drawImage(world, sx, sy, W * scale, H * scale);
+  v.textAlign = 'center'; v.textBaseline = 'middle'; v.lineJoin = 'round';
+  for (const t of texts) {
+    const p = t.t / t.life, a = p < .75 ? 1 : 1 - (p - .75) / .25;
+    const y = (t.y - t.rise * ease(Math.min(1, p * 1.6))) * scale, x = t.x * scale;
+    v.globalAlpha = a; v.font = `700 ${Math.round(t.size * scale)}px "Pixelify Sans", ui-monospace, monospace`;
+    v.lineWidth = Math.max(2, scale * 1.1); v.strokeStyle = t.edge; v.strokeText(t.text, x, y);
+    v.fillStyle = t.color; v.fillText(t.text, x, y);
+  }
+  v.globalAlpha = 1;
+  if (debug) drawDebug();
+}
+let debug = false;
+function drawDebug() {
+  v.save(); v.scale(scale, scale);
+  for (const fl of FLOES) { v.strokeStyle = fl.seals ? '#ff0' : '#f80'; v.lineWidth = 1 / scale; v.beginPath(); fl.pts.forEach(([x, y], i) => i ? v.lineTo(x, y) : v.moveTo(x, y)); v.closePath(); v.stroke(); }
+  for (const id in exitsOf) for (const e of exitsOf[id]) { v.fillStyle = '#0f0'; v.fillRect(e.ex, e.ey, 1, 1); v.fillStyle = '#0ff'; v.fillRect(e.wx, e.wy, 1, 1); }
+  v.restore();
+}
+
+// ---------------------------------------------------------------- panel
+const cardEls = {};
+function buildPanel(icons) {
+  const wrap = $('#cards');
+  for (const u of UPG) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.id = 'up-' + u.id;
+    b.innerHTML = `<span class="ico"><img alt="" src="${icons[u.icon]}"></span><span class="txt"><span class="nm">${u.name}<small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.pelt}"><span></span></span>`;
+    b.addEventListener('click', () => buy(u));
+    wrap.appendChild(b);
+    cardEls[u.id] = { b, lv: b.querySelector('small'), ds: b.querySelector('.ds'), pr: b.querySelector('.price span') };
+  }
+}
+function buy(u) {
+  Snd.init();
+  const c = cost(u);
+  if (S.lv[u.id] >= u.max || S.pelts < c) return;
+  S.pelts -= c; S.lv[u.id]++; Snd.buy();
+  const el = cardEls[u.id].b; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  if (u.id === 'sled' && S.lv.sled === 1) { toast('A husky joins the camp and starts hauling.'); Snd.bark(); Snd.voice('husky', 2); }
+  else quip('bought', .5);
+  if (S.tut < 3) S.tut = 3;
+  dirtyPanel = true; save();
+}
+function buyCamp() {
+  Snd.init();
+  const c = campCost(); if (S.pelts < c) return;
+  S.pelts -= c; S.camp++; Snd.chime(); Snd.voice('camp', 2); hunter.cheer = .75;
+  toast(`Camp level ${S.camp + 1}. Every pelt is worth double, and the seals are hardier.`, 3600);
+  dirtyPanel = true; save();
+}
+function refreshPanel() {
+  $('#peltCount').textContent = fmt(S.pelts);
+  for (const u of UPG) {
+    const e = cardEls[u.id], lv = S.lv[u.id], maxed = lv >= u.max, c = cost(u);
+    e.lv.textContent = `Lv ${lv}`;
+    e.ds.textContent = lv ? `${u.ds()} · now ${u.now()}` : u.ds();
+    e.pr.textContent = maxed ? 'MAX' : fmt(c);
+    e.b.disabled = maxed || S.pelts < c;
+    e.b.classList.toggle('poor', !maxed && S.pelts < c);
+    e.b.classList.toggle('maxed', maxed);
+    e.b.setAttribute('aria-label', `${u.name}, level ${lv}. ${u.ds()}. ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' pelts'}`);
+  }
+  if (S.tut < 3 && !S.tipShop && S.pelts >= UPG[0].base) { S.tipShop = true; toast('You can afford a Sturdier Club. Upgrades are in the ledger.', 3400); }
+  const cc = campCost();
+  $('#campBtn').disabled = S.pelts < cc;
+  $('#campInfo').textContent = `Camp Lv ${S.camp + 1} · doubles every pelt · ${fmt(cc)}`;
+  const st = S.stats;
+  $('#stats').textContent = `Bonks ${fmt(st.bonks)} · Bundles ${fmt(st.kos)} · Golden ${st.golden} · Got away ${st.escaped} · Best combo x${st.best.toFixed(1)}`;
+}
+let hudLast = 0;
+function refreshHud() {
+  const perMin = income.reduce((a, [, n]) => a + n, 0) * 2 + passive() * 60;
+  $('#rateText').textContent = `${fmt(perMin)} pelts / min`;
+  $('#dayText').textContent = `DAY ${S.day}`;
+  const isNight = night() > .5;
+  if (refreshHud.night !== isNight) { refreshHud.night = isNight; $('#dayIcon').src = icons[isNight ? 'i_moon' : 'i_sun']; }
+  const cb = $('#combo');
+  if (combo.n >= 3) {
+    cb.hidden = false; $('#comboText').textContent = `COMBO x${comboMult().toFixed(1)}`;
+    $('#comboBar').style.transform = `scaleX(${clamp(1 - (now - combo.t) / comboWindow(), 0, 1)})`;
+  } else cb.hidden = true;
+  const fb = $('#fishBtn'), cd = S.fishCd;
+  fb.disabled = cd > 0;
+  $('#fishCd').style.transform = `scaleX(${cd / fishCooldown()})`;
+  $('#fishText').textContent = cd > 0 ? `Fish in ${Math.ceil(cd)} s` : 'Toss fish';
+}
+let icons = {};
+
+// ---------------------------------------------------------------- input
+function worldPoint(e) {
+  const r = view.getBoundingClientRect();
+  return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H];
+}
+function inBox([x0, y0, w, h], x, y, pad = 3) { return x >= x0 - pad && x <= x0 + w + pad && y >= y0 - pad && y <= y0 + h + pad; }
+function tap(x, y) {
+  Snd.init();
+  if (gull.state !== 'away' && inBox(gullBox(), x, y)) { shooGull(); return; }
+  if (S.lv.sled && Math.hypot(x - HUSKY.x, y - (HUSKY.y - 14)) < 14) { Snd.bark(); say('♥', HUSKY.x, HUSKY.y - 34, { size: 8, color: '#ff8fa0' }); return; }
+  const under = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && inBox(sealBox(s), x, y));
+  const hit = under.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - x, a.y - 10 - y) - Math.hypot(b.x - x, b.y - 10 - y))[0] || under[0];
+  if (hit) {
+    if (!ON_ICE[hit.state]) {
+      if (now - (tap.hint || -9) > 1.5) { tap.hint = now; say(hit.state === 'swimAway' ? 'too late' : 'wait for it...', hit.x, hit.y - 14, { size: 6, color: '#e1f1ff', edge: '#2d4a7a', life: .9 }); }
+      return;
+    }
+    if (hunter.target === hit) hunter.pending = Math.min(3, hunter.pending + 1);
+    else { hunter.target = hit; hunter.pending = 1; }
+    return;
+  }
+  hunter.target = null; hunter.pending = 0;
+  const [tx, ty] = nearestIce(x, y);
+  planPath(tx, ty);
+}
+function tossFish() {
+  Snd.init();
+  if (S.fishCd > 0) return;
+  S.fishCd = fishCooldown(); rush = 2.6 + .3 * S.lv.bucket; lastSpawn = 1;
+  addFx('fx_splash', 60, 146); if (!Snd.play('fish')) Snd.splash(.4);
+  toast('Seal rush! They smell the fish.');
+  quip('fishy', 1, true); setTimeout(() => Snd.voice('rush', 2), 1500);
+  hunter.cheer = .75;
+}
+
+// ---------------------------------------------------------------- save
+function serialize() { S.t = Date.now(); return JSON.parse(JSON.stringify(S)); }
+function save() { try { localStorage.setItem('cozy-pelts', JSON.stringify(serialize())); } catch (e) {} }
+function restore(data) {
+  let d = data && data.save;
+  if (!d) { try { d = JSON.parse(localStorage.getItem('cozy-pelts') || 'null'); } catch (e) { d = null; } }
+  if (!d || typeof d !== 'object') return 0;
+  const base = fresh();
+  S = Object.assign(base, d, { lv: Object.assign(base.lv, d.lv), stats: Object.assign(base.stats, d.stats), sound: Object.assign(base.sound, d.sound) });
+  const away = clamp((Date.now() - (d.t || Date.now())) / 1000, 0, 7200);
+  return data && data.save ? 0 : away;
+}
+
+// ---------------------------------------------------------------- layout
+function layout() {
+  const game = $('#game'), panel = $('#panel'), stage = $('#stage');
+  const aw = document.documentElement.clientWidth - 32, ah = window.innerHeight - 32;
+  const dpr = window.devicePixelRatio || 1;
+  const wide = aw >= 720 && aw / ah > 1.12;
+  let sw;
+  if (wide) {
+    const pw = clamp(aw * .27, 270, 340);
+    sw = Math.min(ah * W / H, aw - pw - 34);
+    panel.style.width = pw + 'px';
+  } else sw = Math.min(aw, 900);
+  let k = sw * dpr / W;
+  if (k >= 2) k = Math.floor(k);          // whole screen pixels per art pixel wherever there is room
+  const cssW = (k * W) / dpr, cssH = (k * H) / dpr;
+  stage.style.width = cssW + 'px'; stage.style.height = cssH + 'px';
+  view.width = Math.round(k * W); view.height = Math.round(k * H);
+  scale = view.width / W;
+  game.classList.toggle('stacked', !wide);
+  if (wide) { panel.style.height = (cssH - 18) + 'px'; panel.style.maxHeight = ''; }
+  else { panel.style.width = cssW - 24 + 'px'; panel.style.height = 'auto'; }
+}
+
+// ---------------------------------------------------------------- boot
+async function start(data) {
+  [atlas, bg] = await Promise.all([loadImg('__ATLAS_PNG__'), loadImg('__BG_PNG__')]);
+  atlasGrey = tinted('#aeb8cc');
+  atlasGold = tinted('#ffc94f', '#3a2600');
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const cx = c.getContext('2d'); cx.drawImage(bg, 0, 0);
+  buildMaps(cx.getImageData(0, 0, W, H).data);
+  for (const n of ['i_seal', 'i_club', 'i_sled', 'i_mittens', 'i_boots', 'i_bucket', 'i_cocoa', 'i_sun', 'i_moon', 'i_fish', 'pelt']) icons[n] = iconURL(n);
+  $('#rateIcon').src = icons.i_seal; $('#peltIcon').src = icons.i_seal; $('#fishIcon').src = icons.i_fish; $('#dayIcon').src = icons.i_sun;
+  const away = restore(data);
+  buildPanel(icons);
+  $('#campBtn').addEventListener('click', buyCamp);
+  $('#fishBtn').addEventListener('click', tossFish);
+  const setTog = () => { $('#musicTog').setAttribute('aria-pressed', S.sound.music); $('#sfxTog').setAttribute('aria-pressed', S.sound.sfx); $('#voxTog').setAttribute('aria-pressed', S.sound.voice); Snd.apply(); };
+  $('#voxTog').addEventListener('click', () => { Snd.init(); S.sound.voice = !S.sound.voice; setTog(); save(); });
+  $('#musicTog').addEventListener('click', () => { Snd.init(); S.sound.music = !S.sound.music; setTog(); save(); });
+  $('#sfxTog').addEventListener('click', () => { Snd.init(); S.sound.sfx = !S.sound.sfx; setTog(); save(); });
+  setTog();
+  let armed = 0;
+  $('#resetBtn').addEventListener('click', e => {
+    if (Date.now() - armed > 2500) { armed = Date.now(); e.target.textContent = 'Tap again to start over'; setTimeout(() => e.target.textContent = 'New camp', 2500); return; }
+    const snd = S.sound; S = fresh(); S.sound = snd; seals = []; bundles = []; combo.n = 0; sg.clearRect(0, 0, W, H);
+    e.target.textContent = 'New camp'; save(); dirtyPanel = true; toast('A fresh camp on the ice.');
+  });
+  view.addEventListener('pointerdown', e => { e.preventDefault(); const [x, y] = worldPoint(e); tap(x, y); });
+  addEventListener('keydown', e => {
+    if (e.key === 'f' || e.key === 'F') tossFish();
+    if (e.key === ' ' && e.target === document.body) {
+      e.preventDefault();
+      const s = seals.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - hunter.x, a.y - hunter.y) - Math.hypot(b.x - hunter.x, b.y - hunter.y))[0];
+      if (s) tap(s.x, s.y - 8);
+    }
+  });
+  const intro = $('#intro');
+  if (S.total > 0) intro.hidden = true;
+  $('#startBtn').addEventListener('click', () => { Snd.init(); intro.hidden = true; Snd.voice('welcome', 2); });
+  intro.addEventListener('pointerdown', e => { if (e.target === intro) { Snd.init(); intro.hidden = true; } });
+  if (away > 60 && passive() > 0) {
+    const gain = passive() * away * .5; S.pelts += gain; S.total += gain;
+    setTimeout(() => toast(`The husky hauled ${fmt(gain)} pelts while you were away.`, 4000), 600);
+  }
+  let hiddenAt = 0;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { hiddenAt = Date.now(); save(); }
+    else if (hiddenAt) {
+      const s = clamp((Date.now() - hiddenAt) / 1000, 0, 7200);
+      if (s > 5 && passive() > 0) { const gain = passive() * s * .5; S.pelts += gain; S.total += gain; dirtyPanel = true; }
+      hiddenAt = 0; last = performance.now();
+    }
+  });
+  addEventListener('pagehide', save);
+  addEventListener('resize', layout);
+  layout();
+  for (let i = 0; i < 2; i++) spawnSeal(false);
+  for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
+  window.__cp = { get S() { return S; }, Snd, seals: () => seals, hunter, gull, tap, spawnSeal, hitSeal, tossFish, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
+  last = performance.now();
+  let faults = 0;
+  const loop = t => {
+    requestAnimationFrame(loop);          // first, so one bad frame can never stop the game
+    const dt = Math.min(.05, Math.max(0, (t - last) / 1000) || 0); last = t;
+    try { update(dt); render(); } catch (e) { if (faults++ < 3) console.error(e); }
+    if (t - hudLast > 100) { hudLast = t; refreshHud(); if (dirtyPanel) { dirtyPanel = false; refreshPanel(); } }
+  };
+  requestAnimationFrame(loop);
+}
+window.claude?.hot?.snapshot?.(() => ({ save: serialize() }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>

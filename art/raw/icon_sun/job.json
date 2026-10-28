@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_sun.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADyUlEQVR4nO2Wb2hbVRjGfzdp2s6Sf93IHLbrmjVScVuZaSEMkQ1084vaoViIKwj2wygiRa1k/dIKc45VZGDpBxGxZs6JcxVkbh1CZUIprKtsDCYmS9bRbW1nkybdlsYmOX64Js3tvflHv/aBy73nvO95n+ec930PF9axjjXAZa4TLnOdWEsMXSlkHlOLgmz0wku0iqcUfl1GZ0miiheQ2kTvxSaOm/Zkgs8MjKj8Ph3ZzV5hKzZsaQi6a0W2gE6LU3RanJlxr8Ulgu7aklIi5TK4zHVir7BxPHpF4ZMmdCTLFf4+/b8ADC5cVfh7TC3id2mO8ciUJldZLgHPSZvovdDE4a9nxbav7kgg5/e9F+eodOjZ4DADEL8XIzG/RPyajmuTVsqNTnFyURZx78g2YX2liaUDfzLOVGknAGTyfUcXpzwJH3Y8oGqnFYDKXZ0ALF0fBCDmi7D8d5LwhJkvIxUAbE3Jb090LCdPXgFpeEwt4t13ZqnaaV0hnhqByC2Vb/R8iPCEmW9CFaRPIh8KdkGX0SkOv7mK/PqgJnka1uYIb1fH6TI6CxakSoCrul7ExjpE0F0rOqy7RaNkwLxHPvZTPV/QeXCAs2eSqkBnzyR5vzfFpUVzRkSjZKDd0iRmjj4tYmMdmveD6ohc1fWiNbEFAL8+RnOygraTMTBvlx3y7DyN6PkQAOcu1TCpf8yzqSoAfpbuqrpB1QXjoaA0ThCQ+3r//rtAdUHS1UhKsK96kdnwhrxFmLMNV+OE7TP54/9Lbsb9msL++ccr2UwWVdoFBHQZneIByzK5Y5jGJy20N8i14PWHSXx7jp7gG6p1C7+FFON/9Ak8phax+kJLQ7MGvn85AUD/rzbMv/zIJ8/XqxZ6/WEmb8/xRKV8I37kO8gJxzCJhFygZWV62g69ykDUwNEPHgHQ2h9X1YCmgAOpzTwe9gKwo2ZjZudaIl6vqeKn6UfcmJ5n11Ybb9lNGduN6Xn69zkkkOtpRNzPeSWrMOQLiYexuBjyhURKiIKP91ZEMX4Yi4vuUZ/oHvWJI38ESvtnKJa02GfIFxLdoz5NERo3oWFNfzhaaG+wsqNmo2ZszS6QdBJef1hR9ZJO4pDdkvH5LhBVrEnnPtuWXQ+STjv1mgICP/yFva2RU4EFACZvz+G0b1aQplJJJJ3E1cAszfYtKkETgfuKDflP39QUkKMiDaLv2GXFTCopaHA/o5jzn76JTi+pbNnzOr1M0dfzArCs4svTEup89R27rBF0xZb5zppfgZq8gIBiRGUHzbZpk61jHVr4D3HcA95SHNkIAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

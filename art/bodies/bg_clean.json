@@ -1,0 +1,3 @@
+{"description": "empty cozy arctic scenery that continues the surroundings: snow-covered ice floes with icy blue cliff sides, turquoise sea water with sparkles, snowy shore, pastel sunrise sky and mountains. No animals, no people, no sled, no birds, no text, no signs",
+ "inpainting_image": {"image": {"file": "art/ref/bg_src.png"}, "size": "auto"},
+ "mask_image": {"image": {"file": "art/ref/bg_mask.png"}, "size": "auto"}}

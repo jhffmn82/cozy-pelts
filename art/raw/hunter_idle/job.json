@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/hunter_idle.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "0ea966ba-4a80-462c-b893-4f43504e1597",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

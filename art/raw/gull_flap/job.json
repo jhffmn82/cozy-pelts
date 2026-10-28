@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/gull_flap.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "325987db-345d-4028-8935-bde0b2aae7c1",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

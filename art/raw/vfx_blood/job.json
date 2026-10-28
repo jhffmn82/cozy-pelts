@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_blood.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "12c9aa37-f138-4a9e-9ffc-c8b42034a44b",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

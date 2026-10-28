@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_cocoa.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEJElEQVR4nO2Wa0ybVRjHf2+hF1wxgQ7oSodKGIjo4gVkMUpCXDVLdB+8xBnHjCxMpx8I6oeJl3hJpsk2GLJA5ja2xCAwxGgWYxjELW4JTN2mmxAxYxswOgq06Douvb3HD7WvdGvpBb6Y+HzqeZ7nnOd3/uc57yn8V815sVcsxTqqeCb11m0VmmQzvXVbFw0RF8BSWtQAM6O/B+1WpV3GnY8/wUhPo1iMElEDqJMzOHekVQAcd+oVf3JKFpkPro77OKICOHekVUi6Zcp42zs7pNMHq5cEIqYeyLn/XkZ6GgXAmspG6ezhJgCcU8Ox1lVMijbR63YLgNkrZ/ij+zAPbKmRALrfLBH6lQUEoGIFiFqB441+yTXJZtLvWQXAFxvzFcnjKR4TwNrKndKJT55n1v6r4ssrWUdKbiHqpCROf/Z6XE24IHUJRgHQ1FXF5c5vScktVGKdr3Tw5DPB+UkVr7Iy/3bWmyv9OYxFVCVsQglGsad5M4MfH+Cbfg1Tsodtj6rQGxLZ9eXNm3251Mfu7yUsBjf5ZSsofKOa9ebKiBAhg0WYxIHml6gp+5xZIQNgMbjpsmuwGNycdOgA2N3fiHNqmO0PbceBYEOBl9a+RCW/7Jf6iBAhe8Al/eu+KGSlOECXXcPDqXPsn7uAPtvC1GQKDvyKtPYlsqHAq+SNjzgW2jwAieECnulZGkaOssa8lvZJFe/Xl1P4YhXn2/Zy5q0aDpnMGIx+0P2DX6Nbnsf5tr18UFHHHF52NG9moKMFgA5Kg87saY4pioSUZrVkFjv1E2R/9SG3FW/B47Rxt9mCHoFWyKQiowvTPnt63uNCVzeDn57gpEPHa4ZRVqT5SLwLMtofYabbzVOWIeVYQq6SJ2WJer2NFJ0XU7YP7UfPkXzfLsD/CAHMTQ4A8KftLIasUgDsw8cY6Gjhx5ohRoTMC6ljpGl9VFjTAWhfN4bKqMbd76H8lJFOxqSwRzDffLVtOKv8v13vtiGcIM34xyqgbzoBl6zCdl3NgCdNmadVyWy0GvkJqwTw7HdG0VI8FrR2VACRzCWH/p41TZoAX5BPOOHqRIIyDjnTw5L826J8ufUmX0C52YUAAJzuhHChqM0lq4KuNMB1typIsYhvgXAuDqIh1UYRJlGESewzjQNQbTfwwz+3ICSAFwGuYoavaaMuNOMOXipd5LLJYQSg1jBBQ5qNax6JCmu6UhyiaMLLNjV3JHsY7/kNgNQb4pecaqX4/BsQ2MgmhxE1ElpktEJWbkTAwn6jsySzqBWrQHuKrFtdmLLndbMN+uxabtHISvGfp41K2CXnAHBQGmBYXIn9MQoFkaH3KP4b5Q5VfB/9WLka/3M8H+JtkYNddSlSaszFowIIQGQKPY+RuWDeUUYZ4q+oi0cNEICIlOMVvpiK/28AfwOPmpr5xOPu4wAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

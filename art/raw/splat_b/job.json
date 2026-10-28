@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/splat_b.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAB60lEQVR4nO2Uz2oTURjFf/eO2bjoQjp37gQFqWBjFroUREQ3fYHaB3DjTkHNI7isuPQJRHyAgitBkC4EFyIOlTSGxmKToIVgLQXJ/VxkJmmamZtItj2r+2fmnPOd794Lp5gHZWsFkHk4tGdPPq/c5VGpikdkqgGfAE9fvUXhCvfL1lILKj4DftjIiI2M92drwrkizEVsI4mnCGc4GdFEpinR2Nrqn4WTmRT2YkygbC2PSxVQ4x9/vLlKZEKxkZH7Z5fk3rWrtDvdIfnGpTuFFajCnRRRGMqb5dsT6++THR7sf6Cmq6y7pJDvTB5pbCMREUSEtYMFtIOLVy6gteLblxabWy20wItz19nu/faazRUQ59i4fAudJqiAna/feZe00CJoNeByMpak5In4IpJPN9ZYWj5Ps75Lp9GlrwVRoFLexuERzd4BAP0Anv9NJjhzKziOZn0XcdDXk4ckI193CTiII8PeqPnAlJu8udUaL+mYt8bh0WCghjdd7XW6szU5gxPhR7MznCsZxSIKUCAa4sVJ57MJqAGhU4r6fo9SkBac+nzWT6APMcZH44U8pJLdUqnp6nD8JKjO9JR7n+taUOG1+QWg4sjgglHeLxd/Yk041WHhMc0es6xx1oRCev7bna7K5u2cxp7iv/APmEC/X75ZA0wAAAAASUVORK5CYII=",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

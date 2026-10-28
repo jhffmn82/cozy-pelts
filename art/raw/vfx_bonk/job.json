@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_bonk.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "5722dab5-f864-4548-be50-ae33f2956d70",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

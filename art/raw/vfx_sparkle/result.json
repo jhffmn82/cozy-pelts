@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_sparkle",
+ "files": {
+  "vfx-sparkle.gif": "https://api.pixellab.ai/mcp/pixel-tools/b8483787-2991-4d66-af76-f31c3bf89004/vfx-sparkle.gif",
+  "vfx-sparkle.png": "https://api.pixellab.ai/mcp/pixel-tools/b8483787-2991-4d66-af76-f31c3bf89004/vfx-sparkle.png",
+  "vfx-sparkle.json": "https://api.pixellab.ai/mcp/pixel-tools/b8483787-2991-4d66-af76-f31c3bf89004/vfx-sparkle.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 12,
+  "y": 12,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 24,
+  "w": 24
+ },
+ "frames": 6,
+ "message": "Here's a 24x24, 6-frame one-shot golden sparkle: a central four-point star with a warm glow, plus a few small twinkles around it, all in a four-colour gold ramp with hard pixel edges. It fades out by the last frame, so it plays once on pickup. To tweak, try the star's length and the glow's radius for a bigger or softer pop, and the twinkle count for more or fewer specks.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=4cf6fe58-ae8f-46bf-a4d3-ea684dd6d730",
+ "effect_id": "4cf6fe58-ae8f-46bf-a4d3-ea684dd6d730",
+ "gif_exact": true,
+ "result_id": "b8483787-2991-4d66-af76-f31c3bf89004",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "cd39c957-af77-4037-8373-11228abb8f43",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_sled.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFIklEQVR4nO2Vf0zUZRzHX/cFY1gUcnfzckoXRssv5NhJyLXUvMkfMQPtqgmxiYhTmxuRsTlUmGi0wlxsFv1AxESU9HSoaY6Cha5TPFHyVyUe15X5A3+Uv07k7p7+oPvCeSDnlv3h+mzPdvc83+fzfj/vz+d5P/B/PCgxQhMvhkg6cd8AZNnUL0BEuF7IskkId4cQ7g4REa4XMU8k/dtE1KJ7a6pwmMcJUAsACa2QZZPYYWtXwPsOCW1QJKTgPpI4s+G88r9S+7Swm6OxLXTxcuJ4AOLGzvbb43G3ECyJIEMtjtrtfqcEtbi5xihk2SS6t6YKUCuK7LC1i/yi+kGVCA0WXLhtAbPCbSNu7GxsC12c2fAXDrOemEQjaxq+D/pYg5YgIlwvhNvGMacgt8MDwDFn76GO/7iGobN/wa1JR29xYDdHA9Cy5TCmtDjyiiq52+0YVIFRT8YowAC5HR5G7b0AL+qIj1YBPUqoQhNxmPXoLQ7maw4r35vS4qj7RMMfF8/1m181GIEhkk7cvm0lJDSJWaesfmuPrj9OTvazxEerqG5y4cmcxpSJEaSefIyC8tVohj0EQHqiES+d/WINWoKXlpYQEprkN1f5ZAhrY43sP9GO7fQtqptcAOR2XiLG4uTg3AvMjNmu3JB6m3XAGzEogccnxDG1+F2ulQ+ncoSdzppGhZD8XjotW3rkXp6bjcOsx4uXzuYwpNFltM/N4+KV2+SZMwfMP2gJJLSizX6AkdXTlLmZqgUAaLNMtGSvY85b0wEY+uYM9o8ykfxbI+mzMtB+sJr8oioAKsvyuOG6MWAp7hppxZ+Lo3a7mH2q3W/IskkctdvFDlu7ALXilPlF9SIiXC/yi+pFflG9GKGJF7mGeWJtyqsBvhCUAr7fH23ew+Rxkcqar/kWZ7zOM+NfILOlkePzy5T11Svm9iiW0KteVavFT4W7EFAL7+kCXDtr6GwOQzuxi4i88+g0w1lU8SUAG+uauH72T+ITYqn7eCHJ+gQOOo+yYMlnlJfksnJKqpLtxOXwAPABCUhohefGBg5llWBYbMDjbKdt/VWStv1MjsFMZevmHtezOEl9u5RdqwpJG2NCEz4sIJcc5aL5zC22n2xU5vqSGPAWLJ32NeNqigBoW38VgGvlw5kUFYnDrEc7sQu7OZqdqxaRYzCjCR+GHOWiYomTiiVOdOowdOow3vl2F/EjdQAk6xMoTMn0c0Y/J5TQCrctg9DEjZQ21HJuQhdylIuRYd289tVyDmWVMPX5XTySMJJf9yTzlKWcJSlZFM5oAeDTfUaWVUQCUNpQ63egECkEU6zM+9/V0e09F9gDElrRtfU5rh/5HXXJWbx0qnwNmGMwK4m+2PsKh7JKADCsnIpKZ8C1qZjSTUn9AgMUpmQqa3f2QMBb8KF1MlAb4FxVrRZyDGZCHn6DNSmTyJp/E09bM8vmnQV6wFc01CD9U1UfaF9S/XmAH4EDTb0t0b0qk+LdPZurWi1MN2ZTaa3Ce7oAaXQZV8RULqsi/QAkJJL1CTiunwWgfF/9oObjV4K+rH2JpxuzAdhmrcZty+BW20FKNyX5SV2YkklpQy3J+gRMsbKyNxjXUxTw0qkqbaj1k90HDj1NBASA+8IHHsyp+yXgI2E2FvT7anm8Hn5YZwdG+4HudxwBwBQrs6KhBrh0T14f0IQWa5mS4E4y3/zUC542xoRljo7i3XIfRe4NHIJ4C/oS2WatDrq770uYjQVCQquM/wT0gY+/ATBoU6pTI0ojAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

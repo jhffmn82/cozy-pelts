@@ -1,0 +1,13 @@
+{
+ "endpoint": "/image-to-pixelart-pro",
+ "body": "art/bodies/bg_pixel.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "3c3b7c5e-c0a4-4ac4-9ff5-196478391513",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 20.0
+ }
+}

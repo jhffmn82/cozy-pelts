@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/hunter_iso.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "bdeb36ae-009e-42a3-92e1-9feb1e8b1d5d",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

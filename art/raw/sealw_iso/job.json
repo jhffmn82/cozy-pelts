@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/sealw_iso.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "c35e43a1-f5fc-4332-b07a-d1392bb5cb50",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

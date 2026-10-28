@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_bucket.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADx0lEQVR4nO2WbUxbVRzGf7QdGy0kSGgpbWlZ0y68zIGJG0REl2xx8WUMX8IydCSGafAl+mVuJsZk8ZsJ8YNZIxITw9QluqiZJOo2mbikWsQFRxlDYECBNqUCOmkLLvQeP1y5A10vDL72+XLv/Z/n/J/nnPPk3gsppJDCBmDJsYsCo1NspEfaekQBtFodb332Ph3f9fJDqwdNmg5JLDLx+8gd9dTcibAlxy46HruJPUtwrO0k7R+cB+BY20nKjILzD8dxmLYJh7loQ7tyW+HRRqsYbbQKh7lI+EM+8ejjL4knnn5N+EM+Ub33sPCHfKLA6BQ1pW4RfF7mrcXIatslwk1WEhIcuqAljJV0fSZGm5V3P2wC4G2PF4Ax72XsZSUAeD/9mK7aOQAqvjAQiAwm1dGpqdeUuvGG4gCEsdL4zus0HdhPy9l2Xmzw4KgoB6C43ElxuZNvPGdkE5KENyT3KDMKApHkGmoZEK3Vcaos8NGIAYC+H/upNpt5pCJPIbm226mpyuflJw+w/9WDTFz9DZDnVFmgtTqO2lGohjAhyVdJyPNHu/3seO44rzzbAkCg61eFu8KYRqPMWQ1qGRC127dRXxjl7hyJ45ez6PtTjz7bBMDnl5o5crAZs82Gfqtcu/59N4GrPu4xaXmjdA53XjrNPh2fTKQTCA/cVkvVwK5dtTwo/AzNa6kvjFJlkekvePUMxHMVYolhBoCW+2MAeEPyEeyz/c2paCWhwZ6kQVQNocVuJ2i9FzpOAeALQ9t1Pc9sjfGALa7wLk0KTo9lKsFLSAJJCC6a67EBoeErSTVUDQxfu4Zx7i/y9zTQ6TKx+9yJFaLLIQlBQpJrnftOkDkcYWH6BpFgUE1C3UD+zSECg1Hl+fSWp8jca6LTZfof1wZ0LnuOByOExsexxPuZUMm6qoHybC2G+RlmBy/SOymvxAUsTM0CsCUvR+FKC4sALMzMotHpiF35CsvmdNwZCXrWawDkra3I3QSMADA0EEBaWmXfLV7Pvy+b3vAAAOPhOt58qGG19smtOa1l/GSoYHDhLgB25s0rY+6MBIedMeoLo5RkLOK5L0adI4EkFlf0GBYOxkrr1mdgCbkFLsK7j9A9lbGivhS4o5W3RIuyJXZYSmg5287XXVNkG42EJydBkkgG1Y9RgdEpHKWV5Bc6lJcNwI0z7wHyTii1Q0cBiAZmiAfl85ienmai/xfVj9GqPw/L/3h27qklq7gA7eZNyrguXavc/9E7DsDP334pFyRJVXxNBpKZAdCk/SfDGs2aRFNIIYXl+AcUTXWCLmwr1gAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

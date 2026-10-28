@@ -1,0 +1,38 @@
+{
+ "fps": 16,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_bonk",
+ "files": {
+  "vfx-bonk.gif": "https://api.pixellab.ai/mcp/pixel-tools/4620c6df-dfe7-49f9-806f-8de5a10ef688/vfx-bonk.gif",
+  "vfx-bonk.png": "https://api.pixellab.ai/mcp/pixel-tools/4620c6df-dfe7-49f9-806f-8de5a10ef688/vfx-bonk.png",
+  "vfx-bonk.json": "https://api.pixellab.ai/mcp/pixel-tools/4620c6df-dfe7-49f9-806f-8de5a10ef688/vfx-bonk.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 16,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 32
+ },
+ "frames": 6,
+ "message": "A 32x32, 6-frame hit burst: a white-hot flash pops on frame 2, a four-point star spikes out in pale yellow, and a few short speed streaks fly off, all fading by the last frame. The star's spike length and the speed streak size and lifespan are the easiest sliders to tune.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=88f1642c-c9cc-4200-8938-6d4b0646a88c",
+ "effect_id": "88f1642c-c9cc-4200-8938-6d4b0646a88c",
+ "gif_exact": true,
+ "result_id": "4620c6df-dfe7-49f9-806f-8de5a10ef688",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "d71bdb80-e20a-41b0-93c5-33c3a96f35ff",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

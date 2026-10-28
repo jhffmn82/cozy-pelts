@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/seal_hurt.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "c2ec9bb0-75a7-40c2-af00-dd827ff87893",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

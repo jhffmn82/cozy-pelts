@@ -1,0 +1,38 @@
+{
+ "fps": 10,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_poof",
+ "files": {
+  "vfx-poof.gif": "https://api.pixellab.ai/mcp/pixel-tools/d3ce9c69-c9ce-49c8-b804-32ec0abfef66/vfx-poof.gif",
+  "vfx-poof.png": "https://api.pixellab.ai/mcp/pixel-tools/d3ce9c69-c9ce-49c8-b804-32ec0abfef66/vfx-poof.png",
+  "vfx-poof.json": "https://api.pixellab.ai/mcp/pixel-tools/d3ce9c69-c9ce-49c8-b804-32ec0abfef66/vfx-poof.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 18,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 32
+ },
+ "frames": 6,
+ "message": "A 32x32 snow puff: a soft white-grey cloud that starts small, swells to its fullest around frame 3, then breaks up and fades out by frame 6, with a bright white core for a little sparkle. Try the Size and Core sliders if you want it bigger or brighter; it plays once, not as a loop.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=30152d2d-c7c5-4799-975c-eddf5abb1b6d",
+ "effect_id": "30152d2d-c7c5-4799-975c-eddf5abb1b6d",
+ "gif_exact": true,
+ "result_id": "d3ce9c69-c9ce-49c8-b804-32ec0abfef66",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "de81ca0f-edb4-41e8-bd36-de11feaf50f3",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

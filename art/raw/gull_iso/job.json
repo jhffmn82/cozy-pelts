@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/gull_iso.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "acacc89a-7c2f-4aee-8b08-f051f6065970",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

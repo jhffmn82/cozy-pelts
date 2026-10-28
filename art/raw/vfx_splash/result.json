@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_splash",
+ "files": {
+  "vfx-splash.gif": "https://api.pixellab.ai/mcp/pixel-tools/88356688-6c38-4208-b447-49e0cea92bfb/vfx-splash.gif",
+  "vfx-splash.png": "https://api.pixellab.ai/mcp/pixel-tools/88356688-6c38-4208-b447-49e0cea92bfb/vfx-splash.png",
+  "vfx-splash.json": "https://api.pixellab.ai/mcp/pixel-tools/88356688-6c38-4208-b447-49e0cea92bfb/vfx-splash.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 22,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 32
+ },
+ "frames": 8,
+ "message": "A 32x32, 8-frame one-shot water splash: a small turquoise-and-white crown of droplets sprays up from a point, falls back, and leaves a ripple ring on the ground that thins out at the end. Try the droplet count and speed sliders in the crown layer if you want a taller or sparser spray; the ripple ring and its brightness are in the ripple layer.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=680393bb-9f91-4e1e-bd76-97eb19ff792c",
+ "effect_id": "680393bb-9f91-4e1e-bd76-97eb19ff792c",
+ "gif_exact": true,
+ "result_id": "88356688-6c38-4208-b447-49e0cea92bfb",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "2c3ac0eb-544b-4b5a-89ae-ac76829e1dba",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

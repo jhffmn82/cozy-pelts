@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/hunter_walk.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "03aacd8f-4e43-4379-9890-907bd68bd3b8",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

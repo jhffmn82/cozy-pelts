@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_splash.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "74bd1dfe-c608-4fc0-b1f9-7bfc3910df9a",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

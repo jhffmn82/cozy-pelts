@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/hunter_cheer.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "8304768c-ddf5-43a3-bbf9-664fd01e3d04",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

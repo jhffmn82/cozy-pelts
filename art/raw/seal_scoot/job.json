@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/seal_scoot.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "6ba55ac7-747e-420a-8e31-a65ec9ea49c4",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

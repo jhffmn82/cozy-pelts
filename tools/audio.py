@@ -1,0 +1,174 @@
+"""Every sound in Cozy Pelts, from ElevenLabs: effects, the hunter's and the narrator's lines, and the music.
+
+    python tools/audio.py            make whatever is missing, then write game/audio/*.mp3 and game/audio.json
+    python tools/audio.py --list     what would be made, and nothing else
+    python tools/audio.py --music    also the two music tracks (the key needs the music_generation permission)
+
+The key is Shoulda Listened's (.secrets/elevenlabs-api-key.txt there) unless this project has its own, or
+ELEVENLABS_API_KEY. Each take is cached in art/audio/cache under a hash of its request, so a run only pays for what
+changed. Needs numpy and lameenc.
+"""
+import concurrent.futures, hashlib, json, os, sys, time, urllib.error, urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+CACHE = ROOT / 'art' / 'audio' / 'cache'
+OUT = ROOT / 'game' / 'audio'
+API = 'https://api.elevenlabs.io/v1'
+RATES = {'sfx': 44100, 'voice': 22050, 'music': 44100}
+STEREO = {'sfx'}   # sound effects come back as interleaved stereo
+VOICES = {'Jessica': 'cgSgspJ2msm6clMCkdW9', 'George': 'JBFqnCBsd6RMkjVDRZzb'}
+HUNTER, NARRATOR = 'Jessica', 'George'
+
+# name: (takes, prompt, seconds, loop)
+SFX = {
+    'squeal': (4, 'a cute baby seal pup squeals once, a short high-pitched cartoon yelp', .8, False),
+    'wail': (2, 'a cute baby seal pup lets out a long wobbly cartoon wail that fades into a whimper', 1.6, False),
+    'bonk': (3, 'a cartoon wooden club bonk on something soft and furry, a squishy wet thud', .5, False),
+    'whoosh': (1, 'a quick swoosh of a small wooden club swinging through cold air', .5, False),
+    'splash': (2, 'a small seal slipping into icy water with a gentle splash', 1.0, False),
+    'plop': (1, 'a soft thump of a small animal landing on packed snow', .5, False),
+    'hop': (1, 'a cartoon boing as a small round creature hops out of the water', .5, False),
+    'arf': (2, 'a cute baby seal barks softly, arf arf', .8, False),
+    'squawk': (1, 'a seagull squawks twice', .9, False),
+    'bark': (1, 'a happy husky puppy yips twice', .7, False),
+    'ding': (1, 'a soft cozy chime, a gentle bell twinkle for collecting an item in a cute game', .8, False),
+    'buy': (1, 'a cheerful jingle of sleigh bells and a wooden shop bell, an upgrade bought in a cozy game', 1.2, False),
+    'golden': (1, 'a magical sparkling glissando of tiny bells, a rare treasure appears', 1.6, False),
+    'fish': (1, 'a fish tossed into the sea plops into the water with a splash', .8, False),
+    'shore': (1, 'calm arctic shore ambience: gentle waves lapping against ice floes, soft wind, faint distant seagulls, peaceful', 22, True),
+    'nightair': (1, 'quiet arctic night ambience: soft wind over snow and a small crackling campfire, very calm', 22, True),
+}
+# name: (voice, [lines]); words in [brackets] direct the voice and are not spoken
+LINES = {
+    'ko': (HUNTER, ['[cheerful] Gotcha!', '[giggles] Bonk!', '[happy] Nice and fluffy!', "[pleased] Ooh, that's a good pelt.",
+                    '[excited] Into the sled you go!']),
+    'sneak': (HUNTER, ["[whispers] Nap time's over."]),
+    'goldko': (HUNTER, ["[gasps] It's golden!"]),
+    'escape': (HUNTER, ['[groans] Aw, come back!', '[sighs] Slippery little thing.']),
+    'shoo': (HUNTER, ['[shouting] Hey! Shoo, shoo!', '[annoyed] Drop it, you feathery thief!']),
+    'bought': (HUNTER, ['[happy] Ooh, cozy!', '[excited] Upgrade time!']),
+    'fishy': (HUNTER, ['[sing-song] Here, fishy fishy!']),
+    'roll': (HUNTER, ["[excited] I'm on a roll!"]),
+    'welcome': (NARRATOR, ['[warmly] Welcome to Cozy Pelts. The seals are coming up to lounge on the ice.']),
+    'goldseal': (NARRATOR, ["[hushed, excited] A golden seal. Don't let it slip away."]),
+    'rush': (NARRATOR, ['[cheerful] Seal rush!']),
+    'gull': (NARRATOR, ["[alarmed] Mind the gull. It's after your sled."]),
+    'stolen': (NARRATOR, ['[sighs] The gull got away with some of your pelts.']),
+    'dusk': (NARRATOR, ['[softly] Night falls over the ice. Sleepy seals make for sneaky bonks.']),
+    'dawn': (NARRATOR, ['[warmly] A new day on the ice.']),
+    'camp': (NARRATOR, ['[proud] The camp grows cozier.']),
+    'husky': (NARRATOR, ['[warmly] A husky joins the camp, and starts hauling.']),
+}
+MUSIC = {
+    'day': (90, 'Cozy winter lo-fi for a cute pixel art game: music box melody, soft felt piano, gentle plucked acoustic '
+                'guitar, light sleigh bells and brushed percussion, warm and peaceful, slow tempo around 80 bpm, instrumental'),
+    'night': (75, 'Sleepy winter lullaby for a cute pixel art game at night: celesta and soft piano over warm pads, '
+                  'very calm and gentle, slow, instrumental'),
+}
+
+
+def key():
+    k = os.environ.get('ELEVENLABS_API_KEY')
+    for p in (ROOT / '.secrets' / 'elevenlabs-api-key.txt', ROOT.parent / 'shoulda-listened' / '.secrets' / 'elevenlabs-api-key.txt'):
+        if not k and p.exists():
+            k = p.read_text().strip()
+    if not k:
+        sys.exit('No ElevenLabs key')
+    return k
+
+
+def post(path, body, tag, rate):
+    """Raw 16-bit PCM at this rate for this request, from the cache when it was made before."""
+    h = hashlib.sha1(json.dumps([path, body], sort_keys=True).encode()).hexdigest()[:16]
+    f = CACHE / f'{tag}-{h}.pcm'
+    if f.exists():
+        return f.read_bytes()
+    sep = '&' if '?' in path else '?'
+    req = urllib.request.Request(f'{API}{path}{sep}output_format=pcm_{rate}', data=json.dumps(body).encode(),
+                                 headers={'xi-api-key': key(), 'Content-Type': 'application/json', 'User-Agent': 'cozy-pelts'})
+    for attempt in range(4):
+        try:
+            data = urllib.request.urlopen(req, timeout=300).read()
+            break
+        except urllib.error.HTTPError as e:
+            msg = e.read().decode(errors='replace')[:400]
+            if e.code in (429, 500, 502, 503) and attempt < 3:
+                time.sleep(8 * (attempt + 1))
+                continue
+            raise SystemExit(f'ElevenLabs {e.code} on {tag}: {msg}')
+    CACHE.mkdir(parents=True, exist_ok=True)
+    f.write_bytes(data)
+    with open(CACHE.parent / 'calls.jsonl', 'a', encoding='utf-8') as log:
+        log.write(json.dumps({'t': time.strftime('%Y-%m-%d %H:%M:%S'), 'tag': tag, 'path': path,
+                              'text': body.get('text') or body.get('prompt'), 'bytes': len(data)}) + '\n')
+    return data
+
+
+def jobs():
+    out = []
+    for name, (takes, prompt, secs, loop) in SFX.items():
+        for i in range(takes):
+            body = {'text': prompt, 'duration_seconds': secs, 'prompt_influence': .55, 'model_id': 'eleven_text_to_sound_v2'}
+            if loop:
+                body['loop'] = True
+            if takes > 1:
+                body['seed'] = 1000 + i
+            out.append(('sfx', f'{name}_{i + 1}' if takes > 1 else name, '/sound-generation', body))
+    for name, (voice, lines) in LINES.items():
+        for i, text in enumerate(lines):
+            body = {'text': text, 'model_id': 'eleven_v3', 'voice_settings': {'stability': .5, 'similarity_boost': .8}}
+            out.append(('voice', f'{name}_{i + 1}' if len(lines) > 1 else name, f'/text-to-speech/{VOICES[voice]}', body))
+    for name, (secs, prompt) in (MUSIC.items() if '--music' in sys.argv else ()):   # the key needs music_generation
+        out.append(('music', name, '/music', {'prompt': prompt, 'music_length_ms': secs * 1000, 'model_id': 'music_v1',
+                                              'force_instrumental': True}))
+    return out
+
+
+def finish(kind, name, pcm):
+    import numpy as np, lameenc
+    RATE = RATES[kind]
+    x = np.frombuffer(pcm, '<i2').astype(np.float64) / 32768
+    if kind in STEREO:
+        x = x[:len(x) // 2 * 2].reshape(-1, 2).mean(axis=1)
+    if kind != 'music' and name not in ('shore', 'nightair'):
+        loud = np.flatnonzero(np.abs(x) > .015)
+        if len(loud):
+            x = x[max(0, loud[0] - int(RATE * .01)):loud[-1] + int(RATE * .06)]
+    x = x / (np.max(np.abs(x)) or 1) * (.9 if kind == 'voice' else .85)
+    fade = int(RATE * (.6 if kind == 'music' else .004 if name not in ('shore', 'nightair') else .25))
+    if len(x) > 2 * fade and fade:
+        x[:fade] *= np.linspace(0, 1, fade)
+        x[-fade:] *= np.linspace(1, 0, fade)
+    e = lameenc.Encoder()
+    e.set_bit_rate({'music': 56, 'voice': 40}.get(kind, 48)); e.set_in_sample_rate(RATE); e.set_channels(1); e.set_quality(2)
+    data = bytes(e.encode((np.clip(x, -1, 1) * 32767).astype('<i2').tobytes()) + e.flush())
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f'{name}.mp3').write_bytes(data)
+    return len(x) / RATE, len(data)
+
+
+def main():
+    todo = jobs()
+    if '--list' in sys.argv:
+        for kind, name, path, body in todo:
+            print(kind, name, (body.get('text') or body.get('prompt'))[:70])
+        print(len(todo), 'items')
+        return
+    manifest = {}
+
+    def run(job):
+        kind, name, path, body = job
+        secs, size = finish(kind, name, post(path, body, name, RATES[kind]))
+        return kind, name, secs, size
+
+    with concurrent.futures.ThreadPoolExecutor(4) as pool:
+        for kind, name, secs, size in pool.map(run, todo):
+            manifest[name] = {'kind': kind, 'secs': round(secs, 2)}
+            print(f'{kind:5} {name:12} {secs:5.1f} s {size // 1024:4d} KB')
+    (ROOT / 'game' / 'audio.json').write_text(json.dumps(manifest, indent=1))
+    print('total', sum((OUT / f'{n}.mp3').stat().st_size for n in manifest) // 1024, 'KB')
+
+
+if __name__ == '__main__':
+    main()

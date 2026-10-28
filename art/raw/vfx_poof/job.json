@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_poof.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "8a0b39e2-59bb-45ce-a42c-ea010ffd8e3f",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

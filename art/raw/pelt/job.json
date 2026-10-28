@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/pelt.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACr0lEQVR4nO2VUUhTYRTHf9/mQh8Kd+cdVxSZFQRCRfWUVlJJUUlBFAUVFovqQaMIhQglIughfCt6KGhB0UNQVNSCSpOoJZUOrEWiWc6ZNTdtQVDa/Xq47a7bZg3BpzpP5977nd//O/9z73fhf0xFaIoqNUWVUwJ3O13yZSAsXwbCUlMK/ioksgUnQfduPsehCMbiBlfYBFXVC3kfi2Zk5WS769b7zxC6DZEHSHA4BWMjhoiqlQEhCaQJTdiBphRIEAgBtStUAALRJTSfaTQWSKN6Q/UG1s+OU1aicPhqODsBt9MlW28HkbrE4RRs3rwdu81OU2WC0IcvBGIVNJ9uAgm+g5XsONZm1q5ca7UrzSK30yUfPgpS7Mmnr3MEgCtXLgJwqPYYkWgvTZWdNNSdINTTxqY5qVqpg5TWmVs6cDtdsi/y1rJg4O2o5fr7Z9i3/wCrS17RNzDK7Z4U8MzRa+xtrGYoPmxyzURTVNk78CaTY2kiAFu31OCdP0x/NIHdZgPgfHuCFn8nK9YsMEVMi4SA/q6ECSiZO8PMiz35aSKXfReo2TSPXHUVu5buZnphLuXrpyF160ZsyeR9LCqWr5kPwOtAmNIiD7OKZ1pExmKpvkUe2JVllLue8i3xlZw8BwAr1y2wWGQKJCslxhbOHr/Fg7sdlBZ5zKeli/IZ/2Tk3W2DeCv2AHCj93qahSnib6Epqmzxd7Btdw0AB6rqqfdtJzn8d12jdAciCAd8fPGBe+1eHoYdSH3cdOJXXoYv2XgrLp27QG/HIEdONfDgTpD+rgS6rmOzpZr2P/byZNCAT3RUZLxZ6FKllNDqDwIQ8IVYvLPMFHjR8oa6kxsBGIpnBv9RIBmaospWfxCJjvg5Ll03ZvT7MCcdmlIgC12qfNUeyfqInrTQlP1k/u34AXbnFyijNKAmAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

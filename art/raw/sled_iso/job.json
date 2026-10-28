@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-image-pixen",
+ "body": "art/bodies/sled_iso.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "5be3643b-4f2f-4122-a5d6-8f5c889f052f",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/icon_club.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADDElEQVR4nO2Vz2sTQRzFP9k1pEm7haZITdslWYy/sBiSHEok2ELxIEhBEPHgWfTiDwRvHvQkglD8AwTBgwehIEJPikI19NCIIliompTUVC2JYOLaWDfjYd1N2myitNVT3mVnvuzMe/PmfXehjTYcMKwERVgeEl5FE3MTY+K/koflIXH9xH4xNzEmniV3i7A89E9FSOsLvb5SbXxc5U7iB9Er7wHTma12Zdv6QkFX6Hy9QiGfo1sr063B+LIX2CmOnfGRTVU5eunTVvHjWl/wKpqI9e7kpC9LzC9xa9kgGukglKiZlU1VefFyhatnQ+y98Khhj00JADMHfeoOBj2ZpuTRSMeWiGi6cFgJimNHugAIJSSbGCApu7icMxjvl8jmfzJTWtiwgIYQWuSh/lo8sqkqk1NlkrKLc9tlYn6JG6rM7Fsvr5DYTCgbQlgPy+rJqTL1ggBG4zoxv0S6KBO98p5hJSjADPEH3zcG9E4e3uwDaHlFLQU4IV2sEvObxnVrZSj6uKHKjMYruOP7AFidfcPXjNvulrmJMdFMxB8FTE6V2da7i8UKTHsyJOXaPk9mfQAcPh2kJxKoLYoEcL9c4g450kWzbZuJcMyAhWikY818saIBcGvZsMlH4zqrs28a1lq1mF/i/J4VW8T69xwdmCktuMgHRTZv3n02P09BVwC4p4YY9GSYNsQaNz7ffgyAO76Pwv0c0NXqbDZato9X0cQBqnYAH+SrDOid9Kk7CPQEGKmkANMFC18zjcTpYpVpQzi27F/1r5XwmdKCyxKlhg8B2CKsYFqEANOG6XhSdjUV8FddUL/oeynj4rcggKeeBCOVlE1q4W5u1R4nVffv/Mw37N0yhM1g5aFexFNPwp5bJ794rZtTqpt7egiAVw50G/qEehVNjPdLGL6Da+qy/tzxfat70oV3poN12JADANn8T/v+LRi+gyxWtIZnM3LYoANgujCgdxIPf7dJAj0Blr4sNYw/5T7y1njtyLWpf7mTiHqkC+8AHE++JQLqhRyg1gVWSJuduo022qjHL/lIV2RfOsgdAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

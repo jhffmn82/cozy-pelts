@@ -1,0 +1,15 @@
+{
+ "endpoint": "/animate-with-text-v3",
+ "body": "art/bodies/seal_roll.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "6faca7b5-c7c6-413c-8655-45392c294ae8",
+  "status": "processing",
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

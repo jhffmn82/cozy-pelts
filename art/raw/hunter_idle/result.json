@@ -1,0 +1,21 @@
+{
+ "seed": 2418469269,
+ "type": "message_done",
+ "usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1,
+  "cost_if_paid": 0.021703606532679665
+ },
+ "status": "completed",
+ "progress": 0.8,
+ "flow_kind": "animation",
+ "billing_usage": {
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "59958516-0352-41e2-8abd-cce761421236",
+ "queue_position": 0,
+ "billing_charged": true,
+ "generation_started_at": "2026-10-28T15:54:48.983355+00:00"
+}

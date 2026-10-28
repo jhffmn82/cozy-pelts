@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": false,
+ "name": "vfx_blood",
+ "files": {
+  "vfx-blood.gif": "https://api.pixellab.ai/mcp/pixel-tools/12d13311-5cb5-44ce-af81-46910adc2eaf/vfx-blood.gif",
+  "vfx-blood.png": "https://api.pixellab.ai/mcp/pixel-tools/12d13311-5cb5-44ce-af81-46910adc2eaf/vfx-blood.png",
+  "vfx-blood.json": "https://api.pixellab.ai/mcp/pixel-tools/12d13311-5cb5-44ce-af81-46910adc2eaf/vfx-blood.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 16,
+  "y": 13,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 32
+ },
+ "frames": 8,
+ "message": "A 32x32, 8-frame blood splash: a bright red flash on frame 1 bursts into a splat, with droplets and specks spraying up and out, then arcing down and fading by the last frame. It stays inside the canvas. To tune it, try the drops' count and speed for a bigger or smaller spray, and the gravity for how fast they fall.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=dcc61007-f33d-495e-a239-21d01c47d362",
+ "effect_id": "dcc61007-f33d-495e-a239-21d01c47d362",
+ "gif_exact": true,
+ "result_id": "12d13311-5cb5-44ce-af81-46910adc2eaf",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "f863cc45-cc83-4ce1-9695-fe42cb87a97c",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

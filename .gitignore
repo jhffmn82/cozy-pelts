@@ -1,0 +1,6 @@
+# Secrets (API keys): never committed
+.secrets/
+# ElevenLabs takes as raw PCM; tools/audio.py re-makes game/audio/ from them
+art/audio/cache/
+*.log
+__pycache__/

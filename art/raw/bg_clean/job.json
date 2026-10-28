@@ -1,0 +1,13 @@
+{
+ "endpoint": "/inpaint-v3",
+ "body": "art/bodies/bg_clean.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "e2732d7a-8b81-4776-88bb-1a23d4826bad",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}
