@@ -689,7 +689,7 @@ function pickFloe() {
 }
 function spawnSeal(rushy) {
   const fl = pickFloe(); const fi = FLOES.indexOf(fl) + 1;
-  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && Math.hypot(s.lx - x, s.ly - y) < 26);
+  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && (Math.hypot(s.lx - x, s.ly - y) < 30 || Math.hypot(s.x - x, (s.y - y) * 1.5) < 34));
   let ex = null;
   for (let i = 0; i < 12; i++) {
     const e = pick(exitsOf[fl.id]);
@@ -721,7 +721,7 @@ function deepSpot(s) {                    // somewhere comfortably inland, so a 
   for (let i = 0; i < 60; i++) {
     const x = rnd(Math.min(...xs), Math.max(...xs)), y = rnd(Math.min(...ys), Math.max(...ys));
     if (!deep(x, y, fi)) continue;
-    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, o.y - y) < 24)) continue;
+    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, (o.y - y) * 1.5) < 36)) continue;
     const d = Math.hypot(x - s.x, y - s.y);
     if (d < bd && d < 60) { bd = d; best = [x, y]; }
   }
@@ -733,7 +733,7 @@ function chooseBehaviour(s) {
   if (r < 35) {
     for (let i = 0; i < 8; i++) {
       const tx = s.x + rnd(-30, 30), ty = s.y + rnd(-8, 8);
-      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, o.y - ty) < 22)) {
+      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, (o.y - ty) * 1.5) < 34)) {
         setState(s, 'scoot', { tx, ty }); return;
       }
     }
@@ -1392,7 +1392,8 @@ function layout() {
     panel.style.width = pw + 'px';
   } else sw = Math.min(aw, 900);
   let k = sw * dpr / W;
-  if (k >= 2) k = Math.floor(k);          // whole screen pixels per art pixel wherever there is room
+  // whole screen pixels per art pixel where that costs little room; dense phone screens keep the full width
+  if (k >= 2 && (dpr < 1.5 || Math.floor(k) / k > .9)) k = Math.floor(k);
   const cssW = (k * W) / dpr, cssH = (k * H) / dpr;
   stage.style.width = cssW + 'px'; stage.style.height = cssH + 'px';
   view.width = Math.round(k * W); view.height = Math.round(k * H);

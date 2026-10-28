@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFQUlEQVR4nO2XbUxTVxjHf9wNVgxUmON1BWrny2T00sHqEoKSEOayEFnIjPHDNH7al8VkBLY5M4jRhTgjYiaSbJrFKBqjZIQZYzYNCiqZMQ5oCcsUa+lYKTCRt43awr37gPfa9hZwLPGT/+Sm555z7nn+z/885zlP4TkWgUJ9rlwUZ5WL4qyy8v5MjffaO+SxIZdcqM+VC/W58ojbIT8TEkVxVrnX3iHPTD2UZ6Yeyr32DrlQnyuPDbkWTeLFp5lUqM+VBUHQ9C9fYeS7G8d4MPyQ1LQUth35DD7eLwuCgCRJtIzfjvhfBBTD68o2kZiczLlPvyGUyPIVRu73OgFYql9CQflmEpOTGfJ4EGoFGeDy6K05icw5UKjPlQvKNyNaMlltSESn02Fz9AMgmgxkmNLVuX0OFwBdvS4iBIEsYyrdTjejo5P0OZy01pydU42wCijGs3OyWJ+7BoAlMTGkpqVw8cpN1WhSSgKDA8MA2Bz9RAgCoslAalqKqpQtLgbKgRrkcCQ0BIrirPK6sk1k52SRZUxlaXx80Hj2inRsjn5Ek4FLNzpUb0OVyTCl4/f7kSQJWZKgfDNCrSCHboeGgCRJiJZMsoyppLyapFEnw5RO9JJobnbfBaDb6Va9joyM1MxX1rB19iBJkmY8iIDi/UJITE5gY3LCgvMABgeGEQSB7JwsKEejguZsiZZMzCYDgiCo+7sY+P1+ANVr0WRAtGRqVFAVCPVemahEeFLKrMe66OgFDbv/GADA6/USFRUVNF4QEgtBWyBaMtV2t9NNZdlOAKxmkQyLSMWOrfQ5XEFHMBDeqSkG/hzk1A8/09dp45bdBsDe2n2IJgMRYZJZUI/HM6IxvqemmqOn62g82cDgwDCSJOH3+zXP5MQEAD6fj8aTDRw9Xcfe2n0AVJbtfJJDApzUKKCg69dutV1Vvouqx22bo58sY6oqcTjccf8FgMW8Pqj/3l0XptcMcyug7Hns0BiNJxtobm4Immg1i4gmgzr3+1MX1CcQq1JfwWoWg/pa25o5Xl+POeB7DYG6K/V8tK2EnOK82T0Ps89KX3XVASJfekF9vvpyP00/tZNhSken02m+Wxofj9UskpC0jJIN+dRdqVfH1PNYFGeVPzxcgcHr5/Pag2SvXsPG7VuIEARkSaLA+oaaFUPlBei0twFPAlHJjrIkcf74Gbp+/43Kr/dy766LC7uPqXdDUAz0OZyUPhihpegdAMYutmCb0ZH5yRYOHz0HzAZRp70tiESnvY3zl9vV2ImJ1VP6bh49h86wLlqiMM0AaQa41EbXspeDiKsEQhNEbEYmscBA5y9IkkTFjq1MT0+Tn1dMib2N6+0XyM8r5nr7bAxUlu2kta1ZVel+r5PlvjFiX38bAP+oB+/YiEY5NQZaxm9HXKtt5NBjhhN9PfhHPejXznr6yOslP6+YI98eBGBmehqAf/72AtDUdIKC9e/jnZqiz+FCEASEt9ap6wAcMxq5VtsYdDWHPYbulRZN38iDMZqaTlBaug2rWeSW3UZ1zlo2vPOB+t7c3KCm70ctPUFrXY3yMenxaJTW3M9KLQDMXiBAyuA4sW+a1LRaXXWA3UmJGFZaGHY7+cJxh117KlBKMZ/PR0S7Q13zapSPIY8nbGEStkoJJBGauZSzHHv8RxLfW8XQxTtMbC9RjSvRr0AJzLmqogVLsnAkghZ4fEwD28qv414/kxPj85Zk81atgUWpgvnIeDwjDHk86ntrzVkEQVhcURqIojirLEkSiiLzQTEK81fD/4mAgrn+Hyh42v8CzxGIfwGDd3gBwSDsbgAAAABJRU5ErkJggg==">
 </head>
 <body>
 <title>Cozy Pelts</title>
@@ -696,7 +697,7 @@ function pickFloe() {
 }
 function spawnSeal(rushy) {
   const fl = pickFloe(); const fi = FLOES.indexOf(fl) + 1;
-  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && Math.hypot(s.lx - x, s.ly - y) < 26);
+  const crowded = (x, y) => seals.some(s => s.state !== 'gone' && (Math.hypot(s.lx - x, s.ly - y) < 30 || Math.hypot(s.x - x, (s.y - y) * 1.5) < 34));
   let ex = null;
   for (let i = 0; i < 12; i++) {
     const e = pick(exitsOf[fl.id]);
@@ -728,7 +729,7 @@ function deepSpot(s) {                    // somewhere comfortably inland, so a 
   for (let i = 0; i < 60; i++) {
     const x = rnd(Math.min(...xs), Math.max(...xs)), y = rnd(Math.min(...ys), Math.max(...ys));
     if (!deep(x, y, fi)) continue;
-    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, o.y - y) < 24)) continue;
+    if (seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - x, (o.y - y) * 1.5) < 36)) continue;
     const d = Math.hypot(x - s.x, y - s.y);
     if (d < bd && d < 60) { bd = d; best = [x, y]; }
   }
@@ -740,7 +741,7 @@ function chooseBehaviour(s) {
   if (r < 35) {
     for (let i = 0; i < 8; i++) {
       const tx = s.x + rnd(-30, 30), ty = s.y + rnd(-8, 8);
-      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, o.y - ty) < 22)) {
+      if (deep(tx, ty, s.fi) && !seals.some(o => o !== s && o.state !== 'gone' && Math.hypot(o.x - tx, (o.y - ty) * 1.5) < 34)) {
         setState(s, 'scoot', { tx, ty }); return;
       }
     }
@@ -1399,7 +1400,8 @@ function layout() {
     panel.style.width = pw + 'px';
   } else sw = Math.min(aw, 900);
   let k = sw * dpr / W;
-  if (k >= 2) k = Math.floor(k);          // whole screen pixels per art pixel wherever there is room
+  // whole screen pixels per art pixel where that costs little room; dense phone screens keep the full width
+  if (k >= 2 && (dpr < 1.5 || Math.floor(k) / k > .9)) k = Math.floor(k);
   const cssW = (k * W) / dpr, cssH = (k * H) / dpr;
   stage.style.width = cssW + 'px'; stage.style.height = cssH + 'px';
   view.width = Math.round(k * W); view.height = Math.round(k * H);

@@ -33,7 +33,9 @@ def main():
     os.makedirs(os.path.join(ROOT, "docs"), exist_ok=True)
     full = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-            '</head>\n<body>\n' + page + '\n</body>\n</html>\n')
+            '<link rel="icon" type="image/png" href="%s">\n'
+            '</head>\n<body>\n' % data_url(os.path.join(ROOT, "art", "raw", "icon_seal", "00.png"))
+            + page + '\n</body>\n</html>\n')
     open(os.path.join(ROOT, "docs", "index.html"), "w", encoding="utf-8", newline="\n").write(full)
     if len(sys.argv) > 1:
         open(sys.argv[1], "w", encoding="utf-8", newline="\n").write(page)
