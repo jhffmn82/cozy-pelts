@@ -1182,6 +1182,7 @@ function drawSeal(s) {
 
 // ---------------------------------------------------------------- hunter
 function planPath(tx, ty) {
+  hunter.hop = null;
   const ax = hunter.x, ay = hunter.y, len = Math.hypot(tx - ax, ty - ay);
   const gaps = []; let open = -1;
   for (let s = 0; s <= len; s += 2) {
@@ -1194,20 +1195,23 @@ function planPath(tx, ty) {
   hunter.path = { ax, ay, tx, ty, len, s: 0, gaps };
   if (gaps.length) Snd.whiff();
 }
-function standPoint(s) {
-  for (const side of hunter.x <= s.x ? [-1, 1] : [1, -1]) {
-    const px = s.x + side * 27, py = s.y + .5;
+function standPoint(s) {                  // beside it on the near side if there is ice, else the far side, a little closer or further
+  const sx = s.state === 'hopIn' ? s.lx : s.x, sy = s.state === 'hopIn' ? s.ly : s.y;   // a seal still landing: where it will land
+  for (const side of hunter.x <= sx ? [-1, 1] : [1, -1]) for (const off of [27, 22, 32, 18]) for (const oy of [.5, -3, 3]) {
+    const px = sx + side * off, py = sy + oy;
     if (onIce(px, py)) return [px, py];
   }
-  return nearestIce(s.x - 27, s.y);
+  return nearestIce(sx - 27, sy);
 }
 const clubbable = t => t.kind ? !t.dead && !(t.kind === 'kraken' && t.st === 'under') && (t.z || 0) < 12 : t.state !== 'gone' && t.state !== 'ko' && ON_ICE[t.state];
-function inReach(s) {
-  const dx = s.x - hunter.x, dy = s.y - hunter.y;
-  return Math.abs(dy) <= 7 && Math.abs(dx) >= 12 && Math.abs(dx) <= 38 && hunter.z === 0;
+function inReach(s, loose) {              // squared up to swing; loose is the club's whole arc, which a seal can shuffle about in
+  const dx = s.x - hunter.x, dy = s.y - hunter.y, ax = Math.abs(dx);
+  return hunter.z === 0 && (loose ? Math.abs(dy) <= 12 && ax >= 6 && ax <= 46 : Math.abs(dy) <= 7 && ax >= 12 && ax <= 38);
 }
 function jump() {                         // up, a somersault, and down; ground attacks pass underneath
-  if (!S.apoc || apoc.dead || hunter.jump || hunter.swing >= 0 || apoc.st === 'intro') return;
+  if (!S.apoc || apoc.dead || apoc.st === 'intro') return;
+  if (hunter.jump) { if (hunter.jump.t > hunter.jump.dur - .2) apoc.jumpQ = now; return; }   // pressed just before landing: again on touchdown
+  hunter.swing = -1; hunter.victim = null;  // a jump beats a swing
   hunter.jump = { t: 0, dur: .62 }; hunter.path = null; hunter.target = null;
   Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2); if (Math.random() < .2) quip('hup', 1);
 }
@@ -1218,32 +1222,44 @@ function updateHunter(dt) {
     hunter.z = Math.sin(Math.PI * Math.min(1, j.t / j.dur)) * 26;
     if (j.t >= j.dur) {                    // down again, on the ice; a jump over water lands on the nearest floe
       hunter.jump = null; hunter.z = 0;
-      if (!onIce(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestIce(hunter.x, hunter.y);
+      if (!hunter.hop && !onIce(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestIce(hunter.x, hunter.y);
       addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop();
+      if (apoc.jumpQ && now - apoc.jumpQ < .25) { apoc.jumpQ = 0; jump(); }
     }
   }
+  if (hunter.hop) {                         // over a strip of water, on the way somewhere
+    const h = hunter.hop; h.t += dt; const p = Math.min(1, h.t / h.dur);
+    hunter.x = lerp(h.ax, h.bx, p); hunter.y = lerp(h.ay, h.by, p);
+    hunter.z = Math.max(hunter.jump ? hunter.z : 0, Math.sin(Math.PI * p) * h.h);
+    if (p >= 1) { hunter.hop = null; if (!hunter.jump) hunter.z = 0; addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); }
+  }
   const tgt = hunter.target;
-  if (tgt && !clubbable(tgt)) { hunter.target = null; hunter.pending = 0; }
+  if (tgt && !clubbable(tgt) && !(!tgt.kind && tgt.state === 'hopIn')) { hunter.target = null; hunter.pending = 0; }   // a seal still landing is worth waiting for
   if (hunter.swing >= 0) {
     hunter.swing += dt;
-    const T = SWING;
+    const T = SWING, v = hunter.victim;     // the one this swing began on, whoever gets clicked meanwhile
+    if (!hunter.struck && v && clubbable(v) && !(hunter.walking > 0)) {   // the wind-up follows it: a turn to face it and a step in
+      hunter.dir = v.x > hunter.x ? 1 : -1;
+      const px = v.x - hunter.dir * 26, py = v.y + .5, d = Math.hypot(px - hunter.x, py - hunter.y), st = Math.min(d, 90 * dt);
+      const nx = hunter.x + (px - hunter.x) / (d || 1) * st, ny = hunter.y + (py - hunter.y) / (d || 1) * st;
+      if (d > 1 && onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; }
+    }
     if (!hunter.struck && hunter.swing >= T * .3) {
       hunter.struck = true;
-      const s = hunter.target;
-      if (s && clubbable(s) && inReach(s)) {
-        if (s.kind) { hitMutant(s, dmg() * 2); Snd.bonk(); bleed(s.x, s.y - 10, 6); }
-        else hitSeal(s);
+      if (v && clubbable(v) && inReach(v, true)) {
+        if (v.kind) { hitMutant(v, dmg() * 2); Snd.bonk(); bleed(v.x, v.y - 10, 6); }
+        else hitSeal(v);
         if (S.lv.club >= CLUBS.length - 1)   // the tusk goes through the one behind it as well
-          for (const o of (s.kind ? mutants : seals)) if (o !== s && clubbable(o) && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) o.kind ? hitMutant(o, dmg() * 2) : hitSeal(o);
-      } else Snd.whiff();
-      hunter.pending = Math.max(0, hunter.pending - 1);
+          for (const o of (v.kind ? mutants : seals)) if (o !== v && clubbable(o) && inReach(o, true) && Math.sign(o.x - hunter.x) === hunter.dir) o.kind ? hitMutant(o, dmg() * 2) : hitSeal(o);
+        if (hunter.target === v) hunter.pending = Math.max(0, hunter.pending - 1);
+      } else Snd.whiff();                  // a miss keeps the order: he goes after it again
     }
-    if (hunter.swing >= T) hunter.swing = -1;
+    if (hunter.swing >= T) { hunter.swing = -1; hunter.victim = null; }
     return;
   }
   const s = hunter.target;
   if (s && hunter.pending > 0) {
-    if (inReach(s)) { hunter.path = null; hunter.dir = s.x > hunter.x ? 1 : -1; hunter.swing = 0; hunter.struck = false; return; }
+    if (clubbable(s) && (inReach(s) || (!hunter.path && inReach(s, true)))) { hunter.path = null; hunter.dir = s.x > hunter.x ? 1 : -1; hunter.swing = 0; hunter.struck = false; hunter.victim = s; return; }
     const [px, py] = standPoint(s);
     if (!hunter.path || Math.hypot(hunter.path.tx - px, hunter.path.ty - py) > 5) planPath(px, py);
   }
@@ -1796,6 +1812,7 @@ function startApocalypse() {
   for (const s of seals) if (s.state !== 'gone') { addFx('fx_toxic', s.x, s.y - 8); addFx('fx_splash', s.x, s.y); }
   seals = []; bundles = []; S.tipShop = true; S.tipSled = true; $('#toast').classList.remove('show');
   for (const d of drones) d.st = 'flee';
+  hunter.target = null; hunter.pending = 0; planPath(112, 172);   // back to the middle of the ice, off whatever floe he was on
   $('#banner').hidden = false; $('#banner').classList.remove('go'); void $('#banner').offsetWidth; $('#banner').classList.add('go');
   Snd.play('sting', { vol: 1 }); setTimeout(() => Snd.voice('apoc', 3), 900);
   preys = []; tube.lumps = []; coinFx = [];
@@ -1829,8 +1846,8 @@ function rosterFor(w) {
 }
 function showHowTo(ms) {                  // the controls, for whichever device this is
   $('#howtoText').innerHTML = (S.wave === 0 ? 'Coins are worthless now. Mutants are full of <kbd>GOO</kbd>, and goo buys guns.<br>' : '') + (TOUCH
-    ? 'Tap the ice to move · hold <kbd>FIRE</kbd> to shoot the nearest mutant · <kbd>JUMP</kbd> to spin over trouble'
-    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest');
+    ? 'Drag on the ice to run, or tap to walk there · hold <kbd>FIRE</kbd> to shoot the nearest, or hold a finger on one · <kbd>JUMP</kbd> spins over trouble'
+    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> run, hopping the gaps · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>Q</kbd> or the wheel swaps weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest');
   const el = $('#howto'); el.classList.add('show'); clearTimeout(showHowTo.t); showHowTo.t = setTimeout(() => el.classList.remove('show'), ms);
 }
 function startWave() {
@@ -2004,8 +2021,12 @@ function updateShots(dt) {
       if (p >= 1) { s.done = true; acids.push({ x: s.tx, y: s.ty, t: 0, tick: 0 }); addFx('fx_acid', s.tx, s.ty, { fps: 16 }); Snd.play('splat', { vol: .5 }); }
     } else if (s.kind === 'harpoon') {
       s.x += s.vx * dt; s.y += s.vy * dt;
-      for (const m of mutants) if (!m.dead && !s.hits.includes(m) && Math.hypot(m.x - s.x, (m.y - (m.z || 0) - m.T.top * .4) - s.y) < m.T.r + 3) {
-        if (hitMutant(m, s.dmg)) { s.hits.push(m); if (s.hits.length >= s.pierce) s.done = true; }
+      for (const m of mutants) if (!m.dead && !s.hits.includes(m) && Math.hypot(m.x - s.x, midOf(m) - s.y) < m.T.r + 5) {
+        if (hitMutant(m, s.dmg)) {
+          s.hits.push(m); if (s.hits.length >= s.pierce) s.done = true;
+          const sp = Math.hypot(s.vx, s.vy) || 1, nx = m.x + s.vx / sp * 5, ny = m.y + s.vy / sp * 3;   // and a shove back
+          if (!m.T.boss && !m.dead && (m.T.flies || onIce(nx, ny))) { m.x = nx; m.y = ny; }
+        }
       }
       if (s.t > .9 || s.x < -10 || s.x > W + 10 || s.y < -10 || s.y > H + 10) s.done = true;
     } else if (s.kind === 'bullet') {
@@ -2058,18 +2079,22 @@ function muzzle() {                       // the end of the barrel, wherever the
   const mx = G.muzzle[0] * GUN_K, my = G.muzzle[1] * GUN_K * (left ? -1 : 1);
   return [hx + Math.cos(a) * mx - Math.sin(a) * my, hy + Math.sin(a) * mx + Math.cos(a) * my];
 }
-function fireAt(x, y) {                   // the equipped gun, aimed at a point
+function fireAt(x, y, tapped) {           // the equipped gun, aimed at a point; a tap during the reload is kept for when it is ready
   if (apoc.dead) return;
   const w = S.weapon;
+  [x, y] = assist(x, y);
   aimAt(x, y);
   const [ax, ay] = GUN[w] ? muzzle() : [hunter.x, hunter.y - 19 - hunter.z];
   const a = Math.atan2(y - ay, x - ax);
   if (w === 'harpoon' && apoc.fireCd <= 0) {
     const lv = S.lv.harpoon;
     shots.push({ kind: 'harpoon', x: ax, y: ay, vx: Math.cos(a) * 290, vy: Math.sin(a) * 290, a, t: 0, dmg: harpoonDmg(lv), pierce: lv, hits: [] });
-    apoc.fireCd = .75 * Math.pow(.88, lv - 1); hunter.cheer = 0; hunter.recoil = .15;
+    apoc.fireCd = .5 * Math.pow(.88, lv - 1); hunter.cheer = 0; hunter.recoil = .15; apoc.want = null;
     Snd.play('harpoon', { vol: .7, rate: rnd(.95, 1.08) });
-  } else if (w === 'flamer') {
+    for (let i = 0; i < 4; i++) sparkles.push({ x: ax + rnd(-2, 2), y: ay + rnd(-2, 2), t: 0, life: rnd(.12, .22), c: i ? '#fff4c8' : '#ffffff', plus: !i });   // a flash at the muzzle
+    if (!REDUCED) shake = Math.max(shake, .05);
+  } else if (w === 'harpoon') { if (tapped) apoc.want = { x, y, until: now + .35 }; }
+  else if (w === 'flamer') {
     const lv = S.lv.flamer, range = 56 + 6 * lv;
     apoc.jet = { until: now + .12, range };
     if (apoc.fireCd <= 0) {
@@ -2099,11 +2124,52 @@ function nearestMutant(x, y, r = 1e9, hittable = true) {
   }
   return best;
 }
-function mutantAt(x, y) {
-  return mutants.filter(m => !m.dead && !(m.kind === 'kraken' && m.st === 'under')).find(m => {
+const midOf = m => m.y - (m.z || 0) - m.T.top * .4;   // where a shot at a mutant should go
+function mutantAt(x, y, slack = 10) {     // the mutant under a click, or failing that the closest one near it
+  const live = mutants.filter(m => !m.dead && !(m.kind === 'kraken' && m.st === 'under'));
+  const on = live.find(m => {
     const top = m.y - (m.z || 0) - m.T.top, half = m.T.r + 4;
     return x > m.x - half && x < m.x + half && y > top - 4 && y < m.y - (m.z || 0) + 4;
   });
+  if (on) return on;
+  let best = null, bd = 1e9;
+  for (const m of live) { const d = Math.hypot(m.x - x, midOf(m) - y); if (d < m.T.r + slack && d < bd) { bd = d; best = m; } }
+  return best;
+}
+function assist(x, y) {                   // a shot near a mutant goes at it, a little ahead of where it is going
+  const m = mutantAt(x, y);
+  if (!m) return [x, y];
+  const [hx, hy] = handAt(), t = S.weapon === 'harpoon' ? Math.hypot(m.x - hx, midOf(m) - hy) / 290 : 0;
+  return [m.x + (m.vx || 0) * t, midOf(m) + (m.vy || 0) * t];
+}
+const STICK_PX = 34;                       // screen pixels of thumb travel for a full run
+const aiming = () => GUN[S.weapon] && (apoc.mouseAt || apoc.firing);
+function steer(kx, ky, dt) {              // keys or a dragged thumb: straight there, and over narrow water in a hop
+  const l = Math.hypot(kx, ky); if (!l || hunter.hop) return;
+  const ux = kx / l, uy = ky / l, sp = RUN * Math.min(1, l), nx = hunter.x + ux * sp * dt, ny = hunter.y + uy * sp * .8 * dt;
+  hunter.path = null; hunter.target = null; hunter.pending = 0; hunter.walking = .1;
+  if (!aiming() && Math.abs(ux) > .2) hunter.dir = ux < 0 ? -1 : 1;   // with a gun out he faces where it points, so he can back off shooting
+  if (hunter.z > 4) { if (nx > 6 && nx < W - 6 && ny > 96 && ny < H - 4) { hunter.x = nx; hunter.y = ny; } return; }   // in the air, water is no obstacle
+  if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; return; }
+  if (hopOver(ux, uy)) return;
+  if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;   // else along the edge
+}
+function hopOver(ux, uy) {                // the next ice along, if a strip of water is all that is in the way
+  let wet = false;
+  for (let s = 2; s <= 40; s += 2) {
+    const x = hunter.x + ux * s, y = hunter.y + uy * s * .8;
+    if (x < 6 || x > W - 6 || y < 96 || y > H - 4) return false;
+    if (!onIce(x, y)) { wet = true; continue; }
+    const bx = x + ux * 3, by = y + uy * 2.4;
+    if (!wet || !onIce(bx, by)) continue;
+    hunter.hop = { ax: hunter.x, ay: hunter.y, bx, by, t: 0, dur: clamp(s / (RUN * 1.3), .14, .3), h: Math.min(13, 4 + s * .35) };
+    Snd.whiff(); return true;
+  }
+  return false;
+}
+function cycleWeapon(d) {
+  const own = ['club', 'harpoon', 'flamer'].filter(w => w === 'club' || S.lv[w]), i = own.indexOf(S.weapon);
+  S.weapon = own[(i + d + own.length) % own.length]; dirtyPanel = true; apoc.aim = hunter.dir < 0 ? Math.PI : 0;
 }
 function updateApoc(dt) {
   apoc.t += dt; apoc.inv = Math.max(0, apoc.inv - dt); apoc.fireCd -= dt; apoc.flash = Math.max(0, apoc.flash - dt);
@@ -2124,23 +2190,28 @@ function updateApoc(dt) {
       toast(`Wave ${S.wave} cleared. +${fmt(bonus)} goo, a heart back, and a breather.`, 3200); Snd.voice('cleared', 2); dirtyPanel = true; save();
     }
   }
-  for (const m of mutants) updateMutant(m, dt);
+  for (const m of mutants) {               // and how fast each one is going, to lead a shot
+    const ox = m.x, oy = midOf(m); updateMutant(m, dt);
+    if (dt > 0) { let vx = (m.x - ox) / dt, vy = (midOf(m) - oy) / dt; if (Math.hypot(vx, vy) > 160) vx = vy = 0; m.vx = lerp(m.vx || 0, vx, .2); m.vy = lerp(m.vy || 0, vy, .2); }
+  }
   mutants = mutants.filter(m => !m.dead);
   updateShots(dt);
-  // keys move the hunter directly, for dodging
+  // keys, or a thumb dragged across the ice, steer him directly
   const k = apoc.keys, kx = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0), ky = (k.s || k.arrowdown ? 1 : 0) - (k.w || k.arrowup ? 1 : 0);
-  if ((kx || ky) && !apoc.dead && hunter.swing < 0) {
-    const l = Math.hypot(kx, ky), nx = hunter.x + kx / l * RUN * dt, ny = hunter.y + ky / l * RUN * .8 * dt;
-    const free = hunter.z > 4;             // in the air, water is no obstacle
-    if (free && nx > 6 && nx < W - 6 && ny > 96 && ny < H - 4) { hunter.x = nx; hunter.y = ny; }
-    else if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; } else if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;
-    hunter.path = null; hunter.target = null; hunter.walking = .1; if (kx) hunter.dir = kx;
+  const auto = (apoc.fireHeld || k.j || k.f || k.enter) && !apoc.dead && apoc.st !== 'intro', pr = apoc.press;
+  apoc.firing = auto || !!apoc.hold || !!(pr && pr.m);
+  if (apoc.mouseAt && GUN[S.weapon] && !auto && !apoc.hold && !apoc.dead) aimAt(apoc.mouseAt[0], apoc.mouseAt[1]);   // the gun follows the pointer
+  if (!apoc.dead) {
+    if (kx || ky) steer(kx, ky, dt);
+    else if (pr && pr.stick) { const dx = pr.cx - pr.cx0, dy = pr.cy - pr.cy0; if (Math.hypot(dx, dy) > 4) steer(dx / STICK_PX, dy / STICK_PX, dt); }
   }
   hunter.walking = Math.max(0, (hunter.walking || 0) - dt);
-  if ((apoc.fireHeld || apoc.keys.j || apoc.keys.f || apoc.keys.enter) && !apoc.dead && apoc.st !== 'intro') autoFire();
-  if (apoc.press && !apoc.hold && performance.now() - apoc.press.t > 220 && S.weapon !== 'club') { apoc.hold = [apoc.press.x, apoc.press.y]; hunter.path = null; }
-  if (apoc.hold && !apoc.dead && S.weapon !== 'club') fireAt(apoc.hold[0], apoc.hold[1]);
+  if (auto) autoFire();
+  if (pr && pr.m && pr.m.dead) pr.m = null;
+  if (apoc.hold && !apoc.dead && GUN[S.weapon]) fireAt(apoc.hold[0], apoc.hold[1]);
+  else if (pr && pr.m && !apoc.dead && GUN[S.weapon]) fireAt(pr.m.x, midOf(pr.m));   // a finger held on a mutant keeps shooting it
   else if (apoc.burst && now < apoc.burst.until && S.weapon === 'flamer') fireAt(apoc.burst.x, apoc.burst.y);
+  if (apoc.want && apoc.fireCd <= 0) { const w = apoc.want; apoc.want = null; if (now < w.until && S.weapon === 'harpoon' && !apoc.dead) fireAt(w.x, w.y); }
   // gun drones circle and shoot at whatever is closest
   for (let i = 0; i < S.lv.gundrone; i++) {
     apoc.gunT[i] = (apoc.gunT[i] || 0) - dt;
@@ -2419,6 +2490,13 @@ function render() {
   v.imageSmoothingEnabled = false;
   const sx = shake > 0 ? Math.round(rnd(-1, 1)) * scale : 0, sy = shake > 0 ? Math.round(rnd(-1, 1)) * scale : 0;
   v.drawImage(world, sx, sy, W * scale, H * scale);
+  const pr = S.apoc && apoc.press;
+  if (pr && pr.stick) {
+    const r = view.getBoundingClientRect(), k = view.width / r.width, R = STICK_PX * k;
+    const ox = (pr.cx0 - r.left) * k, oy = (pr.cy0 - r.top) * k, dx = (pr.cx - pr.cx0) * k, dy = (pr.cy - pr.cy0) * k, d = Math.hypot(dx, dy), f = d > R ? R / d : 1;
+    v.globalAlpha = .35; v.strokeStyle = '#ffffff'; v.lineWidth = 2 * k; v.beginPath(); v.arc(ox, oy, R, 0, Math.PI * 2); v.stroke();
+    v.globalAlpha = .6; v.fillStyle = '#ffffff'; v.beginPath(); v.arc(ox + dx * f, oy + dy * f, R * .42, 0, Math.PI * 2); v.fill(); v.globalAlpha = 1;
+  }
   v.textAlign = 'center'; v.textBaseline = 'middle'; v.lineJoin = 'round';
   for (const t of texts) {
     const p = t.t / t.life, a = p < .75 ? 1 : 1 - (p - .75) / .25;
@@ -2620,33 +2698,41 @@ function apocTap(x, y) {
   const m = mutantAt(x, y);
   if (m) {
     if (S.weapon === 'club') { if (hunter.target === m) hunter.pending = Math.min(3, hunter.pending + 1); else { hunter.target = m; hunter.pending = 1; } }
-    else { const ty = m.y - (m.z || 0) - m.T.top * .4; fireAt(m.x, ty); if (S.weapon === 'flamer') apoc.burst = { x: m.x, y: ty, until: now + .45 }; }
+    else { const ty = midOf(m); fireAt(m.x, ty, true); if (S.weapon === 'flamer') apoc.burst = { x: m.x, y: ty, until: now + .45 }; }
     return;
   }
   hunter.target = null; hunter.pending = 0;
   const [tx, ty] = nearestIce(x, y); planPath(tx, ty);
 }
+function sealAt(x, y) {                   // the seal under a click, or failing that one close by: fingers are not pixels
+  const live = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && s.state !== 'hooked' && s.state !== 'drop');
+  const d = s => Math.hypot(s.x - x, s.y - 10 - y), near = (a, b) => d(a) - d(b);
+  const under = live.filter(s => inBox(sealBox(s), x, y));
+  return under.filter(s => ON_ICE[s.state]).sort(near)[0] || under.sort(near)[0]
+    || live.filter(s => (ON_ICE[s.state] || s.state === 'hopIn') && d(s) < 16).sort(near)[0];
+}
 function tap(x, y) {
   Snd.init();
   if (S.apoc) return apocTap(x, y);
-  if (gull.state !== 'away' && inBox(gullBox(), x, y)) { shooGull(); return; }
+  const thief = gull.state === 'swoop' || gull.state === 'grab' || gull.state === 'escape';
+  if (thief && inBox(gullBox(), x, y)) { shooGull(); return; }   // a gull at the pelts comes first; one on its perch waits behind the seals
+  const hit = sealAt(x, y);
+  if (hit) {
+    if (!ON_ICE[hit.state] && hit.state !== 'hopIn') {
+      if (now - (tap.hint || -9) > 1.5) { tap.hint = now; say(hit.state === 'swimAway' ? 'too late' : 'wait for it...', hit.x, hit.y - 14, { size: 6, color: '#e1f1ff', edge: '#2d4a7a', life: .9 }); }
+      return;
+    }
+    if (hunter.target === hit) hunter.pending = Math.min(3, hunter.pending + 1);
+    else { hunter.target = hit; hunter.pending = 1; }
+    return;
+  }
+  if (gull.state === 'perch' && inBox(gullBox(), x, y)) { shooGull(); return; }
   for (let i = 0; i < dogs(); i++) {        // a pat for a good dog
     const [dx, dy, , , a] = dogPos(i);
     if (a > 0 && Math.hypot(x - dx, y - (dy - 12)) < 11) { Snd.bark(); say('♥', dx, dy - 30, { size: 8, color: '#ff8fa0' }); return; }
   }
   if (S.lv.decoy && Math.abs(x - DECOY.x) < 20 && y > DECOY.y - 26 && y < DECOY.y + 2) {   // knock knock
     Snd.bonk(1.6); say(pick(['wooden.', 'knock knock', "it's a decoy"]), DECOY.x, DECOY.y - 28, { size: 6, color: '#f3dcb4', edge: '#5a3a22', life: .9 });
-    return;
-  }
-  const under = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && s.state !== 'hooked' && s.state !== 'drop' && inBox(sealBox(s), x, y));
-  const hit = under.filter(s => ON_ICE[s.state]).sort((a, b) => Math.hypot(a.x - x, a.y - 10 - y) - Math.hypot(b.x - x, b.y - 10 - y))[0] || under[0];
-  if (hit) {
-    if (!ON_ICE[hit.state]) {
-      if (now - (tap.hint || -9) > 1.5) { tap.hint = now; say(hit.state === 'swimAway' ? 'too late' : 'wait for it...', hit.x, hit.y - 14, { size: 6, color: '#e1f1ff', edge: '#2d4a7a', life: .9 }); }
-      return;
-    }
-    if (hunter.target === hit) hunter.pending = Math.min(3, hunter.pending + 1);
-    else { hunter.target = hit; hunter.pending = 1; }
     return;
   }
   if (sled.st === 'home' && sledN() > 0 && x > SLED.x - 40 && x < SLED.x + 40 && y > SLED.y - 32 && y < SLED.y + 3) { sendSled(); return; }
@@ -2776,7 +2862,7 @@ async function start(data) {
     $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS'; apoc.wrecked = false;
     $('#coinIcon').src = icons.i_coin; $('#peltBox span').textContent = 'COINS:';
     $('#over').hidden = true; $('#banner').hidden = true; $('#howto').classList.remove('show'); heartsShown = ''; hunter.jump = null; hunter.z = 0;
-    hunter.x = 112; hunter.y = 172; hunter.path = null; hunter.target = null;
+    hunter.x = 112; hunter.y = 172; hunter.path = null; hunter.target = null; hunter.victim = null; hunter.hop = null; apoc.mouseAt = null; apoc.want = null;
     gull.state = 'perch'; gull.x = PERCH.x; gull.y = PERCH.y;
     buildPanel(icons); syncMachines(); Snd.hum(); save(); dirtyPanel = true; toast('A fresh camp on the ice.');
   };
@@ -2788,27 +2874,38 @@ async function start(data) {
   view.addEventListener('pointerdown', e => {
     e.preventDefault(); const [x, y] = worldPoint(e);
     if (S.apoc) {
-      apoc.press = { x, y, x0: x, y0: y, t: performance.now(), id: e.pointerId };
+      Snd.init(); try { view.setPointerCapture(e.pointerId); } catch (_) {}   // a drag or a held shot keeps going off the edge
       if (e.pointerType === 'mouse') {     // the mouse is the gun: left fires where it points, right walks there
-        Snd.init();
-        if (e.button === 2) { apoc.press = null; if (!apoc.dead && apoc.st !== 'intro') { hunter.target = null; hunter.pending = 0; const [tx, ty] = nearestIce(x, y); planPath(tx, ty); } return; }
-        if (S.weapon !== 'club') { apoc.hold = [x, y]; if (!apoc.dead && apoc.st !== 'intro') fireAt(x, y); return; }
+        apoc.mouseAt = [x, y];
+        if (apoc.dead || apoc.st === 'intro') return;
+        if (e.button === 2) { hunter.target = null; hunter.pending = 0; const [tx, ty] = nearestIce(x, y); planPath(tx, ty); return; }
+        if (GUN[S.weapon]) { apoc.hold = [x, y]; fireAt(x, y, true); return; }
+        return tap(x, y);
       }
-      // on a touchscreen a tap on the ice walks at once: the other thumb is on FIRE
+      // a finger: held on a mutant it keeps shooting that one; on the ice it walks there at once, and dragged it is a thumb stick
+      if (apoc.dead || apoc.st === 'intro') return;
+      const m = GUN[S.weapon] ? mutantAt(x, y, 16) : null;
+      apoc.press = { id: e.pointerId, m, cx0: e.clientX, cy0: e.clientY, cx: e.clientX, cy: e.clientY, stick: false };
+      if (m) { fireAt(m.x, midOf(m), true); if (S.weapon === 'flamer') apoc.burst = { x: m.x, y: midOf(m), until: now + .45 }; }
+      else tap(x, y);
+      return;
     }
     tap(x, y);
   });
   view.addEventListener('pointermove', e => {
-    if (S.apoc && e.pointerType === 'mouse' && GUN[S.weapon] && !apoc.dead) { const [x, y] = worldPoint(e); aimAt(x, y); }
-    if (!apoc.press) return;
-    const [x, y] = worldPoint(e); apoc.press.x = x; apoc.press.y = y; if (apoc.hold) apoc.hold = [x, y];
+    if (!S.apoc) return;
+    if (e.pointerType === 'mouse') { const pt = worldPoint(e); apoc.mouseAt = pt; if (apoc.hold) apoc.hold = pt; return; }
+    const p = apoc.press; if (!p || p.id !== e.pointerId || p.m) return;
+    p.cx = e.clientX; p.cy = e.clientY;
+    const dx = p.cx - p.cx0, dy = p.cy - p.cy0, d = Math.hypot(dx, dy), R = STICK_PX * 1.3;
+    if (!p.stick && d > 12) { p.stick = true; hunter.path = null; hunter.target = null; }
+    if (d > R) { p.cx0 = p.cx - dx / d * R; p.cy0 = p.cy - dy / d * R; }   // the stick trails a thumb that runs off with it
   });
   const release = e => {
-    const p = apoc.press;
-    if (p && p.wait && !apoc.hold && e.type === 'pointerup') tap(p.x0, p.y0);
-    apoc.press = null; apoc.hold = null;
+    if (e.pointerType === 'mouse') apoc.hold = null;
+    else if (apoc.press && apoc.press.id === e.pointerId) apoc.press = null;
   };
-  view.addEventListener('pointerup', release); view.addEventListener('pointercancel', release); view.addEventListener('pointerleave', release);
+  view.addEventListener('pointerup', release); view.addEventListener('pointercancel', release); view.addEventListener('lostpointercapture', release);
   const fb = $('#fireBtn'), fireOff = () => { apoc.fireHeld = false; fb.classList.remove('on'); };
   fb.addEventListener('pointerdown', e => { e.preventDefault(); Snd.init(); try { fb.setPointerCapture(e.pointerId); } catch (_) {} apoc.fireHeld = true; fb.classList.add('on'); });
   fb.addEventListener('pointerup', fireOff); fb.addEventListener('pointercancel', fireOff); fb.addEventListener('lostpointercapture', fireOff);
@@ -2818,14 +2915,16 @@ async function start(data) {
   for (const t of ['pointerup', 'pointercancel', 'pointerleave']) jb.addEventListener(t, () => jb.classList.remove('on'));
   jb.addEventListener('contextmenu', e => e.preventDefault());
   view.addEventListener('contextmenu', e => { if (S.apoc) e.preventDefault(); });
+  view.addEventListener('wheel', e => { if (!S.apoc || apoc.dead) return; e.preventDefault(); cycleWeapon(e.deltaY > 0 ? 1 : -1); }, { passive: false });
   addEventListener('keyup', e => { delete apoc.keys[e.key.toLowerCase()]; if (S.apoc && (e.key === ' ' || e.key === 'Enter')) e.preventDefault(); });
-  addEventListener('blur', () => { apoc.keys = {}; apoc.hold = null; apoc.press = null; apoc.fireHeld = false; $('#fireBtn').classList.remove('on'); });
+  addEventListener('blur', () => { apoc.keys = {}; apoc.hold = null; apoc.press = null; apoc.fireHeld = false; apoc.want = null; $('#fireBtn').classList.remove('on'); });
   addEventListener('keydown', e => {
     if (S.apoc) {
       const k = e.key.toLowerCase();
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { apoc.keys[k] = true; if (k.startsWith('arrow')) e.preventDefault(); }
       const pickW = { 1: 'club', 2: 'harpoon', 3: 'flamer' }[e.key];
       if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; apoc.aim = hunter.dir < 0 ? Math.PI : 0; }
+      if (k === 'q' && !e.repeat) cycleWeapon(1);
       if (e.key === ' ') { e.preventDefault(); Snd.init(); if (!e.repeat) jump(); }   // never a click on whatever button has focus
       if (k === 'j' || k === 'f' || k === 'enter') { e.preventDefault(); Snd.init(); apoc.keys[k] = true; }   // held, like FIRE
       return;
