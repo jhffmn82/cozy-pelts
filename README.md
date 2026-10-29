@@ -9,9 +9,9 @@ up the road to the hut, where the trader pays in coins and asks no questions.
 Tap or click a seal to bonk it, tap the ice to walk, tap the sled (or `S`) to send it up to the hut, `F` tosses a
 fish, `Space` bonks the nearest seal.
 
-If things take a turn: on a computer, `WASD` moves, `Space` jumps (with a somersault), clicking shoots where you
-point and right-clicking walks there; `1` `2` `3` switch weapons. On a phone, tap the ice to move and hold **FIRE**
-and **JUMP**.
+If things take a turn: on a computer, `WASD` runs (hopping narrow water), `Space` jumps (with a somersault),
+`Shift` dashes, clicking shoots where you point and right-clicking walks there; `1` `2` `3`, `Q` or the mouse
+wheel switch weapons. On a phone, drag on the ice to run or tap to walk there, and use **FIRE** and **JUMP**.
 
 Coins buy, at prices that multiply with every level:
 

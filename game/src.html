@@ -585,17 +585,26 @@ function iconURL(name) {
 }
 
 // ---------------------------------------------------------------- sound (all synthesised)
+const ALARM = { horn: 1, sting: 1, boom: 1, win: 1, dead: 1, hurt: 1, roar: 1, buy: 1, golden: 1 };   // never thinned out
+const GAP = { gun: .12, splat: .07, goo: .09, coins: .08, squeal: .1, wail: .15, whoosh: .06, plop: .06, croak: .12, retch: .15, pop: .08, harpoon: .05 };
+const SKIPPED = { skipped: true };
 const Snd = {
   c: null,
   init() {
     if (this.c) { if (this.c.state === 'suspended') this.c.resume(); return; }
     const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
     const c = this.c = new C();
-    const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.connect(c.destination);
-    this.sfx = c.createGain(); this.sfx.connect(comp);
+    // Effects, ambience and music share one squeeze; the voices have their own, so a loud fight cannot push them
+    // down with it. Both meet in a limiter that only catches peaks.
+    const lim = c.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .002; lim.release.value = .12; lim.connect(c.destination);
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.connect(lim);
+    const vcomp = c.createDynamicsCompressor(); vcomp.threshold.value = -20; vcomp.knee.value = 10; vcomp.ratio.value = 3; vcomp.attack.value = .005; vcomp.release.value = .2; vcomp.connect(lim);
+    this.comp = comp; this.vcomp = vcomp;
+    this.duck = c.createGain(); this.duck.connect(comp);   // dips the effects and ambience while somebody talks
+    this.sfx = c.createGain(); this.sfx.connect(this.duck);
     this.mus = c.createGain(); this.mus.connect(comp);
-    this.amb = c.createGain(); this.amb.gain.value = .5; this.amb.connect(comp);
-    this.vox = c.createGain(); this.vox.connect(comp);
+    this.amb = c.createGain(); this.amb.gain.value = .5; this.amb.connect(this.duck);
+    this.vox = c.createGain(); this.vox.connect(vcomp);
     const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     this.noise = buf;
@@ -609,7 +618,7 @@ const Snd = {
     this.sfx.gain.value = S.sound.sfx ? .9 : 0;
     this.amb.gain.value = S.sound.sfx ? .5 : 0;
     this.mus.gain.value = S.sound.music ? .55 : 0;
-    this.vox.gain.value = S.sound.voice ? 1 : 0;
+    this.vox.gain.value = S.sound.voice ? .9 : 0;
   },
   buf: {}, loaded: false, speaking: null, pending: null,
   async loadSamples() {
@@ -627,9 +636,25 @@ const Snd = {
   },
   play(name, { vol = 1, rate = 1, bus } = {}) {
     const list = this.buf[name]; if (!this.c || !list || !list.length) return null;
+    const k = bus ? 1 : this.gate(name); if (!k) return SKIPPED;   // skipped, not missing: no fallback sound either
     const src = this.c.createBufferSource(); src.buffer = pick(list); src.playbackRate.value = rate;
-    const gn = this.c.createGain(); gn.gain.value = vol; src.connect(gn); gn.connect(bus || this.sfx); src.start();
+    const gn = this.c.createGain(); gn.gain.value = vol * k; src.connect(gn); gn.connect(bus || this.sfx); src.start();
     return src;
+  },
+  // Effects make room for each other: the same sound right on top of itself is skipped, three of a kind at once is
+  // plenty, and the busier the last third of a second was, the quieter each new one starts. Alarms always get through.
+  recent: [], lastK: 1,
+  gate(name) {
+    const t = this.c.currentTime, alarm = ALARM[name];
+    this.recent = this.recent.filter(r => t - r[0] < .35);
+    if (!alarm) {
+      let same = 0, last = -9;
+      for (const r of this.recent) if (r[1] === name) { same++; last = r[0]; }
+      if (t - last < (GAP[name] || .045) || same >= 3) return 0;
+    }
+    const k = alarm ? 1 : 1 / Math.sqrt(1 + .45 * this.recent.filter(r => !ALARM[r[1]]).length);
+    this.recent.push([t, name]); this.lastK = k;
+    return k;
   },
   loops() {                               // the shore by day, wind and a campfire by night
     if (!this.buf.shore || !this.buf.nightair) return false;
@@ -675,6 +700,7 @@ const Snd = {
     const t = this.c.currentTime, end = t + src.buffer.duration;
     this.speaking = { src, prio, end };
     if (S.sound.music) { this.mus.gain.setTargetAtTime(.22, t, .08); this.mus.gain.setTargetAtTime(.55, end, .4); }
+    const d = this.duck.gain; d.cancelScheduledValues(t); d.setTargetAtTime(.3, t, .04); d.setTargetAtTime(1, end, .3);
     return true;
   },
   tick() {                                // the next waiting line, after a breath
@@ -719,7 +745,8 @@ const Snd = {
     const o = c.createOscillator(); o.type = 'sine';
     o.frequency.setValueAtTime(190 * heavy, t); o.frequency.exponentialRampToValueAtTime(52, t + .14);
     const sampled = this.play('bonk', { vol: 1, rate: rnd(.9, 1.1) });
-    this.env(o, t, .004, sampled ? .45 : .8, .02, .14).connect(this.sfx); o.start(t); o.stop(t + .2);
+    if (sampled === SKIPPED) return;
+    this.env(o, t, .004, (sampled ? .45 : .8) * (sampled ? this.lastK : 1), .02, .14).connect(this.sfx); o.start(t); o.stop(t + .2);
     if (sampled) return;
     const n = this.noiseSrc(t, .06), bp = this.filt('bandpass', 1700, .8); n.connect(bp);
     this.env(bp, t, .002, .5, .01, .05).connect(this.sfx);
@@ -906,7 +933,7 @@ function earn(n, x, y) {
 }
 function earnGoo(n, x, y) {               // after the sea turns, money is worthless; mutants are full of goo
   S.goo = (S.goo || 0) + n; dirtyPanel = true;
-  if (x != null) say('+' + fmt(n) + ' goo', x, y, { color: '#b6ff7a', size: 6, life: 1.3, rise: 12, edge: '#1d3a0a' });
+  if (x != null) say('+' + fmt(n), x, y, { color: '#b6ff7a', size: n >= 200 ? 6 : 5, life: n >= 200 ? 1.3 : .8, rise: 10, edge: '#1d3a0a' });   // small and quick: in a busy wave there are a lot of these
 }
 
 // ---------------------------------------------------------------- seals
@@ -1208,18 +1235,19 @@ function inReach(s, loose) {              // squared up to swing; loose is the c
   const dx = s.x - hunter.x, dy = s.y - hunter.y, ax = Math.abs(dx);
   return hunter.z === 0 && (loose ? Math.abs(dy) <= 12 && ax >= 6 && ax <= 46 : Math.abs(dy) <= 7 && ax >= 12 && ax <= 38);
 }
+const JUMP_T = .66, JUMP_H = 48;           // a jump: how long, how high; high enough to clear a rolling bloater
 function jump() {                         // up, a somersault, and down; ground attacks pass underneath
   if (!S.apoc || apoc.dead || apoc.st === 'intro') return;
   if (hunter.jump) { if (hunter.jump.t > hunter.jump.dur - .2) apoc.jumpQ = now; return; }   // pressed just before landing: again on touchdown
   hunter.swing = -1; hunter.victim = null;  // a jump beats a swing
-  hunter.jump = { t: 0, dur: .62 }; hunter.path = null; hunter.target = null;
+  hunter.jump = { t: 0, dur: JUMP_T }; hunter.path = null; hunter.target = null;
   Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2); if (Math.random() < .2) quip('hup', 1);
 }
 function updateHunter(dt) {
   hunter.at += dt; hunter.cheer = Math.max(0, hunter.cheer - dt);
   if (hunter.jump) {
     const j = hunter.jump; j.t += dt;
-    hunter.z = Math.sin(Math.PI * Math.min(1, j.t / j.dur)) * 26;
+    hunter.z = Math.sin(Math.PI * Math.min(1, j.t / j.dur)) * JUMP_H;
     if (j.t >= j.dur) {                    // down again, on the ice; a jump over water lands on the nearest floe
       hunter.jump = null; hunter.z = 0;
       if (!hunter.hop && !onIce(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestIce(hunter.x, hunter.y);
@@ -1272,7 +1300,7 @@ function updateHunter(dt) {
     if (Math.abs(p.tx - p.ax) > 1) hunter.dir = p.tx > p.ax ? 1 : -1;
     const gp = p.gaps.find(([a, b]) => p.s >= a && p.s <= b);
     hunter.z = gp ? Math.sin(Math.PI * (p.s - gp[0]) / Math.max(1, gp[1] - gp[0])) * Math.min(18, (gp[1] - gp[0]) * .55 + 4) : 0;
-    if (hunter.jump) hunter.z = Math.max(hunter.z, Math.sin(Math.PI * hunter.jump.t / hunter.jump.dur) * 26);
+    if (hunter.jump) hunter.z = Math.max(hunter.z, Math.sin(Math.PI * hunter.jump.t / hunter.jump.dur) * JUMP_H);
     if (p.s >= p.len) { hunter.path = null; hunter.z = 0; if (p.gaps.length) { addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); } }
   }
 }
@@ -1302,6 +1330,11 @@ function hunterFrame() {
 function drawHunter() {
   if (S.apoc && apoc.inv > 0 && !hunter.jump && Math.floor(now * 18) % 2) return;   // blinking after a hit
   const [name, fi] = hunterFrame();
+  if (hunter.ghosts && hunter.ghosts.length) {   // a dash leaves a smear of him behind
+    hunter.ghosts = hunter.ghosts.filter(gh => now - gh[2] < .18);
+    for (const [gx, gy, gt] of hunter.ghosts) { g.globalAlpha = .35 * (1 - (now - gt) / .18); spr(g, A['hunter_walk_empty'] ? 'hunter_walk_empty' : name, 2, gx, gy, hunter.dir < 0); }
+    g.globalAlpha = 1;
+  }
   if (hunter.z > 0) { g.fillStyle = 'rgba(40,50,110,.28)'; g.fillRect(Math.round(hunter.x) - 8, Math.round(hunter.y) - 1, 16, 2); }
   if (hunter.jump) {
     const p = Math.min(1, hunter.jump.t / hunter.jump.dur), cx = Math.round(hunter.x), cy = Math.round(hunter.y - hunter.z - 28);
@@ -1771,34 +1804,45 @@ function drawContraption() {
 // hearts instead of a sled, guns instead of gear, Big Mama on waves 5 and 10 and Sealthulu after wave 10. Killing
 // Sealthulu wins. The score is the waves cleared, times a bonus for getting there in few days.
 const MUT = {
-  frog:   { sprite: 'mut_frog', hp: 6, value: 15, r: 11, top: 26 },
-  bat:    { sprite: 'mut_bat', hp: 5, value: 18, r: 12, top: 30, flies: true },
-  bloat:  { sprite: 'mut_bloat', hp: 10, value: 20, r: 13, top: 30 },
-  kraken: { sprite: 'mut_kraken', hp: 8, value: 22, r: 13, top: 24, swims: true },
-  mama:   { sprite: 'mut_mama', hp: 150, value: 400, r: 36, top: 72, boss: true },
-  thulu:  { sprite: 'mut_thulu', hp: 900, value: 3000, r: 34, top: 100, boss: true, flies: true },
+  frog:   { sprite: 'mut_frog', hp: 24, value: 15, r: 11, top: 26 },
+  bat:    { sprite: 'mut_bat', hp: 18, value: 18, r: 12, top: 30, flies: true },
+  bloat:  { sprite: 'mut_bloat', hp: 32, value: 20, r: 13, top: 30 },
+  kraken: { sprite: 'mut_kraken', hp: 28, value: 22, r: 13, top: 24, swims: true },
+  mama:   { sprite: 'mut_mama', hp: 520, value: 160, r: 36, top: 72, boss: true },
+  thulu:  { sprite: 'mut_thulu', hp: 6000, value: 3000, r: 34, top: 100, boss: true, flies: true },
 };
 const LAST_WAVE = 11;                    // wave 11 is Sealthulu
 const APOC_UPG = [
-  { id: 'harpoon', base: 120, grow: 1.8, max: 5, name: () => 'Harpoon Gun', icon: () => 'i_harpoon',
+  { id: 'harpoon', base: 180, grow: 1.8, max: 5, name: () => 'Harpoon Gun', icon: () => 'i_harpoon',
     ds: () => `Hits for ${harpoonDmg(S.lv.harpoon + 1)} and goes through ${S.lv.harpoon + 1}. Pins them to the ice.` },
-  { id: 'flamer', base: 200, grow: 1.8, max: 5, name: () => 'Flamethrower', icon: () => 'i_flamer',
+  { id: 'flamer', base: 300, grow: 1.8, max: 5, name: () => 'Flamethrower', icon: () => 'i_flamer',
     ds: () => S.lv.flamer ? `Hotter and longer. Hold to keep burning. Smells like roast seal.` : 'A short cone of fire that keeps them burning. Hold to keep it going.' },
-  { id: 'gundrone', base: 350, grow: 2.2, max: 3, name: () => 'Gun Drone', icon: () => 'i_gundrone',
+  { id: 'gundrone', base: 500, grow: 2.2, max: 3, name: () => 'Gun Drone', icon: () => 'i_gundrone',
     ds: () => ['A drone with a machine gun that circles you and shoots on its own.', 'A second gun drone.', 'A third gun drone. It is very loud up there.', 'Three gun drones.'][S.lv.gundrone] },
-  { id: 'hearts', base: 100, grow: 1.55, max: 7, name: () => 'Heart Container', icon: () => 'i_heartup',
+  { id: 'hearts', base: 150, grow: 1.55, max: 7, name: () => 'Heart Container', icon: () => 'i_heartup',
     ds: () => `One more heart, and every heart filled back up.` },
-  { id: 'parka', base: 120, grow: 1.75, max: 5, name: () => 'Armored Parka', icon: () => 'i_parka',
-    ds: () => `Take ${Math.round(100 - 100 * Math.pow(.8, S.lv.parka + 1))}% less damage. Bits of the factory sewn in.` },
-  { id: 'aid', base: 0, grow: 1, max: 999, name: () => 'First Aid', icon: () => 'heart_full', price: () => 50 + 25 * S.wave,
+  { id: 'parka', base: 180, grow: 1.75, max: 5, name: () => 'Armored Parka', icon: () => 'i_parka',
+    ds: () => `Take ${Math.round(100 - 100 * Math.pow(.85, S.lv.parka + 1))}% less damage. Bits of the factory sewn in.` },
+  { id: 'aid', base: 0, grow: 1, max: 999, name: () => 'First Aid', icon: () => 'heart_full', price: () => 60 + 30 * S.wave,
     ds: () => 'Two hearts back. Mostly duct tape.' },
 ];
-const harpoonDmg = lv => 6 + 4 * (lv - 1);
-const maxHp = () => 6 + 2 * S.lv.hearts;          // in half hearts
-const hurtMult = () => Math.pow(.8, S.lv.parka);
-const mutantPower = () => 1.6 * (1 + .07 * Math.max(0, S.wave - 1));   // they hit hard from the start, and harder every wave
-let mutants = [], shots = [], orbs = [], acids = [], rings = [], tongues = [], flames = [];
-const apoc = { st: 'calm', t: 0, queue: [], spawnT: 0, inv: 0, hold: null, fireCd: 0, gunT: [], banner: 0, dead: false, flash: 0, keys: {} };
+const harpoonDmg = lv => 6 + 3 * (lv - 1);
+const maxHp = () => 10 + 2 * S.lv.hearts;         // in half hearts: five to start, since every hit takes a whole one
+const hurtMult = () => Math.pow(.85, S.lv.parka);
+const mutantPower = () => 2 * (1 + .08 * Math.max(0, S.wave - 1));   // a heart a hit on wave 1, and more every wave
+let mutants = [], shots = [], orbs = [], acids = [], rings = [], tongues = [], flames = [], pickups = [], bullets = [];
+// A bullet crosses the ice at a height: low ones (slime, ink) can be jumped, head-high ones (bat spray) have to be
+// stepped round. Aimed in ground terms, where up the screen is a little shorter than across it.
+const BUL = { slime: ['#a6ff4d', '#1d3a0a'], ink: ['#d78bff', '#2a0a3a'], spray: ['#ffe05a', '#4a3000'] };
+function shoot(x, y, h, a, sp, kind) { if (bullets.length < 300) bullets.push({ x, y, h, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp * .8, t: 0, kind }); }
+const aimAtHim = m => Math.atan2((hunter.y - m.y) / .8, hunter.x - m.x);
+function fan(m, n, spread, sp, h, kind) {
+  if (!S.seen.bulletTip) { S.seen.bulletTip = 1; toast('Low green slime: jump it. Yellow spray: step round it.', 3600); }
+  const a0 = aimAtHim(m); for (let i = 0; i < n; i++) shoot(m.x, m.y, h, a0 + (n > 1 ? (i / (n - 1) - .5) * spread : 0), sp, kind); }
+function burst(m, n, sp, h, kind, off = 0) { for (let i = 0; i < n; i++) shoot(m.x, m.y, h, off + i / n * Math.PI * 2, sp, kind); }
+const lead = (t, up = 0) => [hunter.x + (hunter.vx || 0) * t, hunter.y - up + (hunter.vy || 0) * t];   // where he will be, more or less
+function warn(m) { say('!', m.x, m.y - (m.z || 0) - m.T.top - 3, { size: 8, color: '#ff4d4d', edge: '#3a0808', life: .45, rise: 5 }); }   // about to attack
+const apoc = { st: 'calm', t: 0, fails: 0, queue: [], spawnT: 0, inv: 0, hold: null, fireCd: 0, gunT: [], banner: 0, dead: false, flash: 0, keys: {} };
 const bigTmp = document.createElement('canvas'); bigTmp.width = 180; bigTmp.height = 180;
 const bg2 = bigTmp.getContext('2d');
 
@@ -1834,9 +1878,10 @@ function enterApocUI() {
   $('#coinIcon').src = icons.i_goo; $('#peltBox span').textContent = 'GOO:';
   buildApocPanel(); dirtyPanel = true;
 }
+const crowd = () => Math.min(12, 2 + Math.round(1.1 * S.wave)) - (mutants.some(m => m.kind === 'mama' && !m.dead) ? 3 : 0);   // fewer around Big Mama   // how many are out on the ice at once
 function rosterFor(w) {
   if (w === LAST_WAVE) return ['thulu'];
-  const out = [], n = 3 + 2 * w;
+  const out = [], n = Math.round((6 + 3 * w) * (w === 5 || w === 10 ? .6 : 1));   // fewer of the small ones when Big Mama comes
   for (let i = 0; i < n; i++) {
     const r = Math.random();
     out.push(w >= 4 && r < .16 ? 'kraken' : w >= 3 && r < .34 ? 'bloat' : w >= 2 && r < .58 ? 'bat' : 'frog');
@@ -1846,8 +1891,8 @@ function rosterFor(w) {
 }
 function showHowTo(ms) {                  // the controls, for whichever device this is
   $('#howtoText').innerHTML = (S.wave === 0 ? 'Coins are worthless now. Mutants are full of <kbd>GOO</kbd>, and goo buys guns.<br>' : '') + (TOUCH
-    ? 'Drag on the ice to run, or tap to walk there · hold <kbd>FIRE</kbd> to shoot the nearest, or hold a finger on one · <kbd>JUMP</kbd> spins over trouble'
-    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> run, hopping the gaps · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>Q</kbd> or the wheel swaps weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest');
+    ? 'Drag on the ice to run, or tap to walk there · hold <kbd>FIRE</kbd> to shoot the nearest, or hold a finger on one · <kbd>JUMP</kbd> while running leaps over trouble'
+    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> run · <kbd>SPACE</kbd> jump · <kbd>SHIFT</kbd> dash · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>Q</kbd> or the wheel swaps weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest');
   const el = $('#howto'); el.classList.add('show'); clearTimeout(showHowTo.t); showHowTo.t = setTimeout(() => el.classList.remove('show'), ms);
 }
 function startWave() {
@@ -1859,8 +1904,8 @@ function startWave() {
   dirtyPanel = true;
 }
 function spawnMutant(kind) {
-  const T = MUT[kind], hpK = 1 + .18 * (S.wave - 1);
-  const m = { kind, T, hp: T.hp * (T.boss ? 1 : hpK), x: 0, y: 0, z: 0, st: 'in', t: 0, at: Math.random() * 5, dir: -1, cd: rnd(1, 2.5), flash: 0, burn: 0, id: ++sid };
+  const T = MUT[kind], hpK = 1 + .25 * (S.wave - 1);
+  const m = { kind, T, hp: T.hp * (T.boss ? (kind === 'mama' && S.wave >= 10 ? 1.8 : 1) : hpK), x: 0, y: 0, z: 0, st: 'in', t: 0, at: Math.random() * 5, dir: -1, cd: rnd(1, 2.5), flash: 0, burn: 0, id: ++sid };
   m.maxHp = m.hp;
   if (kind === 'bat') { m.x = Math.random() < .5 ? -16 : W + 16; m.y = rnd(120, 190); m.z = 30; m.ang = Math.random() * 6; }
   else if (kind === 'thulu') { m.x = W / 2; m.y = 70; m.z = 170; m.phase = 1; m.ang = 0; }
@@ -1882,12 +1927,12 @@ function krakenSpot() {                    // a bit of open water near where the
   return c.length ? pick(c) : (SEA_PTS.length ? pick(SEA_PTS) : null);
 }
 const near = (m, r) => Math.hypot(m.x - hunter.x, m.y - hunter.y) < r;
-function hurtHunter(n, x, y) {
-  if (apoc.inv > 0 || apoc.dead) return;
-  S.hp -= n * mutantPower() * hurtMult(); apoc.inv = 1; apoc.flash = .25; shake = .2; dirtyPanel = true;
+function hurtHunter(n, x, y, push = 8) {
+  if (apoc.inv > 0 || apoc.dead || hunter.dash) return;
+  S.hp -= n * mutantPower() * hurtMult(); apoc.inv = 1.2; apoc.flash = .25; shake = .2; dirtyPanel = true;
   Snd.play('hurt', { vol: .9 }); if (Math.random() < .3) quip('ow', 1, true);
   bleed(hunter.x, hunter.y - 14, 8);
-  if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * 8, hunter.y + (hunter.y - y) / d * 4); hunter.x = px; hunter.y = py; hunter.path = null; }
+  if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * push, hunter.y + (hunter.y - y) / d * push / 2); hunter.x = px; hunter.y = py; hunter.path = null; }
   if (S.hp <= .01) die();
   else if (S.hp <= 2 && apoc.lowSaid !== S.wave) { apoc.lowSaid = S.wave; Snd.voice('lowhp', 2); }
 }
@@ -1903,12 +1948,13 @@ function hitMutant(m, n, opts = {}) {
 }
 function killMutant(m) {
   m.dead = true; S.stats.kills = (S.stats.kills || 0) + 1;
-  const v = Math.round(m.T.value * 4 * (1 + .15 * S.wave));   // mutants are very full of goo
+  const v = Math.round(m.T.value * 3 * (1 + .1 * S.wave));   // mutants are very full of goo
   earnGoo(v, m.x, m.y - (m.z || 0) - m.T.top);
   if (!Snd.play('goo', { vol: .5, rate: rnd(.9, 1.15) })) Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
   for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
   if (m.kind === 'bloat') blast(m.x, m.y, 26, false);
+  if (!m.T.boss && !m.T.swims && Math.random() < .08 && S.hp < maxHp()) { const [px, py] = nearestIce(m.x, m.y); pickups.push({ x: px, y: py, t: 0 }); }   // now and then a heart falls out
   if (!m.T.boss && Math.random() < .18) quip('kill', 1);
   if (m.kind === 'mama') { shake = .8; toast('Big Mama is down.'); Snd.voice('mamadown', 3); for (let i = 0; i < 6; i++) setTimeout(() => addFx('fx_toxic', m.x + rnd(-24, 24), m.y - rnd(0, 50)), i * 120); }
   if (m.kind === 'thulu') win();
@@ -1926,7 +1972,7 @@ function updateMutant(m, dt) {
   if (m.dead) return;
   const hx = hunter.x, hy = hunter.y, dx = hx - m.x, dy = hy - m.y, d = Math.hypot(dx, dy) || 1;
   if (Math.abs(dx) > 2) m.dir = dx < 0 ? -1 : 1;
-  const sp = 1 + .04 * (S.wave - 1);
+  const sp = 1 + .06 * (S.wave - 1), agg = Math.min(1.35, .65 + .07 * (S.wave - 1));   // how fast they go; how often they attack, gentle on wave 1
   switch (m.kind) {
     case 'frog': case 'bloat': case 'mama': {
       if (m.st === 'in') {                 // hopping up out of the water
@@ -1935,52 +1981,98 @@ function updateMutant(m, dt) {
         break;
       }
       if (m.kind === 'frog') {
-        if (m.st === 'go') {               // hop, hop, then a tongue when close
-          if (!m.hop || m.t > .75) { m.t = 0; const step = Math.min(30, d - 20); m.hop = { ax: m.x, ay: m.y, bx: m.x + dx / d * step, by: m.y + dy / d * step * .9 }; }
-          const p = Math.min(1, m.t / .45); m.x = lerp(m.hop.ax, m.hop.bx, ease(p)); m.y = lerp(m.hop.ay, m.hop.by, ease(p)); m.z = Math.sin(Math.PI * p) * 7;
-          if (p >= 1 && d < 66 && m.cd <= 0) { m.st = 'aim'; m.t = 0; m.aim = [hx, hy - 12]; Snd.play('croak', { vol: .6, rate: rnd(.9, 1.15) }); }
-        } else if (m.st === 'aim') { m.z = 0; if (m.t > .45) { m.st = 'lick'; m.t = 0; tongues.push({ m, x: m.x + m.dir * 6, y: m.y - 10, tx: m.aim[0], ty: m.aim[1], t: 0, hit: false }); Snd.play('tongue', { vol: .7 }); } }
-        else if (m.st === 'lick') { if (m.t > .55) { m.st = 'go'; m.t = 0; m.hop = null; m.cd = rnd(1.8, 2.6) / sp; } }
+        m.pcd = (m.pcd ?? rnd(1.5, 3)) - dt; m.scd = (m.scd ?? rnd(.5, 2)) - dt;
+        if (m.st === 'go') {               // hop, hop, a tongue from a way off, and a pounce up close
+          if (!m.hop || m.t > .55 / sp) { m.t = 0; const step = Math.max(0, Math.min(34, d - 26)), a = Math.atan2(dy, dx) + rnd(-.35, .35); m.hop = { ax: m.x, ay: m.y, bx: m.x + Math.cos(a) * step, by: m.y + Math.sin(a) * step * .9 }; }
+          const p = Math.min(1, m.t / .4); m.x = lerp(m.hop.ax, m.hop.bx, ease(p)); m.y = lerp(m.hop.ay, m.hop.by, ease(p)); m.z = Math.sin(Math.PI * p) * 7;
+          if (p >= 1 && d < 50 && m.pcd <= 0 && S.wave >= 2) { m.st = 'crouch'; m.t = 0; warn(m); }
+          else if (p >= 1 && d < 70 && m.cd <= 0) { m.st = 'aim'; m.t = 0; m.aim = lead(.3, 12); warn(m); Snd.play('croak', { vol: .6, rate: rnd(.9, 1.15) }); }
+          else if (p >= 1 && m.scd <= 0 && d < 170) { m.st = 'spit'; m.t = 0; warn(m); Snd.play('croak', { vol: .5, rate: 1.3 }); }
+        } else if (m.st === 'aim') { m.z = 0; if (m.t > .4) { m.st = 'lick'; m.t = 0; tongues.push({ m, x: m.x + m.dir * 6, y: m.y - 10, tx: m.aim[0], ty: m.aim[1], t: 0, hit: false }); Snd.play('tongue', { vol: .7 }); } }
+        else if (m.st === 'lick') { if (m.t > .5) { m.st = 'go'; m.t = 0; m.hop = null; m.cd = rnd(1.3, 2) / agg; } }
+        else if (m.st === 'spit') { m.z = 0; if (m.t > .35) { fan(m, S.wave >= 6 ? 5 : 3, .55, 70 * sp, 8, 'slime'); m.st = 'go'; m.t = 0; m.hop = null; m.scd = rnd(2.2, 3.2) / agg; } }   // low: jump it
+        else if (m.st === 'crouch') { m.z = 0; if (m.t > .35) { m.st = 'pounce'; m.t = 0; m.hop = { ax: m.x, ay: m.y, bx: hx, by: hy }; Snd.play('croak', { vol: .8, rate: .75 }); } }
+        else if (m.st === 'pounce') {      // a big leap at where he was standing: move
+          const p = Math.min(1, m.t / .45); m.x = lerp(m.hop.ax, m.hop.bx, p); m.y = lerp(m.hop.ay, m.hop.by, p); m.z = Math.sin(Math.PI * p) * 22;
+          if (p >= 1) {
+            m.z = 0; m.st = 'go'; m.t = 0; m.hop = null; m.pcd = rnd(2.5, 3.8) / agg; addFx('fx_poof', m.x, m.y - 2); Snd.plop();
+            if (hunter.z < 6 && Math.hypot(hx - m.x, (hy - m.y) * 1.4) < 16) hurtHunter(1, m.x, m.y);
+            if (!onIce(m.x, m.y)) [m.x, m.y] = nearestIce(m.x, m.y);
+          }
+        }
       } else if (m.kind === 'bloat') {
-        if (m.st === 'go') { m.x += dx / d * 17 * sp * dt; m.y += dy / d * 17 * sp * dt; if (d < 17) { m.st = 'fuse'; m.t = 0; Snd.play('hiss', { vol: .7 }); } }
-        else if (m.st === 'fuse') { m.flash = Math.sin(m.t * 30) > 0 ? .05 : 0; if (m.t > .6) { m.dead = true; blast(m.x, m.y, 30, true); } }
+        m.rcd = (m.rcd ?? rnd(.8, 1.8)) - dt;
+        if (m.st === 'go') {               // a waddle; then it curls up and rolls at him like a bowling ball
+          const v = (d < 60 ? 40 : 25) * sp; m.x += dx / d * v * dt; m.y += dy / d * v * dt;
+          if (d < 18) { m.st = 'fuse'; m.t = 0; warn(m); Snd.play('hiss', { vol: .7 }); }
+          else if (m.rcd <= 0 && d < 170) { m.st = 'curl'; m.t = 0; warn(m); Snd.play('hiss', { vol: .5, rate: 1.4 }); }
+        }
+        else if (m.st === 'curl') { m.spin = (m.spin || 0) + dt * 6 * (dx < 0 ? -1 : 1); const a = aimAtHim(m); if (m.t < .4) m.rd = [Math.cos(a), Math.sin(a) * .8]; if (m.t > .6) { m.st = 'roll'; m.t = 0; Snd.play('mush', { vol: .6, rate: 1.4 }); } }
+        else if (m.st === 'roll') {
+          const v = 125 * sp; m.x += m.rd[0] * v * dt; m.y += m.rd[1] * v * dt; m.spin += dt * 16 * Math.sign(m.rd[0] || 1);
+          if (m.x < 8 || m.x > W - 8) { m.rd[0] *= -1; m.x = clamp(m.x, 8, W - 8); shake = Math.max(shake, .08); }   // off the edges, like a pinball
+          if (m.y < 100 || m.y > H - 6) { m.rd[1] *= -1; m.y = clamp(m.y, 100, H - 6); shake = Math.max(shake, .08); }
+          if (Math.random() < dt * 14) addFx('fx_poof', m.x, m.y);
+          if (hunter.z < 14 && Math.hypot(hunter.x - m.x, (hunter.y - m.y) * 1.4) < m.T.r + 5) hurtHunter(2, m.x, m.y);   // jump it
+          if (m.t > 1.7) { m.st = 'go'; m.t = 0; m.spin = 0; m.rcd = rnd(1.8, 2.8) / agg; }
+        }
+        else if (m.st === 'fuse') { m.flash = Math.sin(m.t * 30) > 0 ? .05 : 0; if (m.t > .55) { m.dead = true; blast(m.x, m.y, 32, true); } }
       } else {                             // Big Mama: a slow advance, a slam that sends a ring out, and babies
+        m.ccd = (m.ccd ?? 4) - dt;
         if (m.st === 'go') {
-          m.x += dx / d * 11 * dt; m.y += dy / d * 11 * dt;
-          if (m.cd <= 0) { m.st = 'slam'; m.t = 0; Snd.play('roar', { vol: .9 }); }
-          if (m.t > 7) { m.t = 0; for (let i = 0; i < 2; i++) { const b = { kind: 'frog', T: MUT.frog, hp: MUT.frog.hp, maxHp: MUT.frog.hp, x: m.x + rnd(-20, 20), y: m.y + rnd(-4, 6), z: 0, st: 'go', t: 0, at: 0, dir: -1, cd: 2, flash: 0, burn: 0, id: ++sid }; mutants.push(b); } }
-        } else if (m.st === 'slam') { if (m.t > .7) { rings.push({ x: m.x, y: m.y, r: 8, hit: false }); shake = .35; m.st = 'go'; m.t = 0; m.cd = rnd(3.5, 5); } }
+          m.x += dx / d * 14 * dt; m.y += dy / d * 14 * dt;
+          if (S.wave >= 10 && (m.spit = (m.spit ?? 1.5) - dt) <= 0) { m.spit = 2.4 / agg; fan(m, 3, .35, 85, 20, 'spray'); }   // the second time she spits as well
+          if (m.cd <= 0) { m.st = 'slam'; m.t = 0; warn(m); Snd.play('roar', { vol: .9 }); }
+          else if (m.ccd <= 0 && d > 50) { m.st = 'rear'; m.t = 0; warn(m); Snd.play('roar', { vol: 1, rate: 1.2 }); }   // a charge across the ice
+          if (m.t > 8) { m.t = 0; for (let i = 0; i < 2; i++) { const b = { kind: 'frog', T: MUT.frog, hp: MUT.frog.hp, maxHp: MUT.frog.hp, x: m.x + rnd(-20, 20), y: m.y + rnd(-4, 6), z: 0, st: 'go', t: 0, at: 0, dir: -1, cd: 2, flash: 0, burn: 0, id: ++sid }; mutants.push(b); } }
+        } else if (m.st === 'slam') { if (m.t > .7) { rings.push({ x: m.x, y: m.y, r: 8, hit: false }); fan(m, S.wave >= 10 ? 7 : 5, 1.2, 72, 8, 'slime'); shake = .35; m.st = 'go'; m.t = 0; m.cd = rnd(2.4, 3.4); } }
+        else if (m.st === 'rear') { if (m.t > .7) { m.st = 'charge'; m.t = 0; m.ch = [dx / d, dy / d]; } }
+        else if (m.st === 'charge') {
+          m.x += m.ch[0] * 105 * dt; m.y += m.ch[1] * 105 * dt; if (Math.random() < dt * 20) addFx('fx_poof', m.x - m.ch[0] * 20, m.y);
+          if (m.t > .8) { m.st = 'go'; m.t = 0; m.ccd = rnd(5, 7); shake = .2; }
+        }
       }
       break;
     }
-    case 'bat': {                          // circles at a distance and throws up on you
-      m.ang += dt * .6; const R = 72;
-      const tx = clamp(hx + Math.cos(m.ang) * R, 10, W - 10), ty = clamp(hy + Math.sin(m.ang) * R * .5, 80, H - 10);
-      flyTo(m, tx, ty, 42 * sp, dt); m.z = 28 + Math.sin(m.at * 3) * 4;
-      if (m.st === 'in' && m.x > 4 && m.x < W - 4) m.st = 'go';
-      if (m.st === 'go' && m.cd <= 0) {
-        m.cd = rnd(2.2, 3.2) / sp; Snd.play('retch', { vol: .6, rate: rnd(.9, 1.1) });
-        shots.push({ kind: 'acid', x: m.x, y: m.y, z: m.z + 8, sx: m.x, sy: m.y, sz: m.z + 8, tx: hx + rnd(-6, 6), ty: hy + rnd(-3, 3), t: 0, dur: .9 });
+    case 'bat': {                          // circles close, throws up where he is heading, and later on swoops at him
+      m.scd = (m.scd ?? rnd(3, 5)) - dt;
+      if (m.st === 'swoop') {
+        flyTo(m, m.sw[0], m.sw[1], 125 * sp, dt); m.z = lerp(m.z, 5, Math.min(1, dt * 9));
+        if (hunter.z < 10 && m.z < 12 && Math.hypot(hx - m.x, (hy - m.y) * 1.4) < 12) hurtHunter(1, m.x, m.y);
+        if (m.t > .9 || Math.hypot(m.x - m.sw[0], m.y - m.sw[1]) < 3) { m.st = 'go'; m.t = 0; m.scd = rnd(4, 6) / agg; }
+        break;
       }
+      m.ang += dt * .8; const R = 58;
+      const tx = clamp(hx + Math.cos(m.ang) * R, 10, W - 10), ty = clamp(hy + Math.sin(m.ang) * R * .5, 80, H - 10);
+      flyTo(m, tx, ty, 50 * sp, dt); m.z = lerp(m.z, 28 + Math.sin(m.at * 3) * 4, Math.min(1, dt * 3));
+      if (m.st === 'in' && m.x > 4 && m.x < W - 4) m.st = 'go';
+      if (m.st === 'go' && m.cd <= 0) { m.st = 'retch'; m.t = 0; warn(m); Snd.play('retch', { vol: .6, rate: rnd(.9, 1.1) }); }
+      else if (m.st === 'retch' && m.t > .35) {
+        m.st = 'go'; m.cd = rnd(1.5, 2.3) / agg; const [ax, ay] = lead(.7);
+        if (S.wave >= 2) fan(m, S.wave >= 7 ? 5 : 3, .4, 85 * sp, 20, 'spray');   // head high: step round it
+        shots.push({ kind: 'acid', x: m.x, y: m.y, z: m.z + 8, sx: m.x, sy: m.y, sz: m.z + 8, tx: clamp(ax + rnd(-4, 4), 8, W - 8), ty: clamp(ay + rnd(-2, 2), 100, H - 6), t: 0, dur: .9 });
+      }
+      else if (m.st === 'go' && S.wave >= 3 && m.scd <= 0 && d < 90) { m.st = 'swoop'; m.t = 0; warn(m); m.sw = [clamp(m.x + (hx - m.x) * 1.6, 10, W - 10), clamp(m.y + (hy - m.y) * 1.6, 100, H - 10)]; }
       break;
     }
     case 'kraken': {                       // under, up for a few seconds to slap at you, and down again
       if (m.st === 'under') {
         if (Math.random() < dt * 5) sparkles.push({ x: m.x + rnd(-8, 8), y: m.y + rnd(-1, 2), t: 0, life: .5, c: '#a6ff8a', ring: true });
-        if (m.t > 1.4) { m.st = 'up'; m.t = 0; addFx('fx_splash', m.x, m.y + 2, { fps: 16 }); Snd.play('gurgle', { vol: .7 }); m.cd = .6; }
+        if (m.t > 1) { m.st = 'up'; m.t = 0; addFx('fx_splash', m.x, m.y + 2, { fps: 16 }); Snd.play('gurgle', { vol: .7 }); m.cd = .45; burst(m, 8 + Math.floor(S.wave / 3), 52 * sp, 6, 'ink', Math.random()); m.ink = 1.3 / agg; }
       } else if (m.st === 'up') {
-        if (m.cd <= 0 && d < 40) { m.st = 'wind'; m.t = 0; m.aim = [hx, hy]; }
-        if (m.t > 3.2) { m.st = 'under'; m.t = 0; const p = krakenSpot(); if (p) [m.x, m.y] = p; }
+        if (m.cd <= 0 && d < 50) { m.st = 'wind'; m.t = 0; m.aim = [hx, hy]; warn(m); }
+        if ((m.ink -= dt) <= 0) { m.ink = 1.3 / agg; burst(m, 8 + Math.floor(S.wave / 3), 52 * sp, 6, 'ink', Math.random()); }
+        if (m.t > 2.8) { m.st = 'under'; m.t = 0; const p = krakenSpot(); if (p) [m.x, m.y] = p; }
       } else if (m.st === 'wind') {
         m.flash = Math.sin(m.t * 25) > 0 ? .05 : 0;
-        if (m.t > .5) { addFx('fx_splash', m.aim[0], m.aim[1], { fps: 18 }); if (hunter.z < 6 && Math.hypot(hx - m.aim[0], hy - m.aim[1]) < 18) hurtHunter(2, m.x, m.y); m.st = 'up'; m.t = 1; m.cd = 1.4; }
+        if (m.t > .55) { addFx('fx_splash', m.aim[0], m.aim[1], { fps: 18 }); shake = Math.max(shake, .12); if (hunter.z < 6 && Math.hypot(hx - m.aim[0], hy - m.aim[1]) < 20) hurtHunter(2, m.x, m.y); m.st = 'up'; m.t = 1; m.cd = 1.1; }
       }
       break;
     }
     case 'thulu': updateThulu(m, dt, d); break;
   }
-  if ((m.kind === 'frog' || m.kind === 'mama') && m.st !== 'in' && hunter.z < 6 && Math.hypot(hunter.x - m.x, (hunter.y - m.y) * 1.4) < m.T.r + 6)
-    hurtHunter(m.kind === 'mama' ? 2 : 1, m.x, m.y);   // and bumping into one hurts
+  if (m.kind === 'mama' && m.st !== 'in' && hunter.z < 6 && Math.hypot(hunter.x - m.x, (hunter.y - m.y) * 1.4) < m.T.r + 6)
+    hurtHunter(1.5, m.x, m.y, 22);   // and bumping into her hurts, and throws him clear; the frogs keep their distance
   if (!MUT[m.kind].flies && m.kind !== 'kraken' && m.st !== 'in' && m.kind !== 'thulu') {   // shoved apart a little
     for (const o of mutants) if (o !== m && !o.dead && !o.T.flies && o.kind !== 'kraken') {
       const ox = m.x - o.x, oy = m.y - o.y, od = Math.hypot(ox, oy);
@@ -2043,9 +2135,15 @@ function updateShots(dt) {
     if (o.x < -8 || o.x > W + 8 || o.y < -8 || o.y > H + 8) o.done = true;
   }
   orbs = orbs.filter(o => !o.done);
+  for (const b of bullets) {
+    b.t += dt; b.x += b.vx * dt; b.y += b.vy * dt;
+    if (Math.hypot(hunter.x - b.x, (hunter.y - b.y) * 1.5) < 7 && Math.abs(hunter.z + 12 - b.h) < 13) { b.done = true; hurtHunter(1, b.x - b.vx * .05, b.y - b.vy * .05); }
+    if (b.t > 4 || b.x < -6 || b.x > W + 6 || b.y < 70 || b.y > H + 6) b.done = true;
+  }
+  bullets = bullets.filter(b => !b.done);
   for (const a of acids) {
     a.t += dt; a.tick -= dt;
-    if (a.tick <= 0 && hunter.z < 4 && Math.hypot(hunter.x - a.x, (hunter.y - a.y) * 1.6) < 11) { a.tick = .7; hurtHunter(1); }
+    if (a.tick <= 0 && hunter.z < 4 && Math.hypot(hunter.x - a.x, (hunter.y - a.y) * 1.6) < 11) { a.tick = .9; hurtHunter(1); }
   }
   acids = acids.filter(a => a.t < 4.5);
   for (const r of rings) {
@@ -2089,7 +2187,7 @@ function fireAt(x, y, tapped) {           // the equipped gun, aimed at a point;
   if (w === 'harpoon' && apoc.fireCd <= 0) {
     const lv = S.lv.harpoon;
     shots.push({ kind: 'harpoon', x: ax, y: ay, vx: Math.cos(a) * 290, vy: Math.sin(a) * 290, a, t: 0, dmg: harpoonDmg(lv), pierce: lv, hits: [] });
-    apoc.fireCd = .5 * Math.pow(.88, lv - 1); hunter.cheer = 0; hunter.recoil = .15; apoc.want = null;
+    apoc.fireCd = .5 * Math.pow(.9, lv - 1); hunter.cheer = 0; hunter.recoil = .15; apoc.want = null;
     Snd.play('harpoon', { vol: .7, rate: rnd(.95, 1.08) });
     for (let i = 0; i < 4; i++) sparkles.push({ x: ax + rnd(-2, 2), y: ay + rnd(-2, 2), t: 0, life: rnd(.12, .22), c: i ? '#fff4c8' : '#ffffff', plus: !i });   // a flash at the muzzle
     if (!REDUCED) shake = Math.max(shake, .05);
@@ -2104,7 +2202,7 @@ function fireAt(x, y, tapped) {           // the equipped gun, aimed at a point;
         if (m.dead) continue;
         const mx = m.x - ax, my = (m.y - (m.z || 0) - m.T.top * .4) - ay, md = Math.hypot(mx, my);
         let da = Math.abs(Math.atan2(my, mx) - a); if (da > Math.PI) da = Math.PI * 2 - da;
-        if (md < range + m.T.r && da < .5) hitMutant(m, (16 + 8 * (lv - 1)) * .09, { burn: true, quiet: true });
+        if (md < range + m.T.r && da < .5) hitMutant(m, (14 + 6 * (lv - 1)) * .09, { burn: true, quiet: true });
       }
       if (now - (apoc.flameSnd || -9) > .5) { apoc.flameSnd = now; Snd.play('flame', { vol: .5, rate: rnd(.95, 1.05) }); }
     }
@@ -2144,10 +2242,10 @@ function assist(x, y) {                   // a shot near a mutant goes at it, a 
 }
 const STICK_PX = 34;                       // screen pixels of thumb travel for a full run
 const aiming = () => GUN[S.weapon] && (apoc.mouseAt || apoc.firing);
-function steer(kx, ky, dt) {              // keys or a dragged thumb: straight there, and over narrow water in a hop
+function steer(kx, ky, dt, boost = 1) {   // keys or a dragged thumb: straight there, and over narrow water in a hop
   const l = Math.hypot(kx, ky); if (!l || hunter.hop) return;
-  const ux = kx / l, uy = ky / l, sp = RUN * Math.min(1, l), nx = hunter.x + ux * sp * dt, ny = hunter.y + uy * sp * .8 * dt;
-  hunter.path = null; hunter.target = null; hunter.pending = 0; hunter.walking = .1;
+  const ux = kx / l, uy = ky / l, sp = RUN * Math.min(1, l) * boost * (hunter.jump ? 1.2 : 1), nx = hunter.x + ux * sp * dt, ny = hunter.y + uy * sp * .8 * dt;
+  hunter.path = null; hunter.target = null; hunter.pending = 0; hunter.walking = .1; hunter.mx = ux; hunter.my = uy;
   if (!aiming() && Math.abs(ux) > .2) hunter.dir = ux < 0 ? -1 : 1;   // with a gun out he faces where it points, so he can back off shooting
   if (hunter.z > 4) { if (nx > 6 && nx < W - 6 && ny > 96 && ny < H - 4) { hunter.x = nx; hunter.y = ny; } return; }   // in the air, water is no obstacle
   if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; return; }
@@ -2167,6 +2265,13 @@ function hopOver(ux, uy) {                // the next ice along, if a strip of w
   }
   return false;
 }
+function dash() {                         // a quick dart the way he is going, untouchable while it lasts
+  if (!S.apoc || apoc.dead || apoc.st === 'intro' || hunter.dash || hunter.jump || (apoc.dashCd || 0) > 0) return;
+  const k = apoc.keys, kx = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0), ky = (k.s || k.arrowdown ? 1 : 0) - (k.w || k.arrowup ? 1 : 0);
+  const l = Math.hypot(kx, ky), ux = l ? kx / l : hunter.mx ?? hunter.dir, uy = l ? ky / l : hunter.my ?? 0;
+  hunter.dash = { t: 0, dur: .17, ux, uy }; hunter.ghosts = []; apoc.dashCd = .6; hunter.swing = -1; hunter.victim = null;
+  Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2);
+}
 function cycleWeapon(d) {
   const own = ['club', 'harpoon', 'flamer'].filter(w => w === 'club' || S.lv[w]), i = own.indexOf(S.weapon);
   S.weapon = own[(i + d + own.length) % own.length]; dirtyPanel = true; apoc.aim = hunter.dir < 0 ? Math.PI : 0;
@@ -2182,13 +2287,21 @@ function updateApoc(dt) {
   else if (apoc.st === 'wave') {
     apoc.spawnT -= dt;
     const alive = mutants.filter(m => !m.dead).length;
-    if (apoc.queue.length && apoc.spawnT <= 0 && alive < 6 + S.wave) { if (spawnMutant(apoc.queue[0])) apoc.queue.shift(); apoc.spawnT = Math.max(.5, 1.7 - .1 * S.wave); }
+    if (apoc.queue.length && apoc.spawnT <= 0 && alive < crowd()) {   // the ice stays busy: one down, another up
+      if (spawnMutant(apoc.queue[0])) { apoc.queue.shift(); apoc.fails = 0; }
+      else if (++apoc.fails > 8) { apoc.queue.shift(); apoc.fails = 0; }   // nowhere for that one to come up: skip it rather than stall the wave
+      apoc.spawnT = alive < 2 ? .25 : .55;
+    }
     if (!apoc.queue.length && !alive && !apoc.dead) {
       if (S.wave >= LAST_WAVE) return;
-      apoc.st = 'break'; apoc.t = 0; S.inWave = 0; S.hp = Math.min(maxHp(), S.hp + 2);
-      const bonus = 60 * S.wave; earnGoo(bonus, hunter.x, hunter.y - 44);   // and clearing a wave pays out
-      toast(`Wave ${S.wave} cleared. +${fmt(bonus)} goo, a heart back, and a breather.`, 3200); Snd.voice('cleared', 2); dirtyPanel = true; save();
+      apoc.st = 'break'; apoc.t = 0; S.inWave = 0; S.hp = Math.min(maxHp(), S.hp + 4);
+      const bonus = 40 * S.wave; earnGoo(bonus, hunter.x, hunter.y - 44);   // and clearing a wave pays out
+      toast(`Wave ${S.wave} cleared. +${fmt(bonus)} goo, two hearts back, and a breather.`, 3200); Snd.voice('cleared', 2); dirtyPanel = true; save();
     }
+  }
+  for (const m of mutants) if (!m.T.boss) {   // one that has wandered off the ice for good is gone, so a wave can always end
+    const off = m.x < -40 || m.x > W + 40 || m.y < 40 || m.y > H + 40;
+    m.offT = off ? (m.offT || 0) + dt : 0; if (m.offT > 3) m.dead = true;
   }
   for (const m of mutants) {               // and how fast each one is going, to lead a shot
     const ox = m.x, oy = midOf(m); updateMutant(m, dt);
@@ -2196,13 +2309,25 @@ function updateApoc(dt) {
   }
   mutants = mutants.filter(m => !m.dead);
   updateShots(dt);
+  if (dt > 0) { hunter.vx = lerp(hunter.vx || 0, (hunter.x - (hunter.px ?? hunter.x)) / dt, .25); hunter.vy = lerp(hunter.vy || 0, (hunter.y - (hunter.py ?? hunter.y)) / dt, .25); }
+  hunter.px = hunter.x; hunter.py = hunter.y;   // how fast he is going, for mutants that aim ahead of him
+  apoc.dashCd = (apoc.dashCd || 0) - dt;
+  for (const p of pickups) {               // a heart dropped by a mutant: walk over it
+    p.t += dt;
+    if (hunter.z < 10 && Math.hypot(hunter.x - p.x, hunter.y - p.y) < 12) { p.done = true; S.hp = Math.min(maxHp(), S.hp + 2); Snd.ding(1.4); say('+♥', p.x, p.y - 16, { size: 7, color: '#ff8fa0', edge: '#3a0a14' }); dirtyPanel = true; }
+  }
+  pickups = pickups.filter(p => !p.done && p.t < 9);
   // keys, or a thumb dragged across the ice, steer him directly
   const k = apoc.keys, kx = (k.d || k.arrowright ? 1 : 0) - (k.a || k.arrowleft ? 1 : 0), ky = (k.s || k.arrowdown ? 1 : 0) - (k.w || k.arrowup ? 1 : 0);
   const auto = (apoc.fireHeld || k.j || k.f || k.enter) && !apoc.dead && apoc.st !== 'intro', pr = apoc.press;
   apoc.firing = auto || !!apoc.hold || !!(pr && pr.m);
   if (apoc.mouseAt && GUN[S.weapon] && !auto && !apoc.hold && !apoc.dead) aimAt(apoc.mouseAt[0], apoc.mouseAt[1]);   // the gun follows the pointer
   if (!apoc.dead) {
-    if (kx || ky) steer(kx, ky, dt);
+    if (hunter.dash) {
+      const h = hunter.dash; h.t += dt; hunter.ghosts.push([hunter.x, hunter.y, now]);
+      steer(h.ux, h.uy, dt, 2.8); if (h.t >= h.dur) hunter.dash = null;
+    }
+    else if (kx || ky) steer(kx, ky, dt);
     else if (pr && pr.stick) { const dx = pr.cx - pr.cx0, dy = pr.cy - pr.cy0; if (Math.hypot(dx, dy) > 4) steer(dx / STICK_PX, dy / STICK_PX, dt); }
   }
   hunter.walking = Math.max(0, (hunter.walking || 0) - dt);
@@ -2218,8 +2343,8 @@ function updateApoc(dt) {
     const gx = hunter.x + Math.cos(now * 1.6 + i * 2.1) * 34, gy = hunter.y - 62 + Math.sin(now * 1.6 + i * 2.1) * 8;
     const m = nearestMutant(gx, gy + 20, 150);
     if (m && apoc.gunT[i] <= 0) {
-      apoc.gunT[i] = .2; const a = Math.atan2(m.y - (m.z || 0) - m.T.top * .4 - gy, m.x - gx);
-      shots.push({ kind: 'bullet', x: gx, y: gy, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, t: 0, dmg: 1.6 + .6 * (S.lv.gundrone - 1) });
+      apoc.gunT[i] = .3; const a = Math.atan2(m.y - (m.z || 0) - m.T.top * .4 - gy, m.x - gx);
+      shots.push({ kind: 'bullet', x: gx, y: gy, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, t: 0, dmg: 1.2 + .4 * (S.lv.gundrone - 1) });
       if (now - (apoc.gunSnd || -9) > .25) { apoc.gunSnd = now; Snd.play('gun', { vol: .35, rate: rnd(.95, 1.1) }); }
     }
   }
@@ -2247,11 +2372,12 @@ function endGame(won) {
 function die() { S.hp = 0; Snd.play('dead', { vol: 1 }); Snd.voice('eaten', 3); shake = .6; for (let i = 0; i < 3; i++) setTimeout(() => bleed(hunter.x, hunter.y - 12, 20, 1.4), i * 150); endGame(false); }
 function win() { shake = 1.5; Snd.play('win', { vol: 1 }); setTimeout(() => Snd.voice('won', 3), 1200); for (let i = 0; i < 10; i++) setTimeout(() => addFx('fx_toxic', rnd(60, 200), rnd(60, 180)), i * 150); orbs = []; endGame(true); }
 // ---- drawing
-function drawFlashy(name, fi, x, y, flip, flash, k = 1) {   // a sprite that flashes white when hit
-  if (flash <= 0) return sprK(g, name, fi, x, y, flip, k);
+function drawFlashy(name, fi, x, y, flip, flash, k = 1, rot = 0, cy = 0) {   // a sprite that flashes white when hit, turned about its middle if it is rolling
+  if (flash <= 0 && !rot) return sprK(g, name, fi, x, y, flip, k);
   bg2.clearRect(0, 0, 180, 180); sprK(bg2, name, fi, 90, 150, flip, k);
-  bg2.globalCompositeOperation = 'source-atop'; bg2.fillStyle = 'rgba(255,255,255,.6)'; bg2.fillRect(0, 0, 180, 180); bg2.globalCompositeOperation = 'source-over';
-  g.drawImage(bigTmp, Math.round(x) - 90, Math.round(y) - 150);
+  if (flash > 0) { bg2.globalCompositeOperation = 'source-atop'; bg2.fillStyle = 'rgba(255,255,255,.6)'; bg2.fillRect(0, 0, 180, 180); bg2.globalCompositeOperation = 'source-over'; }
+  if (!rot) return g.drawImage(bigTmp, Math.round(x) - 90, Math.round(y) - 150);
+  g.save(); g.translate(Math.round(x), Math.round(y - cy)); g.rotate(rot); g.drawImage(bigTmp, -90, -150 + cy); g.restore();
 }
 function drawMutant(m) {
   const name = m.T.sprite, n = A[name] ? A[name].f.length : 1, fps = m.kind === 'bloat' ? 8 : m.kind === 'mama' ? 7 : 11;
@@ -2260,7 +2386,7 @@ function drawMutant(m) {
   if (m.kind === 'kraken' && m.st === 'under') { g.globalAlpha = .25; sprK(g, name, fi, m.x, m.y + 6, m.dir > 0, .8); g.globalAlpha = 1; return; }
   if (m.z > 1 && !m.T.swims) { g.fillStyle = 'rgba(20,40,30,.28)'; const w = Math.round(m.T.r * 1.4); g.fillRect(Math.round(m.x) - (w >> 1), Math.round(m.y) - 1, w, 2); }
   const k = m.kind === 'bloat' && m.st === 'fuse' ? 1 + .25 * m.t : 1;
-  drawFlashy(name, fi, m.x, m.y - (m.z || 0), m.dir > 0, m.flash, k);
+  drawFlashy(name, fi, m.x, m.y - (m.z || 0), m.dir > 0, m.flash, k, m.kind === 'bloat' && (m.st === 'roll' || m.st === 'curl') ? m.spin : 0, m.T.top / 2);
   if (m.burn > 0 && Math.random() < .3) sparkles.push({ x: m.x + rnd(-6, 6), y: m.y - (m.z || 0) - rnd(4, 18), t: 0, life: .3, c: '#ffb347' });
   if (m.T.boss) {                          // a health bar across the top of the screen
     const w = 84, x = (W - w) >> 1, y = 7;
@@ -2272,6 +2398,22 @@ function drawMutant(m) {
   }
 }
 function drawApocAir() {                   // everything above the ice: shots, bullets, tongues, flames, gun drones
+  const mark = (x, y, r, c, a) => { g.globalAlpha = a; g.strokeStyle = c; g.lineWidth = 1; g.beginPath(); g.ellipse(Math.round(x), Math.round(y), r, r / 1.6, 0, 0, Math.PI * 2); g.stroke(); g.globalAlpha = 1; };
+  for (const s of shots) if (s.kind === 'acid') { const p = Math.min(1, s.t / s.dur); mark(s.tx, s.ty, 3 + 6 * p, '#9dff7a', .4 + .5 * p); }   // where the acid will land
+  for (const m of mutants) {
+    if (m.kind === 'frog' && m.st === 'crouch') mark(hunter.x, hunter.y, 9, '#ff4d4d', .5 + .4 * Math.sin(now * 30));
+    if (m.kind === 'frog' && m.st === 'pounce') mark(m.hop.bx, m.hop.by, 10 - 4 * Math.min(1, m.t / .45), '#ff4d4d', .85);
+    if (m.kind === 'bloat' && m.st === 'curl' && m.rd) {
+      g.globalAlpha = .7 + .3 * Math.sin(now * 30); g.fillStyle = '#d0101e';
+      for (let i = 2; i < 16; i++) if (i % 2) g.fillRect(Math.round(m.x + m.rd[0] * i * 8) - 1, Math.round(m.y + m.rd[1] * i * 8), 3, 2);
+      g.globalAlpha = 1;
+    }
+    if (m.kind === 'kraken' && m.st === 'wind') mark(m.aim[0], m.aim[1], 20 * Math.min(1, m.t / .4), '#ff4d4d', .5 + .4 * Math.sin(now * 30));
+  }
+  for (const p of pickups) {               // dropped hearts, blinking before they go
+    if (p.t > 7 && Math.floor(p.t * 8) % 2) continue;
+    sprK(g, 'heart_full', 0, p.x, p.y - 1 - Math.abs(Math.sin(p.t * 4)) * 3, false, .6);
+  }
   for (const a of acids) { g.globalAlpha = Math.min(1, (4.5 - a.t) / 1); spr(g, 'sludge', 0, a.x, a.y, false); }
   g.globalAlpha = 1;
   for (const r of rings) {
@@ -2300,6 +2442,11 @@ function drawApocAir() {                   // everything above the ice: shots, b
     spr(g, 'gundrone', Math.floor(now * 16 + i * 3) % 9, gx, gy + 12, false);
   }
   for (const o of orbs) spr(g, 'orb', 0, o.x, o.y, false);
+  for (const b of bullets) {                 // a shadow on the ice, the ball above it: the gap says whether to jump it
+    const x = Math.round(b.x), y = Math.round(b.y), [c, e] = BUL[b.kind];
+    g.fillStyle = 'rgba(20,30,40,.35)'; g.fillRect(x - 2, y, 4, 1);
+    g.fillStyle = e; g.fillRect(x - 2, y - b.h - 2, 5, 5); g.fillStyle = c; g.fillRect(x - 1, y - b.h - 1, 3, 3); g.fillStyle = '#ffffff'; g.fillRect(x - 1, y - b.h - 1, 1, 1);
+  }
 }
 
 // ---------------------------------------------------------------- day and night
@@ -2857,7 +3004,7 @@ async function start(data) {
     const snd = S.sound; S = fresh(); S.sound = snd; seals = []; bundles = []; combo.n = 0; sg.clearRect(0, 0, W, H);
     Object.assign(sled, { st: 'home', d: 0, t: 0, cargo: 0, warned: false }); chipper.queue = []; chipper.grind = 0;
     Object.assign(tube, { lumps: [], st: 'roam', prey: null }); preys = []; slicks = []; coinFx = [];
-    mutants = []; shots = []; orbs = []; acids = []; rings = []; tongues = []; flames = []; drones.length = 0;
+    mutants = []; shots = []; orbs = []; acids = []; rings = []; tongues = []; flames = []; pickups = []; bullets = []; drones.length = 0;
     Object.assign(apoc, { st: 'calm', t: 0, queue: [], dead: false, hold: null, press: null, inv: 0, flash: 0, said: false, lowSaid: 0 });
     $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS'; apoc.wrecked = false;
     $('#coinIcon').src = icons.i_coin; $('#peltBox span').textContent = 'COINS:';
@@ -2925,6 +3072,7 @@ async function start(data) {
       const pickW = { 1: 'club', 2: 'harpoon', 3: 'flamer' }[e.key];
       if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; apoc.aim = hunter.dir < 0 ? Math.PI : 0; }
       if (k === 'q' && !e.repeat) cycleWeapon(1);
+      if (k === 'shift' && !e.repeat) { e.preventDefault(); Snd.init(); dash(); }
       if (e.key === ' ') { e.preventDefault(); Snd.init(); if (!e.repeat) jump(); }   // never a click on whatever button has focus
       if (k === 'j' || k === 'f' || k === 'enter') { e.preventDefault(); Snd.init(); apoc.keys[k] = true; }   // held, like FIRE
       return;
@@ -2967,7 +3115,8 @@ async function start(data) {
   for (let i = 0; i < 2; i++) spawnSeal(false);
   for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
   window.__cp = { get S() { return S; }, TYPES, Snd, seals: () => seals, hunter, gull, sled, drones, tube, chipper, apoc, mutants: () => mutants, orbs: () => orbs, spawnMutant, startWave, startApocalypse, hitMutant, fireAt, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
-    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), costOf: id => { const u = UPG.find(u => u.id === id); return S.lv[id] >= u.max ? 1e18 : cost(u); }, tierCost: () => TIER_COST[S.factory] ?? 1e18, jump, aimAt, muzzle, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
+    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), costOf: id => { const u = UPG.find(u => u.id === id); return S.lv[id] >= u.max ? 1e18 : cost(u); }, tierCost: () => TIER_COST[S.factory] ?? 1e18, jump, aimAt, muzzle, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, tick: n => { for (let i = 0; i < n; i++) update(1 / 60); }, A,
+    buyApoc: id => buyApoc(APOC_UPG.find(u => u.id === id)), apocCost: id => { const u = APOC_UPG.find(u => u.id === id); return (S.lv[id] || 0) >= u.max ? 1e18 : apocCost(u); }, maxHp, dash, hazards: () => ({ rings, acids, tongues, shots, orbs, bullets }), now: () => now };
   last = performance.now();
   let faults = 0;
   const loop = t => {
