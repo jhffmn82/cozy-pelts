@@ -24,10 +24,19 @@ def audio_json():
     return json.dumps(clips, separators=(",", ":"))
 
 
+def audio_gains():
+    """The level tools/audio.py measured for each voice line, as {name: gain}."""
+    manifest = os.path.join(ROOT, "game", "audio.json")
+    if not os.path.exists(manifest):
+        return "{}"
+    return json.dumps({n: v["gain"] for n, v in json.load(open(manifest)).items() if "gain" in v}, separators=(",", ":"))
+
+
 def main():
     src = open(os.path.join(ROOT, "game", "src.html"), encoding="utf-8").read()
     page = (src.replace("/*ATLAS_JSON*/{}", open(os.path.join(ROOT, "game", "atlas.json")).read())
                .replace("/*AUDIO_JSON*/{}", audio_json())
+               .replace("/*AUDIO_GAIN*/{}", audio_gains())
                .replace("__ATLAS_PNG__", data_url(os.path.join(ROOT, "game", "atlas.png")))
                .replace("__BG_PNG__", data_url(os.path.join(ROOT, "art", "ref", "bg_clean.png"))))
     os.makedirs(os.path.join(ROOT, "docs"), exist_ok=True)

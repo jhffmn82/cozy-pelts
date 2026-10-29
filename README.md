@@ -35,5 +35,8 @@ off the sled.
   (`tools/pl.py`, packed by `tools/pack.py`).
 - Sound: [ElevenLabs](https://elevenlabs.io) sound effects, ambience and voice lines (`tools/audio.py`). The music box
   score is synthesised in the browser.
+- itch.io: `python tools/itch.py` makes the upload zip, cover, banner, snowy page background and screenshots in
+  `out/itch/`, drawn by the game itself; `itch/description.html` and `itch/settings.md` are the page's text and
+  every setting on its form and theme.
 - The game is one HTML file with everything inlined: `python tools/build.py` writes `docs/index.html`, which GitHub
   Pages serves. `python tools/publish.py` builds, commits and pushes.

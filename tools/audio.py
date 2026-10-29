@@ -38,12 +38,12 @@ SFX = {
     'fish': (1, 'a fish tossed into the sea plops into the water with a splash', .8, False),
     'shore': (1, 'calm arctic shore ambience: gentle waves lapping against ice floes, soft wind, faint distant seagulls, peaceful', 22, True),
     'nightair': (1, 'quiet arctic night ambience: soft wind over snow and a small crackling campfire, very calm', 22, True),
-    'drone': (1, 'a small quadcopter drone whirring and buzzing as it lifts off and flies past', 1.6, False),
+    'whirr': (1, 'a small quadcopter drone whirring and buzzing as it lifts off and flies past', 1.6, False),
     'winch': (1, 'a small electric winch whirs and reels in a metal cable, ending with a clunk', 1.0, False),
     'chipper': (2, 'a cartoon wood chipper grinding something soft and squishy, a wet crunchy grind that sputters to a stop', 1.6, False),
     'slurp': (2, 'a huge industrial vacuum hose slurping something heavy up out of water, a deep wet shloop and a hollow metal thunk', 1.2, False),
     'clank': (1, 'heavy factory machinery clanks once and lets out a short hiss of steam', .9, False),
-    'mush': (1, 'sleigh bells jingle as a dog sled sets off across the snow and a husky yips excitedly', 1.6, False),
+    'sleigh': (1, 'sleigh bells jingle as a dog sled sets off across the snow and a husky yips excitedly', 1.6, False),
     'coins': (1, 'a satisfying old cash register ka-ching followed by a handful of coins clinking', 1.0, False),
     'hum': (1, 'a steady low industrial factory hum with a slow rhythmic pump thumping, muffled and mechanical', 12, True),
     # the sealocalypse
@@ -95,7 +95,8 @@ LINES = {
     'thulu': (NARRATOR, ['[terrified whisper] Sealthulu has risen. Good luck.']),
     'won': (NARRATOR, ['[awed] You won. The sea is quiet now. Too quiet.']),
     'eaten': (NARRATOR, ['[solemnly] You have been eaten. The seals send their regards.']),
-    'ow': (HUNTER, ['[pained] Ow!', '[yelps] Ouch!', '[gasps] Oh no!']),
+    'ow': (HUNTER, ['[pained] Ow!', '[yelps] Ouch!', '[gasps] Oh no!', '[indignant] Hey! This is my good parka!', '[yelps] Rude!',
+                    "[disgusted] Eww, it's warm!"]),
     # rare seals, one line for the first sighting of each
     'r_platinum': (NARRATOR, ['[impressed] A platinum seal. Very exclusive. Very bonkable.']),
     'r_emerald': (NARRATOR, ['[hushed] An emerald seal. Rare, green, and about to be very red.']),
@@ -119,7 +120,20 @@ LINES = {
     'mamadown': (NARRATOR, ['[impressed] Big Mama is down. Somebody tell the babies.']),
     'thulu2': (NARRATOR, ["[terrified] Now he's angry."]),
     'thulu3': (NARRATOR, ["[panicking] He's throwing everything he has. Dodge!"]),
-    'kill': (HUNTER, ['[grimly] Not so cozy now.', '[battle cry] Come and get it!', '[panting] Got one!', '[cackling] Toasty!']),
+    'kill': (HUNTER, ['[grimly] Not so cozy now.', '[battle cry] Come and get it!', '[panting] Got one!', '[cackling] Toasty!',
+                      '[sweetly] Night night!', '[giggles] Pop!', '[cheerfully] Back in the soup you go!', '[soothing] Shh, shh. Sleepy time.']),
+    # the hunter staying cozy through it all (Justin, 2026-10-29: "more cozy lines from the player character")
+    'h_wave': (HUNTER, ['[nervous but chipper] Cozy thoughts. Cozy thoughts.', '[determined] Right. Mittens on.',
+                        '[brightly] Ooh, visitors! Ugly ones.', '[shaky sing-song] Nobody panic. Especially me.']),
+    'h_cleared': (HUNTER, ['[relieved] Phew. Cocoa break.', '[contented sigh] Ahh. Blanket time.', '[cheerful] All tidy!',
+                           '[proudly] Still cozy. Mostly.']),
+    'h_low': (HUNTER, ['[shaky] I just want a little nap.', '[weakly] Somebody put the kettle on.']),
+    'h_heart': (HUNTER, ['[delighted] Ooh, warm and squishy!', "[happy] Don't mind if I do!"]),
+    'h_roll': (HUNTER, ['[alarmed] Why is it rolling?', '[panicked giggle] Big round boy, coming through!']),
+    'h_kraken': (HUNTER, ['[disgusted] Nobody needs that many arms!']),
+    'h_mama': (HUNTER, ['[nervous laugh] Hi, Mama. About your babies...']),
+    'h_thulu': (HUNTER, ["[tiny voice] Oh. He's very big."]),
+    'h_won': (HUNTER, ['[softly] Can we go back to being cozy now?']),
     'buyharpoon': (HUNTER, ['[excited] Harpoon time!']),
     'buyflamer': (HUNTER, ['[maniacal giggle] Who wants a barbecue?']),
     'buydrone': (HUNTER, ['[cheerful] Get them, little buddy!']),
@@ -180,6 +194,10 @@ def post(path, body, tag, rate):
 
 
 def jobs():
+    # The game groups clips by name (bonk_1, bonk_2 are both 'bonk'), so an effect and a line sharing a name would
+    # play each other: the drone's whirr was once the narrator's drone line, every time a drone set off.
+    shared = set(SFX) & set(LINES)
+    if shared: raise SystemExit(f'an effect and a line share a name: {sorted(shared)}')
     out = []
     for name, (takes, prompt, secs, loop) in SFX.items():
         for i in range(takes):
@@ -197,6 +215,18 @@ def jobs():
         out.append(('music', name, '/music', {'prompt': prompt, 'music_length_ms': secs * 1000, 'model_id': 'music_v1',
                                               'force_instrumental': True}))
     return out
+
+
+VOICE_DB = -15.0   # the median speech loudness of the lines; each line gets the gain that puts it here
+
+
+def speech_db(x, rate):
+    """Loudness of the speech in a clip: RMS over the 50 ms frames within 20 dB of its loudest one."""
+    import numpy as np
+    f = int(rate * .05)
+    rms = np.sqrt((x[:len(x) // f * f].reshape(-1, f) ** 2).mean(axis=1))
+    act = rms[rms > rms.max() * .1]
+    return float(20 * np.log10(np.sqrt((act ** 2).mean()) or 1e-9))
 
 
 def finish(kind, name, pcm):
@@ -219,7 +249,7 @@ def finish(kind, name, pcm):
     data = bytes(e.encode((np.clip(x, -1, 1) * 32767).astype('<i2').tobytes()) + e.flush())
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f'{name}.mp3').write_bytes(data)
-    return len(x) / RATE, len(data)
+    return len(x) / RATE, len(data), speech_db(x, RATE) if kind == 'voice' else None
 
 
 def main():
@@ -233,12 +263,14 @@ def main():
 
     def run(job):
         kind, name, path, body = job
-        secs, size = finish(kind, name, post(path, body, name, RATES[kind]))
-        return kind, name, secs, size
+        secs, size, db = finish(kind, name, post(path, body, name, RATES[kind]))
+        return kind, name, secs, size, db
 
     with concurrent.futures.ThreadPoolExecutor(4) as pool:
-        for kind, name, secs, size in pool.map(run, todo):
+        for kind, name, secs, size, db in pool.map(run, todo):
             manifest[name] = {'kind': kind, 'secs': round(secs, 2)}
+            if db is not None:   # whispers and dry asides come out quieter than shouts; the game evens them out
+                manifest[name]['gain'] = round(min(2, max(.5, 10 ** ((VOICE_DB - db) / 20))), 3)
             print(f'{kind:5} {name:12} {secs:5.1f} s {size // 1024:4d} KB')
     (ROOT / 'game' / 'audio.json').write_text(json.dumps(manifest, indent=1))
     print('total', sum((OUT / f'{n}.mp3').stat().st_size for n in manifest) // 1024, 'KB')

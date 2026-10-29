@@ -4,3 +4,5 @@
 art/audio/cache/
 *.log
 __pycache__/
+# The itch.io upload and images, made by tools/itch.py
+out/

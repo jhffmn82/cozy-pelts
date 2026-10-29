@@ -95,9 +95,9 @@
   "kind": "sfx",
   "secs": 22.0
  },
- "drone": {
-  "kind": "voice",
-  "secs": 7.07
+ "whirr": {
+  "kind": "sfx",
+  "secs": 1.59
  },
  "winch": {
   "kind": "sfx",
@@ -123,7 +123,7 @@
   "kind": "sfx",
   "secs": 0.88
  },
- "mush": {
+ "sleigh": {
   "kind": "sfx",
   "secs": 1.45
  },
@@ -245,338 +245,552 @@
  },
  "ko_1": {
   "kind": "voice",
-  "secs": 1.06
+  "secs": 1.06,
+  "gain": 0.782
  },
  "ko_2": {
   "kind": "voice",
-  "secs": 1.77
+  "secs": 1.77,
+  "gain": 0.846
  },
  "ko_3": {
   "kind": "voice",
-  "secs": 1.71
+  "secs": 1.71,
+  "gain": 1.268
  },
  "ko_4": {
   "kind": "voice",
-  "secs": 2.19
+  "secs": 2.19,
+  "gain": 1.251
  },
  "ko_5": {
   "kind": "voice",
-  "secs": 1.95
+  "secs": 1.95,
+  "gain": 0.997
  },
  "sneak": {
   "kind": "voice",
-  "secs": 1.84
+  "secs": 1.84,
+  "gain": 1.343
  },
  "goldko": {
   "kind": "voice",
-  "secs": 2.42
+  "secs": 2.42,
+  "gain": 1.104
  },
  "escape_1": {
   "kind": "voice",
-  "secs": 2.33
+  "secs": 2.33,
+  "gain": 0.931
  },
  "escape_2": {
   "kind": "voice",
-  "secs": 2.03
+  "secs": 2.03,
+  "gain": 1.176
  },
  "shoo_1": {
   "kind": "voice",
-  "secs": 1.88
+  "secs": 1.88,
+  "gain": 0.843
  },
  "shoo_2": {
   "kind": "voice",
-  "secs": 2.1
+  "secs": 2.1,
+  "gain": 0.74
  },
  "bought_1": {
   "kind": "voice",
-  "secs": 1.82
+  "secs": 1.82,
+  "gain": 0.927
  },
  "bought_2": {
   "kind": "voice",
-  "secs": 1.53
+  "secs": 1.53,
+  "gain": 0.89
  },
  "fishy": {
   "kind": "voice",
-  "secs": 1.77
+  "secs": 1.77,
+  "gain": 0.833
  },
  "roll": {
   "kind": "voice",
-  "secs": 1.42
+  "secs": 1.42,
+  "gain": 0.823
  },
  "welcome": {
   "kind": "voice",
-  "secs": 6.63
+  "secs": 6.63,
+  "gain": 0.997
  },
  "goldseal": {
   "kind": "voice",
-  "secs": 3.05
+  "secs": 3.05,
+  "gain": 1.042
  },
  "rush": {
   "kind": "voice",
-  "secs": 1.01
+  "secs": 1.01,
+  "gain": 0.9
  },
  "gull": {
   "kind": "voice",
-  "secs": 2.16
+  "secs": 2.16,
+  "gain": 0.975
  },
  "stolen": {
   "kind": "voice",
-  "secs": 2.32
+  "secs": 2.32,
+  "gain": 1.02
  },
  "dusk": {
   "kind": "voice",
-  "secs": 4.9
+  "secs": 4.9,
+  "gain": 1.349
  },
  "dawn": {
   "kind": "voice",
-  "secs": 1.6
+  "secs": 1.6,
+  "gain": 1.05
  },
  "husky": {
   "kind": "voice",
-  "secs": 4.2
+  "secs": 4.2,
+  "gain": 1.31
+ },
+ "drone": {
+  "kind": "voice",
+  "secs": 7.07,
+  "gain": 0.972
  },
  "drone2": {
   "kind": "voice",
-  "secs": 3.23
+  "secs": 3.23,
+  "gain": 1.132
  },
  "factory": {
   "kind": "voice",
-  "secs": 5.12
+  "secs": 5.12,
+  "gain": 1.562
  },
  "apoc": {
   "kind": "voice",
-  "secs": 2.51
+  "secs": 2.51,
+  "gain": 1.041
  },
  "cleared_1": {
   "kind": "voice",
-  "secs": 1.87
+  "secs": 1.87,
+  "gain": 0.753
  },
  "cleared_2": {
   "kind": "voice",
-  "secs": 1.27
+  "secs": 1.27,
+  "gain": 1.567
  },
  "cleared_3": {
   "kind": "voice",
-  "secs": 2.76
+  "secs": 2.76,
+  "gain": 0.905
  },
  "cleared_4": {
   "kind": "voice",
-  "secs": 1.79
+  "secs": 1.79,
+  "gain": 1.063
  },
  "mama": {
   "kind": "voice",
-  "secs": 1.33
+  "secs": 1.33,
+  "gain": 0.826
  },
  "thulu": {
   "kind": "voice",
-  "secs": 2.87
+  "secs": 2.87,
+  "gain": 1.015
  },
  "won": {
   "kind": "voice",
-  "secs": 4.47
+  "secs": 4.47,
+  "gain": 1.095
  },
  "eaten": {
   "kind": "voice",
-  "secs": 3.75
+  "secs": 3.75,
+  "gain": 0.97
  },
  "ow_1": {
   "kind": "voice",
-  "secs": 1.16
+  "secs": 1.16,
+  "gain": 1.115
  },
  "ow_2": {
   "kind": "voice",
-  "secs": 1.78
+  "secs": 1.78,
+  "gain": 0.938
  },
  "ow_3": {
   "kind": "voice",
-  "secs": 1.51
+  "secs": 1.51,
+  "gain": 0.885
+ },
+ "ow_4": {
+  "kind": "voice",
+  "secs": 2.26,
+  "gain": 0.856
+ },
+ "ow_5": {
+  "kind": "voice",
+  "secs": 1.65,
+  "gain": 0.862
+ },
+ "ow_6": {
+  "kind": "voice",
+  "secs": 2.39,
+  "gain": 0.796
  },
  "r_platinum": {
   "kind": "voice",
-  "secs": 4.12
+  "secs": 4.12,
+  "gain": 1.466
  },
  "r_emerald": {
   "kind": "voice",
-  "secs": 5.05
+  "secs": 5.05,
+  "gain": 1.044
  },
  "r_sapphire": {
   "kind": "voice",
-  "secs": 3.56
+  "secs": 3.56,
+  "gain": 1.291
  },
  "r_ruby": {
   "kind": "voice",
-  "secs": 5.1
+  "secs": 5.1,
+  "gain": 0.945
  },
  "r_diamond": {
   "kind": "voice",
-  "secs": 5.2
+  "secs": 5.2,
+  "gain": 0.933
  },
  "r_rainbow": {
   "kind": "voice",
-  "secs": 4.57
+  "secs": 4.57,
+  "gain": 0.982
  },
  "r_cosmic": {
   "kind": "voice",
-  "secs": 5.25
+  "secs": 5.25,
+  "gain": 1.492
  },
  "r_holy": {
   "kind": "voice",
-  "secs": 5.35
+  "secs": 5.35,
+  "gain": 0.978
  },
  "decoyup": {
   "kind": "voice",
-  "secs": 3.16
+  "secs": 3.16,
+  "gain": 0.979
  },
  "rareko_1": {
   "kind": "voice",
-  "secs": 1.54
+  "secs": 1.54,
+  "gain": 1.144
  },
  "rareko_2": {
   "kind": "voice",
-  "secs": 1.64
+  "secs": 1.64,
+  "gain": 1.175
  },
  "rareko_3": {
   "kind": "voice",
-  "secs": 3.12
+  "secs": 3.12,
+  "gain": 1.005
  },
  "whathave": {
   "kind": "voice",
-  "secs": 2.43
+  "secs": 2.43,
+  "gain": 0.987
  },
  "apoc2": {
   "kind": "voice",
-  "secs": 5.53
+  "secs": 5.53,
+  "gain": 1.127
  },
  "wave_1": {
   "kind": "voice",
-  "secs": 2.31
+  "secs": 2.31,
+  "gain": 0.851
  },
  "wave_2": {
   "kind": "voice",
-  "secs": 2.24
+  "secs": 2.24,
+  "gain": 1.134
  },
  "wave_3": {
   "kind": "voice",
-  "secs": 3.89
+  "secs": 3.89,
+  "gain": 1.239
  },
  "wave_4": {
   "kind": "voice",
-  "secs": 2.81
+  "secs": 2.81,
+  "gain": 1.161
  },
  "m_frog": {
   "kind": "voice",
-  "secs": 4.29
+  "secs": 4.29,
+  "gain": 1.115
  },
  "m_bat": {
   "kind": "voice",
-  "secs": 2.8
+  "secs": 2.8,
+  "gain": 1.044
  },
  "m_bloat": {
   "kind": "voice",
-  "secs": 2.35
+  "secs": 2.35,
+  "gain": 1.368
  },
  "m_kraken": {
   "kind": "voice",
-  "secs": 2.71
+  "secs": 2.71,
+  "gain": 1.035
  },
  "lowhp": {
   "kind": "voice",
-  "secs": 2.21
+  "secs": 2.21,
+  "gain": 1.211
  },
  "mamadown": {
   "kind": "voice",
-  "secs": 3.05
+  "secs": 3.05,
+  "gain": 0.981
  },
  "thulu2": {
   "kind": "voice",
-  "secs": 1.87
+  "secs": 1.87,
+  "gain": 0.988
  },
  "thulu3": {
   "kind": "voice",
-  "secs": 2.74
+  "secs": 2.74,
+  "gain": 1.021
  },
  "kill_1": {
   "kind": "voice",
-  "secs": 1.4
+  "secs": 1.4,
+  "gain": 0.688
  },
  "kill_2": {
   "kind": "voice",
-  "secs": 1.15
+  "secs": 1.15,
+  "gain": 0.835
  },
  "kill_3": {
   "kind": "voice",
-  "secs": 1.49
+  "secs": 1.49,
+  "gain": 0.916
  },
  "kill_4": {
   "kind": "voice",
-  "secs": 2.75
+  "secs": 2.75,
+  "gain": 1.345
+ },
+ "kill_5": {
+  "kind": "voice",
+  "secs": 1.08,
+  "gain": 0.81
+ },
+ "kill_6": {
+  "kind": "voice",
+  "secs": 1.11,
+  "gain": 0.812
+ },
+ "kill_7": {
+  "kind": "voice",
+  "secs": 1.54,
+  "gain": 0.978
+ },
+ "kill_8": {
+  "kind": "voice",
+  "secs": 2.42,
+  "gain": 1.061
+ },
+ "h_wave_1": {
+  "kind": "voice",
+  "secs": 2.8,
+  "gain": 0.939
+ },
+ "h_wave_2": {
+  "kind": "voice",
+  "secs": 2.04,
+  "gain": 0.937
+ },
+ "h_wave_3": {
+  "kind": "voice",
+  "secs": 2.99,
+  "gain": 1.486
+ },
+ "h_wave_4": {
+  "kind": "voice",
+  "secs": 3.25,
+  "gain": 0.881
+ },
+ "h_cleared_1": {
+  "kind": "voice",
+  "secs": 2.2,
+  "gain": 0.962
+ },
+ "h_cleared_2": {
+  "kind": "voice",
+  "secs": 2.36,
+  "gain": 0.794
+ },
+ "h_cleared_3": {
+  "kind": "voice",
+  "secs": 1.26,
+  "gain": 0.716
+ },
+ "h_cleared_4": {
+  "kind": "voice",
+  "secs": 2.07,
+  "gain": 1.351
+ },
+ "h_low_1": {
+  "kind": "voice",
+  "secs": 2.33,
+  "gain": 0.879
+ },
+ "h_low_2": {
+  "kind": "voice",
+  "secs": 1.65,
+  "gain": 0.819
+ },
+ "h_heart_1": {
+  "kind": "voice",
+  "secs": 2.67,
+  "gain": 1.067
+ },
+ "h_heart_2": {
+  "kind": "voice",
+  "secs": 1.07,
+  "gain": 0.774
+ },
+ "h_roll_1": {
+  "kind": "voice",
+  "secs": 1.79,
+  "gain": 0.87
+ },
+ "h_roll_2": {
+  "kind": "voice",
+  "secs": 2.7,
+  "gain": 1.054
+ },
+ "h_kraken": {
+  "kind": "voice",
+  "secs": 2.53,
+  "gain": 1.058
+ },
+ "h_mama": {
+  "kind": "voice",
+  "secs": 3.94,
+  "gain": 1.294
+ },
+ "h_thulu": {
+  "kind": "voice",
+  "secs": 2.53,
+  "gain": 1.003
+ },
+ "h_won": {
+  "kind": "voice",
+  "secs": 2.08,
+  "gain": 1.096
  },
  "buyharpoon": {
   "kind": "voice",
-  "secs": 1.62
+  "secs": 1.62,
+  "gain": 0.745
  },
  "buyflamer": {
   "kind": "voice",
-  "secs": 3.61
+  "secs": 3.61,
+  "gain": 1.03
  },
  "buydrone": {
   "kind": "voice",
-  "secs": 1.29
+  "secs": 1.29,
+  "gain": 0.908
  },
  "buyheart": {
   "kind": "voice",
-  "secs": 1.45
+  "secs": 1.45,
+  "gain": 0.829
  },
  "buyparka": {
   "kind": "voice",
-  "secs": 2.61
+  "secs": 2.61,
+  "gain": 1.779
  },
  "buyaid": {
   "kind": "voice",
-  "secs": 3.17
+  "secs": 3.17,
+  "gain": 0.922
  },
  "hup_1": {
   "kind": "voice",
-  "secs": 1.09
+  "secs": 1.09,
+  "gain": 0.871
  },
  "hup_2": {
   "kind": "voice",
-  "secs": 0.48
+  "secs": 0.48,
+  "gain": 0.852
  },
  "tier2": {
   "kind": "voice",
-  "secs": 5.94
+  "secs": 5.94,
+  "gain": 1.237
  },
  "sold_1": {
   "kind": "voice",
-  "secs": 3.61
+  "secs": 3.61,
+  "gain": 1.027
  },
  "sold_2": {
   "kind": "voice",
-  "secs": 1.82
+  "secs": 1.82,
+  "gain": 0.839
  },
  "full": {
   "kind": "voice",
-  "secs": 2.24
+  "secs": 2.24,
+  "gain": 1.138
  },
  "mush_1": {
   "kind": "voice",
-  "secs": 1.52
+  "secs": 1.52,
+  "gain": 0.817
  },
  "mush_2": {
   "kind": "voice",
-  "secs": 1.5
+  "secs": 1.5,
+  "gain": 0.689
  },
  "byebye_1": {
   "kind": "voice",
-  "secs": 1.21
+  "secs": 1.21,
+  "gain": 0.863
  },
  "byebye_2": {
   "kind": "voice",
-  "secs": 2.34
+  "secs": 2.34,
+  "gain": 1.274
  },
  "messy": {
   "kind": "voice",
-  "secs": 1.78
+  "secs": 1.78,
+  "gain": 1.276
  }
 }
