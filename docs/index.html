@@ -607,12 +607,20 @@ const Snd = {
     const lim = c.createDynamicsCompressor(); lim.threshold.value = -2; lim.knee.value = 0; lim.ratio.value = 20; lim.attack.value = .002; lim.release.value = .12; lim.connect(c.destination);
     const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.connect(lim);
     const vcomp = c.createDynamicsCompressor(); vcomp.threshold.value = -20; vcomp.knee.value = 10; vcomp.ratio.value = 3; vcomp.attack.value = .005; vcomp.release.value = .2; vcomp.connect(lim);
+    // The voices get a little presence and level; while somebody talks, the effects drop and lose the middle of
+    // their sound, the 1 to 4 kHz where speech lives, so the words come through even in a busy fight.
+    const vhp = c.createBiquadFilter(); vhp.type = 'highpass'; vhp.frequency.value = 110;
+    const vpres = c.createBiquadFilter(); vpres.type = 'peaking'; vpres.frequency.value = 2600; vpres.Q.value = .9; vpres.gain.value = 4;
+    const vmk = this.vmk = c.createGain(); vmk.gain.value = 1.35;
+    vcomp.disconnect(); vcomp.connect(vmk); vmk.connect(lim);
     this.comp = comp; this.vcomp = vcomp;
-    this.duck = c.createGain(); this.duck.connect(comp);   // dips the effects and ambience while somebody talks
+    this.carve = c.createBiquadFilter(); this.carve.type = 'peaking'; this.carve.frequency.value = 2200; this.carve.Q.value = .6; this.carve.gain.value = 0;
+    this.carve.connect(comp);
+    this.duck = c.createGain(); this.duck.connect(this.carve);   // dips the effects and ambience while somebody talks
     this.sfx = c.createGain(); this.sfx.connect(this.duck);
     this.mus = c.createGain(); this.mus.connect(comp);
     this.amb = c.createGain(); this.amb.gain.value = .5; this.amb.connect(this.duck);
-    this.vox = c.createGain(); this.vox.connect(vcomp);
+    this.vox = c.createGain(); this.vox.connect(vhp); vhp.connect(vpres); vpres.connect(vcomp);
     const len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     this.noise = buf;
@@ -707,8 +715,9 @@ const Snd = {
     const src = this.play(name, { bus: this.vox }); if (!src) return false;
     const t = this.c.currentTime, end = t + src.buffer.duration;
     this.speaking = { src, prio, end };
-    if (S.sound.music) { this.mus.gain.setTargetAtTime(.22, t, .08); this.mus.gain.setTargetAtTime(.55, end, .4); }
-    const d = this.duck.gain; d.cancelScheduledValues(t); d.setTargetAtTime(.3, t, .04); d.setTargetAtTime(1, end, .3);
+    if (S.sound.music) { this.mus.gain.setTargetAtTime(.15, t, .08); this.mus.gain.setTargetAtTime(.55, end, .4); }
+    const d = this.duck.gain; d.cancelScheduledValues(t); d.setTargetAtTime(.25, t, .04); d.setTargetAtTime(1, end, .3);
+    const cv = this.carve.gain; cv.cancelScheduledValues(t); cv.setTargetAtTime(-12, t, .04); cv.setTargetAtTime(0, end, .3);
     return true;
   },
   tick() {                                // the next waiting line, after a breath
@@ -1927,7 +1936,7 @@ function spawnMutant(kind) {
     addFx('fx_splash', e.wx, e.wy + 2, { fps: 16 });
   }
   mutants.push(m);
-  if (!S.seen['m_' + kind] && ['frog', 'bat', 'bloat', 'kraken'].includes(kind)) { S.seen['m_' + kind] = 1; setTimeout(() => Snd.voice('m_' + kind, 2), 900); }   // a word about each kind, the first time
+  if (!S.seen['m_' + kind] && ['frog', 'bat', 'bloat', 'kraken'].includes(kind)) { S.seen['m_' + kind] = 1; setTimeout(() => Snd.voice('m_' + kind, 2, 20), 900); }   // a word about each kind, the first time
   return true;
 }
 function krakenSpot() {                    // a bit of open water near where the hunter stands
@@ -2289,7 +2298,7 @@ function updateApoc(dt) {
   hunter.recoil = Math.max(0, (hunter.recoil || 0) - dt);
   if (apoc.st === 'intro') {
     if (!apoc.said && apoc.t > 4) { apoc.said = true; Snd.voice('whathave', 2); }
-    if (apoc.t > 5) { apoc.st = 'break'; apoc.t = 0; showHowTo(9000); setTimeout(() => Snd.voice('apoc2', 2), 1800); }
+    if (apoc.t > 5) { apoc.st = 'break'; apoc.t = 0; showHowTo(9000); setTimeout(() => Snd.voice('apoc2', 2, 15), 1800); }
   }
   else if (apoc.st === 'break') { if (apoc.t > 8 && !apoc.dead) startWave(); }
   else if (apoc.st === 'wave') {
