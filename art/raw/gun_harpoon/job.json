@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/gun_harpoon.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAADAAAAAgCAYAAABU1PscAAAEeElEQVR4nO2YXUxbZRjHf2+xM0bdFhPNwMFAmsFKMlYYsgDzSg0fG0tWMDIJo1nUmOzCu2kyExN34e4YMU4vCGZxzmR0FyTVJXq17CPL0iHTYpkrRSCMxBg2EjRoeh4vDn17zqG01A0hcf+k6Tmnz8f//57nfd73LTzC2kIt81xysF1TZBRwoLUdt9uNUorzA2ez+awJMpERgEpfPZ6SIpQyzQeCX6123oceSHzVDbywbat2UUrRvL8ZlysPkQRK5a0omUiCnp5PGR66utLcWbHSILKrqp7S4sLUAx1ApSJJKqKIaaGU0g5KwUDwXK65MyKXIFLpq8NTUgQoghdMIv6DHciinFh8AqUUYmkBSsEPN6/825xZkWswAWjzH0IQgsFzWkAsPpEsjYeRZ8V4LEd7BYggIILf3wEijI1PWsk7yQrp23I625yRLpmN7HKO/oOvAxAbn3SWiA3tbW8gImaZSWpOxMYnGApfXo6HlUtGkdY3ICdbvQAcGxwBkGRyEJRyAej1IHjh67QBvV4fTzz5NADhG5cwDANBUKjF79QEz4b3jn/Exyc+sLSGzAIwEgbvh6KcbPVybHCEpn1NKItr4HAnYI5qEucHztJZthGAL0fnKPdW8HxhIXl5LsI3LrHvQMuSpKdOnc7EW6u7HR2loqKKSOTmsiJsAm7HZwh4NxO9M52Kttj+kngl303z/iabgApPgXkzOkdLy6sAuFwu7e+EUspaPjbSJ5rLOf5NlPbXuvjlTowX99QRidy02VjFWAWo/pF7tnS9vaeX9PPInIve3s8wDEM/uzwc1z4Xv/2ePLdb34cGQzbyBduK9XV3+SbKSvNtv7vyTOGNTS9z48Mr7N27h/6+T+jrP6MHJXC4U78RZxeyviYxyZtzOSlken6B5xavk89CUwvaKfLTj6nFyxpscQANI6H9Jmbn+c0i3opr18IADA1HAHNgnt2Sj1JCX/8ZjgS6BHtxWHI9RFT66m33NTW7CYfDzhLSaNn6OKGpBXZW1nJr+Dq+6gaGwpfZWVmrbW4NX09eKucbEI9nB7tr6/h5JKrlZWqT2WEfj0Qi4TSwDWJoakEcJJ2kbT5LFrKnNj5DcUkxf/05r5+VlnQsaX3KklcppVulY+u9ZHUeHrqKr7rBmTYdOXn7nXf5/HTPEtLZIA/yafMfEo9nR0abXVX11vtsPDIi7RzoLt+EcinEEGbm/uDi9N/6x2RNWnyluuYlZn+fYWzsdrrYmUg88FYi7V7I2tpUfIZG5m0issBJalVPcHYBCuku2wTAaOwuX0TvA9BY4KaxwO0UoUfWMIzV5JgRtr0Qkhr9stJ8iN7nTe9mJu+lJrRhCLuqUq0x2fMXy+c/Py/rOvVVN3D06FscCXQR8G5me8kWk1h8hvFZU8B3dzOW0Zoc9rUA88hYRPP+Jo4EugCzdAASosmvq38kwLF1ONDazoYNGxAxECCYOr+ms18XSHugafN3YIi5dx/7dQoRSa7G605AOgjmnHAuQOsSWf/YWqHtI/xv8Q8Z+M4iR2VhCwAAAABJRU5ErkJggg==",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

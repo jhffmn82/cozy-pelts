@@ -207,15 +207,17 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
 #game.apoc #factBtn { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .06) 0 6px, transparent 6px 12px), linear-gradient(#6a2bd1, #3a137a); border-color: #22084a; box-shadow: 0 3px 0 #22084a; text-shadow: 0 2px 0 #22084a; }
 #game.apoc .badge, #game.apoc #toast, #game.apoc .tog { background: #2f4226; color: #e4ffd6; border-color: #4f7a35; }
 #game.apoc .trees { background: repeating-linear-gradient(90deg, transparent 0 4px, #4f7a35 4px 12px, transparent 12px 16px, #7bd84a 16px 22px, transparent 22px 26px); }
-#heartsBadge { gap: .3cqw; padding: 0 1.4cqw; }
-#heartsBadge img { width: 4.4cqw; height: 4.4cqw; background: transparent; border-radius: 0; }
+#game.apoc #heartsBadge { background: none; border: 0; box-shadow: none; padding: 0; height: auto; gap: .25cqw; flex-wrap: wrap; width: 19.2cqw; filter: drop-shadow(0 .3cqw 0 rgba(10, 20, 8, .8)); }   /* five to a row, like the old games */
+#heartsBadge img { width: 3.6cqw; height: 3.6cqw; background: transparent; border-radius: 0; }
+#game.apoc #dayBadge { display: none; }
+#game.apoc #toast { top: 11cqw; font-size: 2.9cqw; padding: .9cqw 2cqw; }
 #weaponBar { position: absolute; left: 2cqw; bottom: 2cqw; display: flex; gap: 1.2cqw; }
 #weaponBar button {
-  width: 9cqw; height: 9cqw; padding: 0; display: grid; place-items: center; cursor: pointer; position: relative;
+  width: 7.4cqw; height: 7.4cqw; padding: 0; display: grid; place-items: center; cursor: pointer; position: relative;
   background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw; box-shadow: 0 0 0 .4cqw #10170c;
 }
-#weaponBar button img { width: 6.6cqw; height: 6.6cqw; image-rendering: pixelated; }
-#weaponBar button span { position: absolute; right: .3cqw; bottom: 0; font: 700 2.4cqw var(--font); color: #b6ff7a; }
+#weaponBar button img { width: 5.4cqw; height: 5.4cqw; image-rendering: pixelated; }
+#weaponBar button span { position: absolute; right: .2cqw; bottom: -.2cqw; font: 700 2cqw var(--font); color: #b6ff7a; }
 #weaponBar button.on { border-color: var(--gold); box-shadow: 0 0 0 .4cqw #10170c, 0 0 1.6cqw rgba(244, 198, 79, .7); }
 #fireBtn {
   position: absolute; right: 2.4cqw; bottom: 2.4cqw; width: 17cqw; height: 17cqw; border-radius: 50%; cursor: pointer;
@@ -243,8 +245,8 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
 #howto b { color: #b6ff7a; letter-spacing: .1em; font-size: 3.4cqw; }
 #howto kbd { font: 700 2.8cqw var(--font); padding: 0 .9cqw; border: .3cqw solid #7bd84a; border-radius: .6cqw; background: #1d2817; color: #fffaf3; }
 #waveBtn {
-  position: absolute; right: 2cqw; top: 2cqw; height: 6.4cqw; padding: 0 2.4cqw; cursor: pointer;
-  font: 600 3.3cqw var(--font); color: #e4ffd6; background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw;
+  position: absolute; right: 2cqw; top: 2cqw; height: 5.2cqw; padding: 0 1.8cqw; cursor: pointer;
+  font: 600 2.8cqw var(--font); color: #e4ffd6; background: #2f4226; border: .7cqw solid #4f7a35; border-radius: 1.4cqw;
   box-shadow: 0 0 0 .4cqw #10170c; font-variant-numeric: tabular-nums;
 }
 #waveBtn:disabled { cursor: default; color: #a9d38f; }
@@ -883,6 +885,10 @@ function earn(n, x, y) {
   S.coins += n; dirtyPanel = true;
   if (x != null) say('+' + fmt(n) + ' coins', x, y, { color: '#ffe08a', size: 7, life: 1.6, rise: 12 });
 }
+function earnGoo(n, x, y) {               // after the sea turns, money is worthless; mutants are full of goo
+  S.goo = (S.goo || 0) + n; dirtyPanel = true;
+  if (x != null) say('+' + fmt(n) + ' goo', x, y, { color: '#b6ff7a', size: 6, life: 1.3, rise: 12, edge: '#1d3a0a' });
+}
 
 // ---------------------------------------------------------------- seals
 function rollType(rushy) {
@@ -1206,10 +1212,10 @@ function updateHunter(dt) {
       hunter.struck = true;
       const s = hunter.target;
       if (s && clubbable(s) && inReach(s)) {
-        if (s.kind) { hitMutant(s, dmg() * 1.5); Snd.bonk(); bleed(s.x, s.y - 10, 6); }
+        if (s.kind) { hitMutant(s, dmg() * 2); Snd.bonk(); bleed(s.x, s.y - 10, 6); }
         else hitSeal(s);
         if (S.lv.club >= CLUBS.length - 1)   // the tusk goes through the one behind it as well
-          for (const o of (s.kind ? mutants : seals)) if (o !== s && clubbable(o) && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) o.kind ? hitMutant(o, dmg() * 1.5) : hitSeal(o);
+          for (const o of (s.kind ? mutants : seals)) if (o !== s && clubbable(o) && inReach(o) && Math.sign(o.x - hunter.x) === hunter.dir) o.kind ? hitMutant(o, dmg() * 2) : hitSeal(o);
       } else Snd.whiff();
       hunter.pending = Math.max(0, hunter.pending - 1);
     }
@@ -1267,6 +1273,16 @@ function drawHunter() {
     g.save(); g.translate(cx, cy); g.rotate(hunter.dir * p * Math.PI * 4);
     spr(g, name, fi, 0, 28, hunter.dir < 0);
     g.restore();
+    return;
+  }
+  const G = S.apoc && GUN[S.weapon] && A['hunter_idle_empty'] && A[GUN[S.weapon].sprite] ? GUN[S.weapon] : null;
+  if (G) {
+    const walking = hunter.path || hunter.walking > 0, kick = hunter.recoil > 0 ? 2 : 0;
+    spr(g, walking ? 'hunter_walk_empty' : 'hunter_idle_empty', walking ? 1 + Math.floor(hunter.at * 15) % 8 : Math.floor(hunter.at * 6) % 9, hunter.x, hunter.y - hunter.z, hunter.dir < 0);
+    const a = apoc.aim ?? (hunter.dir < 0 ? Math.PI : 0), [hx, hy] = handAt(), m = A[G.sprite], f = m.f[0];
+    g.save(); g.translate(Math.round(hx - Math.cos(a) * kick), Math.round(hy - Math.sin(a) * kick)); g.rotate(a);
+    g.scale(GUN_K, Math.cos(a) < 0 ? -GUN_K : GUN_K);   // turned over when aiming left, so it is never upside down
+    g.drawImage(atlas, f[0], f[1], m.w, m.h, m.ox, m.oy, m.w, m.h); g.restore();
     return;
   }
   spr(g, name, fi, hunter.x - (hunter.recoil > 0 ? hunter.dir * 2 : 0), hunter.y - hunter.z, hunter.dir < 0);   // a kick back on each shot
@@ -1627,7 +1643,7 @@ function moveNozzle(tx, ty, sp, dt) {
   tube.nx += dx / d * sp * dt; tube.ny += dy / d * sp * dt; return false;
 }
 function updateContraption(dt) {
-  if (!S.factory || !REACH.length) return;
+  if (!S.factory || !REACH.length || (S.apoc && apoc.wrecked)) return;
   tube.t += dt; tube.shake = Math.max(0, tube.shake - dt);
   if (preys.length < 2 + S.factory && Math.random() < dt / (tierGap() * .8)) {
     const [x, y] = pick(REACH);
@@ -1678,6 +1694,11 @@ function slurped(type) {                  // out of the chute it comes, as money
   if (Math.random() < .5) for (let i = 0; i < 4; i++)
     drops.push({ x: CHUTE[0], y: CHUTE[1] + 6, z: 6, vx: rnd(-10, 30), vy: rnd(-4, 6), vz: rnd(5, 30), c: S.factory >= 2 && Math.random() < .5 ? '#7bd84a' : pick(REDS), s: 1, any: true });
 }
+function drawWreck(x, y, k) {             // what's left, still smoking
+  sprK(g, 'wreck', 0, x, y, false, k);
+  if (Math.random() < .04) addFx('fx_poof', x + rnd(-14, 14) * k, y - rnd(10, 30) * k, { fps: 6 });
+  if (Math.random() < .03) addFx('fx_flame', x + rnd(-12, 12) * k, y - rnd(4, 16) * k, { fps: 14 });
+}
 function drawSlicks() {
   for (const s of slicks) {
     const b = Math.sin(now * 1.1 + s.ph);
@@ -1719,27 +1740,28 @@ const MUT = {
   bat:    { sprite: 'mut_bat', hp: 5, value: 18, r: 12, top: 30, flies: true },
   bloat:  { sprite: 'mut_bloat', hp: 10, value: 20, r: 13, top: 30 },
   kraken: { sprite: 'mut_kraken', hp: 8, value: 22, r: 13, top: 24, swims: true },
-  mama:   { sprite: 'mut_mama', hp: 150, value: 400, r: 28, top: 70, boss: true },
+  mama:   { sprite: 'mut_mama', hp: 150, value: 400, r: 36, top: 72, boss: true },
   thulu:  { sprite: 'mut_thulu', hp: 900, value: 3000, r: 34, top: 100, boss: true, flies: true },
 };
 const LAST_WAVE = 11;                    // wave 11 is Sealthulu
 const APOC_UPG = [
-  { id: 'harpoon', base: 600, grow: 2.3, max: 5, name: () => 'Harpoon Gun', icon: () => 'i_harpoon',
-    ds: () => S.lv.harpoon ? `Hits for ${harpoonDmg(S.lv.harpoon + 1)} and goes through ${S.lv.harpoon + 1}. Pins them to the ice.` : 'Fires a barbed harpoon that goes through a mutant. Tap one to shoot.' },
-  { id: 'flamer', base: 1000, grow: 2.3, max: 5, name: () => 'Flamethrower', icon: () => 'i_flamer',
+  { id: 'harpoon', base: 120, grow: 1.8, max: 5, name: () => 'Harpoon Gun', icon: () => 'i_harpoon',
+    ds: () => `Hits for ${harpoonDmg(S.lv.harpoon + 1)} and goes through ${S.lv.harpoon + 1}. Pins them to the ice.` },
+  { id: 'flamer', base: 200, grow: 1.8, max: 5, name: () => 'Flamethrower', icon: () => 'i_flamer',
     ds: () => S.lv.flamer ? `Hotter and longer. Hold to keep burning. Smells like roast seal.` : 'A short cone of fire that keeps them burning. Hold to keep it going.' },
-  { id: 'gundrone', base: 1800, grow: 3, max: 3, name: () => 'Gun Drone', icon: () => 'i_gundrone',
+  { id: 'gundrone', base: 350, grow: 2.2, max: 3, name: () => 'Gun Drone', icon: () => 'i_gundrone',
     ds: () => ['A drone with a machine gun that circles you and shoots on its own.', 'A second gun drone.', 'A third gun drone. It is very loud up there.', 'Three gun drones.'][S.lv.gundrone] },
-  { id: 'hearts', base: 500, grow: 1.9, max: 7, name: () => 'Heart Container', icon: () => 'i_heartup',
+  { id: 'hearts', base: 100, grow: 1.55, max: 7, name: () => 'Heart Container', icon: () => 'i_heartup',
     ds: () => `One more heart, and every heart filled back up.` },
-  { id: 'parka', base: 700, grow: 2.1, max: 5, name: () => 'Armored Parka', icon: () => 'i_parka',
+  { id: 'parka', base: 120, grow: 1.75, max: 5, name: () => 'Armored Parka', icon: () => 'i_parka',
     ds: () => `Take ${Math.round(100 - 100 * Math.pow(.8, S.lv.parka + 1))}% less damage. Bits of the factory sewn in.` },
-  { id: 'aid', base: 0, grow: 1, max: 999, name: () => 'First Aid', icon: () => 'heart_full', price: () => 150 + 100 * S.wave,
+  { id: 'aid', base: 0, grow: 1, max: 999, name: () => 'First Aid', icon: () => 'heart_full', price: () => 50 + 25 * S.wave,
     ds: () => 'Two hearts back. Mostly duct tape.' },
 ];
-const harpoonDmg = lv => 4 + 3 * (lv - 1);
+const harpoonDmg = lv => 6 + 4 * (lv - 1);
 const maxHp = () => 6 + 2 * S.lv.hearts;          // in half hearts
 const hurtMult = () => Math.pow(.8, S.lv.parka);
+const mutantPower = () => 1.6 * (1 + .07 * Math.max(0, S.wave - 1));   // they hit hard from the start, and harder every wave
 let mutants = [], shots = [], orbs = [], acids = [], rings = [], tongues = [], flames = [];
 const apoc = { st: 'calm', t: 0, queue: [], spawnT: 0, inv: 0, hold: null, fireCd: 0, gunT: [], banner: 0, dead: false, flash: 0, keys: {} };
 const bigTmp = document.createElement('canvas'); bigTmp.width = 180; bigTmp.height = 180;
@@ -1747,7 +1769,8 @@ const bg2 = bigTmp.getContext('2d');
 
 function apocCost(u) { return u.price ? u.price() : Math.ceil(u.base * Math.pow(u.grow, S.lv[u.id])); }
 function startApocalypse() {
-  S.apoc = 1; S.wave = 0; S.hp = maxHp(); S.weapon = 'club';
+  S.apoc = 1; S.wave = 0; S.hp = maxHp(); S.goo = 0;
+  S.lv.harpoon = Math.max(1, S.lv.harpoon); S.weapon = 'harpoon';   // everyone starts the end of the world armed
   const sold = pValue(S.sledB) + pValue(S.heapB) + pValue(sled.cargoB || []);   // the sled's last load goes for whatever the trader will pay
   if (sold) { S.coins += sold; S.sledB = []; S.heapB = []; sled.cargoB = []; sled.cargo = 0; }
   apoc.st = 'intro'; apoc.t = 0; apoc.banner = 0; shake = 1.2;
@@ -1756,11 +1779,22 @@ function startApocalypse() {
   for (const d of drones) d.st = 'flee';
   $('#banner').hidden = false; $('#banner').classList.remove('go'); void $('#banner').offsetWidth; $('#banner').classList.add('go');
   Snd.play('sting', { vol: 1 }); setTimeout(() => Snd.voice('apoc', 3), 900);
+  preys = []; tube.lumps = []; coinFx = [];
+  boom(CONTRAPTION.x, CONTRAPTION.y - 40, 46, 250); if (S.lv.drones) boom(CHIPPER.x, CHIPPER.y - 26, 30, 900);
+  setTimeout(() => toast('Your coins are worthless now. Mutants are full of goo, and goo buys guns.', 4200), 5600);
   enterApocUI(); save();
+}
+function boom(x, y, r, delay) {           // a machine goes up: fire, green muck, bits of pipe, then a smoking wreck
+  setTimeout(() => {
+    apoc.wrecked = true; shake = Math.max(shake, .9); Snd.play('pop', { vol: 1, rate: .7 }); Snd.play('clank', { vol: .9, rate: .8 });
+    for (let i = 0; i < 9; i++) setTimeout(() => { addFx('fx_toxic', x + rnd(-r, r) * .7, y + rnd(-r, r) * .6, { fps: 13 }); addFx('fx_flame', x + rnd(-r, r) * .5, y + rnd(-r, r) * .5, { fps: 16 }); }, i * 70);
+    for (let i = 0; i < 26; i++) drops.push({ x, y: y + r * .8, z: r * .6, vx: rnd(-90, 90), vy: rnd(-30, 30), vz: rnd(30, 110), c: pick(['#7bd84a', '#3a3f5c', '#e8384b', '#c9cfe0', '#ffb347']), s: 2, any: true });
+  }, delay);
 }
 function enterApocUI() {
   $('#game').classList.add('apoc'); document.body.classList.add('apoc');
   $('#panel h1').textContent = 'SEALOCALYPSE';
+  $('#coinIcon').src = icons.i_goo; $('#peltBox span').textContent = 'GOO:';
   buildApocPanel(); dirtyPanel = true;
 }
 function rosterFor(w) {
@@ -1812,7 +1846,7 @@ function krakenSpot() {                    // a bit of open water near where the
 const near = (m, r) => Math.hypot(m.x - hunter.x, m.y - hunter.y) < r;
 function hurtHunter(n, x, y) {
   if (apoc.inv > 0 || apoc.dead) return;
-  S.hp -= n * hurtMult(); apoc.inv = 1; apoc.flash = .25; shake = .2; dirtyPanel = true;
+  S.hp -= n * mutantPower() * hurtMult(); apoc.inv = 1; apoc.flash = .25; shake = .2; dirtyPanel = true;
   Snd.play('hurt', { vol: .9 }); if (Math.random() < .3) quip('ow', 1, true);
   bleed(hunter.x, hunter.y - 14, 8);
   if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * 8, hunter.y + (hunter.y - y) / d * 4); hunter.x = px; hunter.y = py; hunter.path = null; }
@@ -1831,7 +1865,7 @@ function hitMutant(m, n, opts = {}) {
 function killMutant(m) {
   m.dead = true; S.stats.kills = (S.stats.kills || 0) + 1;
   const v = Math.round(m.T.value * (1 + .12 * S.wave));
-  earn(v, m.x, m.y - (m.z || 0) - m.T.top);
+  earnGoo(v, m.x, m.y - (m.z || 0) - m.T.top);
   Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
   for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
@@ -1849,7 +1883,7 @@ function blast(x, y, r, hurtsHunter) {   // a bloater going off: it hurts everyt
 }
 function updateMutant(m, dt) {
   m.t += dt; m.at += dt; m.cd -= dt; m.flash = Math.max(0, m.flash - dt);
-  if (m.burn > 0) { m.burn -= dt; m.hp -= (3 + S.lv.flamer) * dt; if (Math.random() < dt * 8) addFx('fx_flame', m.x + rnd(-6, 6), m.y - (m.z || 0) - rnd(4, 16), { fps: 18 }); if (m.hp <= 0 && !m.dead) killMutant(m); }
+  if (m.burn > 0) { m.burn -= dt; m.hp -= (5 + 1.5 * S.lv.flamer) * dt; if (Math.random() < dt * 8) addFx('fx_flame', m.x + rnd(-6, 6), m.y - (m.z || 0) - rnd(4, 16), { fps: 18 }); if (m.hp <= 0 && !m.dead) killMutant(m); }
   if (m.dead) return;
   const hx = hunter.x, hy = hunter.y, dx = hx - m.x, dy = hy - m.y, d = Math.hypot(dx, dy) || 1;
   if (Math.abs(dx) > 2) m.dir = dx < 0 ? -1 : 1;
@@ -1906,6 +1940,8 @@ function updateMutant(m, dt) {
     }
     case 'thulu': updateThulu(m, dt, d); break;
   }
+  if ((m.kind === 'frog' || m.kind === 'mama') && m.st !== 'in' && hunter.z < 6 && Math.hypot(hunter.x - m.x, (hunter.y - m.y) * 1.4) < m.T.r + 6)
+    hurtHunter(m.kind === 'mama' ? 2 : 1, m.x, m.y);   // and bumping into one hurts
   if (!MUT[m.kind].flies && m.kind !== 'kraken' && m.st !== 'in' && m.kind !== 'thulu') {   // shoved apart a little
     for (const o of mutants) if (o !== m && !o.dead && !o.T.flies && o.kind !== 'kraken') {
       const ox = m.x - o.x, oy = m.y - o.y, od = Math.hypot(ox, oy);
@@ -1987,11 +2023,24 @@ function updateShots(dt) {
   flames = flames.filter(f => f.t < f.life);
 }
 // ---- the hunter's side of it
+const GUN = { harpoon: { sprite: 'gun_harpoon', muzzle: [36, -4] }, flamer: { sprite: 'gun_flamer', muzzle: [36, -9] } };
+const GUN_K = .8;                          // the guns are drawn a little smaller than they were painted
+function handAt() { return [hunter.x + hunter.dir * (hunter.jump ? 4 : 15), hunter.y - 16 - hunter.z]; }   // his front mitten
+function aimAt(x, y) {                    // point the gun at a spot: he turns to face it
+  const [hx, hy] = handAt();
+  if (Math.abs(x - hunter.x) > 3) hunter.dir = x < hunter.x ? -1 : 1;
+  const [hx2, hy2] = handAt(); apoc.aim = Math.atan2(y - hy2, x - hx2);
+}
+function muzzle() {                       // the end of the barrel, wherever the gun is pointing
+  const G = GUN[S.weapon], [hx, hy] = handAt(), a = apoc.aim ?? (hunter.dir < 0 ? Math.PI : 0), left = Math.cos(a) < 0;
+  const mx = G.muzzle[0] * GUN_K, my = G.muzzle[1] * GUN_K * (left ? -1 : 1);
+  return [hx + Math.cos(a) * mx - Math.sin(a) * my, hy + Math.sin(a) * mx + Math.cos(a) * my];
+}
 function fireAt(x, y) {                   // the equipped gun, aimed at a point
   if (apoc.dead) return;
   const w = S.weapon;
-  if (Math.abs(x - hunter.x) > 2) hunter.dir = x < hunter.x ? -1 : 1;
-  const ax = hunter.x + hunter.dir * (hunter.jump ? 8 : 30), ay = hunter.y - 19 - hunter.z;   // the muzzle, held at the hip
+  aimAt(x, y);
+  const [ax, ay] = GUN[w] ? muzzle() : [hunter.x, hunter.y - 19 - hunter.z];
   const a = Math.atan2(y - ay, x - ax);
   if (w === 'harpoon' && apoc.fireCd <= 0) {
     const lv = S.lv.harpoon;
@@ -1999,15 +2048,16 @@ function fireAt(x, y) {                   // the equipped gun, aimed at a point
     apoc.fireCd = .75 * Math.pow(.88, lv - 1); hunter.cheer = 0; hunter.recoil = .15;
     Snd.play('harpoon', { vol: .7, rate: rnd(.95, 1.08) });
   } else if (w === 'flamer') {
-    const lv = S.lv.flamer, range = 42 + 5 * lv;
+    const lv = S.lv.flamer, range = 56 + 6 * lv;
+    apoc.jet = { until: now + .12, range };
     if (apoc.fireCd <= 0) {
       apoc.fireCd = .09;
-      for (let i = 0; i < 2; i++) { const aa = a + rnd(-.3, .3), sp = rnd(90, 130); flames.push({ x: ax, y: ay, vx: Math.cos(aa) * sp, vy: Math.sin(aa) * sp, t: 0, life: range / sp }); }
+      for (let i = 0; i < 2; i++) { const aa = a + rnd(-.25, .25), sp = rnd(80, 120); flames.push({ x: ax, y: ay, vx: Math.cos(aa) * sp, vy: Math.sin(aa) * sp, t: 0, life: range / sp * rnd(.6, 1.1) }); }
       for (const m of mutants) {
         if (m.dead) continue;
         const mx = m.x - ax, my = (m.y - (m.z || 0) - m.T.top * .4) - ay, md = Math.hypot(mx, my);
         let da = Math.abs(Math.atan2(my, mx) - a); if (da > Math.PI) da = Math.PI * 2 - da;
-        if (md < range + m.T.r && da < .45) hitMutant(m, (10 + 5 * (lv - 1)) * .09, { burn: true, quiet: true });
+        if (md < range + m.T.r && da < .5) hitMutant(m, (16 + 8 * (lv - 1)) * .09, { burn: true, quiet: true });
       }
       if (now - (apoc.flameSnd || -9) > .5) { apoc.flameSnd = now; Snd.play('flame', { vol: .5, rate: rnd(.95, 1.05) }); }
     }
@@ -2075,7 +2125,7 @@ function updateApoc(dt) {
     const m = nearestMutant(gx, gy + 20, 150);
     if (m && apoc.gunT[i] <= 0) {
       apoc.gunT[i] = .2; const a = Math.atan2(m.y - (m.z || 0) - m.T.top * .4 - gy, m.x - gx);
-      shots.push({ kind: 'bullet', x: gx, y: gy, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, t: 0, dmg: 1 + .4 * (S.lv.gundrone - 1) });
+      shots.push({ kind: 'bullet', x: gx, y: gy, vx: Math.cos(a) * 230, vy: Math.sin(a) * 230, t: 0, dmg: 1.6 + .6 * (S.lv.gundrone - 1) });
       if (now - (apoc.gunSnd || -9) > .25) { apoc.gunSnd = now; Snd.play('gun', { vol: .35, rate: rnd(.95, 1.1) }); }
     }
   }
@@ -2119,7 +2169,7 @@ function drawMutant(m) {
   drawFlashy(name, fi, m.x, m.y - (m.z || 0), m.dir > 0, m.flash, k);
   if (m.burn > 0 && Math.random() < .3) sparkles.push({ x: m.x + rnd(-6, 6), y: m.y - (m.z || 0) - rnd(4, 18), t: 0, life: .3, c: '#ffb347' });
   if (m.T.boss) {                          // a health bar across the top of the screen
-    const w = 160, x = (W - w) >> 1, y = 26;
+    const w = 84, x = (W - w) >> 1, y = 7;
     g.fillStyle = 'rgba(20,10,30,.8)'; g.fillRect(x - 1, y - 1, w + 2, 5);
     g.fillStyle = m.kind === 'thulu' ? '#c03cff' : '#7bd84a'; g.fillRect(x, y, Math.max(0, Math.round(w * m.hp / m.maxHp)), 3);
   } else if (m.hp < m.maxHp) {
@@ -2144,7 +2194,12 @@ function drawApocAir() {                   // everything above the ice: shots, b
     else if (s.kind === 'harpoon') { g.save(); g.translate(Math.round(s.x), Math.round(s.y)); g.rotate(s.a); const m = A.harpoon, f = m.f[0]; g.drawImage(atlas, f[0], f[1], m.w, m.h, -m.w + 4, -(m.h >> 1), m.w, m.h); g.restore(); }
     else { g.fillStyle = '#fff3a0'; g.fillRect(Math.round(s.x), Math.round(s.y), 2, 1); }
   }
-  for (const f of flames) { const p = f.t / f.life; g.globalAlpha = 1 - p * .6; g.fillStyle = p < .3 ? '#fff3a0' : p < .6 ? '#ffb347' : '#e8384b'; const s = 2 + Math.round(p * 3); g.fillRect(Math.round(f.x) - (s >> 1), Math.round(f.y) - (s >> 1), s, s); }
+  if (apoc.jet && now < apoc.jet.until && S.weapon === 'flamer' && A.fx_flamejet) {   // the jet itself, stretched to its reach
+    const [mx, my] = muzzle(), m = A.fx_flamejet, f = m.f[Math.floor(now * 16) % m.f.length], sx = apoc.jet.range / m.w;
+    g.save(); g.translate(Math.round(mx), Math.round(my)); g.rotate(apoc.aim); g.scale(sx, Math.cos(apoc.aim) < 0 ? -1.15 : 1.15);
+    g.drawImage(atlas, f[0], f[1], m.w, m.h, -2, -m.h / 2, m.w, m.h); g.restore();
+  }
+  for (const f of flames) { const p = f.t / f.life; g.globalAlpha = 1 - p * .7; g.fillStyle = p < .3 ? '#fff3a0' : p < .6 ? '#ffb347' : '#e8384b'; const s = 3 + Math.round(p * 5); g.fillRect(Math.round(f.x) - (s >> 1), Math.round(f.y) - (s >> 1), s, s); }
   g.globalAlpha = 1;
   for (let i = 0; i < S.lv.gundrone; i++) {
     const gx = hunter.x + Math.cos(now * 1.6 + i * 2.1) * 34, gy = hunter.y - 62 + Math.sin(now * 1.6 + i * 2.1) * 8;
@@ -2296,9 +2351,9 @@ function render() {
   if (!S.apoc) for (let i = 0; i < dogs(); i++) list.push([dogPos(i)[1] + .1, () => drawDog(i)]);
   for (const m of mutants) list.push([m.y + (m.T.flies ? 80 : 0), () => drawMutant(m)]);
   if (heapN() > 0) list.push([SLED.y + 6, drawHeap]);
-  if (S.lv.drones) list.push([CHIPPER.y, drawChipper]);
+  if (S.lv.drones) list.push([CHIPPER.y, S.apoc && apoc.wrecked ? () => drawWreck(CHIPPER.x + 4, CHIPPER.y + 1, .75) : drawChipper]);
   if (S.lv.decoy) list.push([DECOY.y, () => spr(g, 'decoy', 0, DECOY.x, DECOY.y, false)]);
-  if (S.factory) list.push([CONTRAPTION.y, drawContraption]);
+  if (S.factory) list.push([CONTRAPTION.y, S.apoc && apoc.wrecked ? () => drawWreck(CONTRAPTION.x, CONTRAPTION.y, 1.1) : drawContraption]);
   if (gull.state === 'perch' && !S.apoc) list.push([gull.y, drawGull]);
   list.sort((a, b) => a[0] - b[0]);
   for (const [, fn] of list) fn();
@@ -2410,7 +2465,7 @@ function buildApocPanel() {
   for (const k in cardEls) delete cardEls[k];
   for (const u of APOC_UPG) {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.id = 'up-' + u.id;
-    b.innerHTML = `<span class="ico"><img alt=""></span><span class="txt"><span class="nm"><i></i><small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.i_coin}"><span></span></span>`;
+    b.innerHTML = `<span class="ico"><img alt=""></span><span class="txt"><span class="nm"><i></i><small></small></span><span class="ds"></span></span><span class="price"><img alt="" src="${icons.i_goo}"><span></span></span>`;
     b.addEventListener('click', () => buyApoc(u));
     wrap.appendChild(b);
     cardEls[u.id] = { b, ico: b.querySelector('.ico img'), nm: b.querySelector('.nm i'), lv: b.querySelector('small'), ds: b.querySelector('.ds'), pr: b.querySelector('.price span') };
@@ -2426,8 +2481,8 @@ function buildApocPanel() {
 function buyApoc(u) {
   Snd.init();
   const c = apocCost(u);
-  if ((S.lv[u.id] || 0) >= u.max || S.coins < c || (u.id === 'aid' && S.hp >= maxHp())) return;
-  S.coins -= c; Snd.buy();
+  if ((S.lv[u.id] || 0) >= u.max || (S.goo || 0) < c || (u.id === 'aid' && S.hp >= maxHp())) return;
+  S.goo -= c; Snd.buy();
   if (u.id === 'aid') S.hp = Math.min(maxHp(), S.hp + 4);
   else {
     S.lv[u.id]++;
@@ -2439,16 +2494,16 @@ function buyApoc(u) {
   dirtyPanel = true; save();
 }
 function refreshApocPanel() {
-  $('#coinCount').textContent = fmt(S.coins);
+  $('#coinCount').textContent = fmt(S.goo || 0);
   for (const u of APOC_UPG) {
     const e = cardEls[u.id]; if (!e) continue;
     const lv = S.lv[u.id] || 0, maxed = lv >= u.max, c = apocCost(u), full = u.id === 'aid' && S.hp >= maxHp(), ico = icons[u.icon()];
     if (e.ico.src !== ico) e.ico.src = ico;
     e.nm.textContent = u.name(); e.lv.textContent = u.id === 'aid' ? '' : `Lv ${lv}`; e.ds.textContent = u.ds();
     e.pr.textContent = maxed ? 'MAX' : fmt(c);
-    e.b.disabled = maxed || full || S.coins < c;
-    e.b.classList.toggle('poor', !maxed && S.coins < c); e.b.classList.toggle('maxed', maxed);
-    e.b.setAttribute('aria-label', `${u.name()}. ${u.ds()} ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' coins'}`);
+    e.b.disabled = maxed || full || (S.goo || 0) < c;
+    e.b.classList.toggle('poor', !maxed && (S.goo || 0) < c); e.b.classList.toggle('maxed', maxed);
+    e.b.setAttribute('aria-label', `${u.name()}. ${u.ds()} ${maxed ? 'Maxed' : 'Costs ' + fmt(c) + ' goo'}`);
   }
   const fb = $('#factBtn'), alive = mutants.length + apoc.queue.length;
   $('#factIcon').src = icons.i_harpoon;
@@ -2500,7 +2555,7 @@ function apocHud() {
   }
   const wb = $('#waveBtn'), alive = mutants.length + apoc.queue.length;
   wb.disabled = apoc.st !== 'break' || apoc.dead;
-  wb.textContent = apoc.dead ? 'Game over' : apoc.st === 'wave' ? `${alive} mutant${alive === 1 ? '' : 's'} left` : apoc.st === 'break' ? `Wave ${S.wave + 1} in ${Math.max(0, Math.ceil(8 - apoc.t))} s` : 'Here they come...';
+  wb.textContent = apoc.dead ? 'Game over' : apoc.st === 'wave' ? `Wave ${S.wave} · ${alive} left` : apoc.st === 'break' ? `Wave ${S.wave + 1} in ${Math.max(0, Math.ceil(8 - apoc.t))}` : 'Here they come';
 }
 function refreshHud() {
   const ap = !!S.apoc;
@@ -2671,7 +2726,7 @@ async function start(data) {
   const away = restore(data);
   syncMachines(); pollute();
   buildPanel(icons);
-  if (S.apoc) { enterApocUI(); apoc.st = 'break'; apoc.t = 0; S.hp = Math.max(S.hp, 2); if (S.inWave) { S.wave--; S.inWave = 0; } setTimeout(() => showHowTo(7000), 600); }   // a wave cut short by a reload plays again
+  if (S.apoc) { apoc.wrecked = true; S.lv.harpoon = Math.max(1, S.lv.harpoon); enterApocUI(); apoc.st = 'break'; apoc.t = 0; S.hp = Math.max(S.hp, 2); if (S.inWave) { S.wave--; S.inWave = 0; } setTimeout(() => showHowTo(7000), 600); }   // a wave cut short by a reload plays again
   if (location.hash === '#sealocalypse' && !S.apoc) {   // a shortcut for trying the ending without an hour of seals
     S.factory = Math.max(S.factory, 2); S.coins = Math.max(S.coins, TIER_COST[2] + 4000); syncMachines(); pollute();
     setTimeout(() => toast('Test shortcut: the contraption is at tier 2, and you have the coins for tier 3.', 4200), 800);
@@ -2693,7 +2748,8 @@ async function start(data) {
     Object.assign(tube, { lumps: [], st: 'roam', prey: null }); preys = []; slicks = []; coinFx = [];
     mutants = []; shots = []; orbs = []; acids = []; rings = []; tongues = []; flames = []; drones.length = 0;
     Object.assign(apoc, { st: 'calm', t: 0, queue: [], dead: false, hold: null, press: null, inv: 0, flash: 0, said: false, lowSaid: 0 });
-    $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS';
+    $('#game').classList.remove('apoc'); document.body.classList.remove('apoc'); $('#panel h1').textContent = 'COZY PELTS'; apoc.wrecked = false;
+    $('#coinIcon').src = icons.i_coin; $('#peltBox span').textContent = 'COINS:';
     $('#over').hidden = true; $('#banner').hidden = true; $('#howto').classList.remove('show'); heartsShown = ''; hunter.jump = null; hunter.z = 0;
     hunter.x = 112; hunter.y = 172; hunter.path = null; hunter.target = null;
     gull.state = 'perch'; gull.x = PERCH.x; gull.y = PERCH.y;
@@ -2718,6 +2774,7 @@ async function start(data) {
     tap(x, y);
   });
   view.addEventListener('pointermove', e => {
+    if (S.apoc && e.pointerType === 'mouse' && GUN[S.weapon] && !apoc.dead) { const [x, y] = worldPoint(e); aimAt(x, y); }
     if (!apoc.press) return;
     const [x, y] = worldPoint(e); apoc.press.x = x; apoc.press.y = y; if (apoc.hold) apoc.hold = [x, y];
   });
@@ -2743,7 +2800,7 @@ async function start(data) {
       const k = e.key.toLowerCase();
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(k)) { apoc.keys[k] = true; if (k.startsWith('arrow')) e.preventDefault(); }
       const pickW = { 1: 'club', 2: 'harpoon', 3: 'flamer' }[e.key];
-      if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; }
+      if (pickW && (pickW === 'club' || S.lv[pickW])) { S.weapon = pickW; dirtyPanel = true; apoc.aim = hunter.dir < 0 ? Math.PI : 0; }
       if (e.key === ' ') { e.preventDefault(); Snd.init(); if (!e.repeat) jump(); }   // never a click on whatever button has focus
       if (k === 'j' || k === 'f' || k === 'enter') { e.preventDefault(); Snd.init(); apoc.keys[k] = true; }   // held, like FIRE
       return;
@@ -2786,7 +2843,7 @@ async function start(data) {
   for (let i = 0; i < 2; i++) spawnSeal(false);
   for (const s of seals) { const d = deepSpot(s) || [s.lx, s.ly]; s.state = 'idle'; s.x = d[0]; s.y = d[1]; s.alpha = 1; s.next = rnd(1, 3); }
   window.__cp = { get S() { return S; }, TYPES, Snd, seals: () => seals, hunter, gull, sled, drones, tube, chipper, apoc, mutants: () => mutants, orbs: () => orbs, spawnMutant, startWave, startApocalypse, hitMutant, fireAt, tap, spawnSeal, hitSeal, tossFish, sendSled, syncMachines, buyFactory,
-    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), costOf: id => { const u = UPG.find(u => u.id === id); return S.lv[id] >= u.max ? 1e18 : cost(u); }, tierCost: () => TIER_COST[S.factory] ?? 1e18, jump, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
+    refresh: () => { dirtyPanel = true; }, buy: id => buy(UPG.find(u => u.id === id)), costOf: id => { const u = UPG.find(u => u.id === id); return S.lv[id] >= u.max ? 1e18 : cost(u); }, tierCost: () => TIER_COST[S.factory] ?? 1e18, jump, aimAt, muzzle, setDebug: d => debug = d, step: n => { for (let i = 0; i < n; i++) update(1 / 60); render(); }, A };
   last = performance.now();
   let faults = 0;
   const loop = t => {

@@ -1,0 +1,17 @@
+{
+ "endpoint": "/create-image-pixen",
+ "body": "art/bodies/gun_flamer.json",
+ "response": {
+  "usage": {
+   "type": "generations",
+   "generations": 1.0
+  },
+  "image": {
+   "type": "base64",
+   "base64": "iVBORw0KGgoAAAANSUhEUgAAADAAAAAgCAYAAABU1PscAAAE8klEQVR4nO2YXWwUVRTHf3e2SqKAPNC1obS2FB/K1kI16W4b0jTB1qpJ2aI8APHFWPTBGBPSxvTFBxJiSnzzASnygsWYIKwlIauVWAGXbRMT2O6C8qFoC8HS8FWiiJ25PszO7czO7G5bavvCP5nMveece+75nzv33JmBR1hYiIy+zNBl9nNBZvTz2c8JtExBV1MxB3asUQH1dgQ42Fml+lkgezsCXO4LW2Pz2c8abTHd4ddFYFf/Vc4n7gBwYMcayksKuXPzb3tQXhfBugoGT11C0xyJn3MSj6/QHSS8ltkx6cHOKrZ2J+ntCNDYWgPA/Vv38k4UP3mRbbtTueaZFT6ckDIxbHCk3icACryM6kOvABCLH1OybbtTMBXQTCGZAxKbL/6jktsW0+WRep/IJCDbt3eqTix+jLKVywGwy73Qs7eb3o4AQgi2dieVfc/ebkLBFuKDUTuJfBveU689JqhfBGNrBNfPmSZ2AtLKfKixLj05PF22TBmEGusQQkNKw4MAlJcUOmwtuSY0OwkAqzCwtTvpFbCXXpEMPyHYg5OABAhUV1HbEKS1OUzftxEAVja+BET4JfUztQ1BivzPEno+4CIAsDpUkW4N0NocVvJAdRWhxjraeRshNN7cspHa0CpEgQbdSXo+/wqfbyqXlt5EEoD2G7p8/SlnzWmL6bIA4Kd9LbzwVtQzqOunjgPw6ftQufk1AG6MexeX7w4NesoBDMMg3LJJ9UtefDndijjkbn0fAJnBF6UfowJARg5NbU5N01T27ajcbDq6dLiVwuWC/V987bJJLzcAR/v7VDuVSFLbEHT4HR34xtPWS5+JfeMGk1fAaxMDZraGTpjZnJycBMzK9G7DHwzFf6W3I8C2LRv57OCRrJMAjr0ydGKQyucqVf/PK7dV+/b4TddYux5g/7V/VXvyms+7jCbOJFyO4icvmqSkwScnSonFj9G+vZP27a8SHzjtsL3cFwagojXC6e9/VHLdMImcHz6vZFdGx5FSuuQWfhu5gRC24jQqeaCZ4VrBWwTEzuiIeqgTZxJUr6tm+KxJJnXGzISUoEuDYG2LazILsR8ueMp9mqb8acJ8lm2nO6lEEt3QEUIo/d1b9x0+vly/yPMcsVbA8eI2fDahHHnBvlL2JF1ITTiCMtKPkLUCQkBRUSkA10YfKFtLZsfI7/fx+bLHkEkAQAwORWWwtiWdbd3D3H2gSinVUuu6oSY1pGFLgqR4RTmHI3vUOF2f2h92uQWfT3PYTIcAAINDUTaF33EZFq8oy+vMHpiUUiUhI3gByF39V+3DXCfxzuhILn1OxazfILuaivH5NHZGR1QSMgKfc+RyKgE2VFUDsKq8wtOo52juUjqNeR4KM/3Kmo4vaV+JaczxUPA8yOywVgBQdVsIwfGkWYms7wU7AuuW8deEswz+X8hVp2Tz2hoWP7lEXUsWL2XJ4qUOo+D61a6B5SWFtO+5DPPwXZxzBZ4pLVPtsbExT5uK1shcxjNjZCMgm9fWOAR+vx8wiViPUuYYML+j698bmLsI8yDrCtizb4ff72fi3l0A+x8IhTc+Pmc15+W3iuc50Ly2xkHAMKZORE3TplM65yV4yLKJS1aWuoK2YJdjBup1LRjkBxuKs/37UVdXk8NmQeF6B+lqKsbIeIfSNDAM8w4o/UfHr3r5mFfk+50xGx+PMBP8B45K6scKmDIPAAAAAElFTkSuQmCC",
+   "format": "png"
+  },
+  "enhanced_prompt": null,
+  "enhance_usage": null
+ }
+}

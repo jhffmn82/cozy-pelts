@@ -1,0 +1,14 @@
+{
+ "endpoint": "/vfx",
+ "body": "art/bodies/vfx_flamejet.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "cc4f7315-d459-4450-acf9-025a936e72da",
+  "status": "processing",
+  "quoted_generations": 1
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 1.0
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "fps": 12,
+ "kind": "new",
+ "loop": true,
+ "name": "vfx_flamejet",
+ "files": {
+  "vfx-flamejet.gif": "https://api.pixellab.ai/mcp/pixel-tools/51f7855d-e690-47eb-bebf-8562a9b5ef25/vfx-flamejet.gif",
+  "vfx-flamejet.png": "https://api.pixellab.ai/mcp/pixel-tools/51f7855d-e690-47eb-bebf-8562a9b5ef25/vfx-flamejet.png",
+  "vfx-flamejet.json": "https://api.pixellab.ai/mcp/pixel-tools/51f7855d-e690-47eb-bebf-8562a9b5ef25/vfx-flamejet.json"
+ },
+ "parts": [],
+ "anchor": {
+  "x": 0,
+  "y": 16,
+  "kind": "origin"
+ },
+ "artist": "lite",
+ "canvas": {
+  "h": 32,
+  "w": 64
+ },
+ "frames": 8,
+ "message": "A 64x32 looping flamethrower jet: a bright yellow core at the left edge widens into an orange-to-red billowing cone with licking tongues, ending in a dark smoke puff on the right, with a few sparks flying out. Try the page sliders to change the flame colours or the sparks; the cone's shape is set in the recipe itself.",
+ "edit_url": "https://pixellab.ai/create-vfx?effect=ba5f96b6-251d-4875-8719-f2cea2b0a483",
+ "effect_id": "ba5f96b6-251d-4875-8719-f2cea2b0a483",
+ "gif_exact": true,
+ "result_id": "51f7855d-e690-47eb-bebf-8562a9b5ef25",
+ "billing_usage": {
+  "usd": 0.0,
+  "type": "generations",
+  "generations": 1.0
+ },
+ "generation_id": "9395e8ee-99ef-4164-ad54-b789cac412f5",
+ "billing_charged": true,
+ "generation_mode": "vfx",
+ "pixel_tools_image": true,
+ "quoted_generations": 1
+}

@@ -1,0 +1,11 @@
+{
+ "description": "a smoking pile of twisted burnt metal wreckage and broken pipes with small flames and puddles of glowing green goo, side view, pastel winter pixel art game sprite",
+ "image_size": {
+  "width": 64,
+  "height": 48
+ },
+ "no_background": true,
+ "outline": "single color outline",
+ "detail": "medium detail",
+ "view": "side"
+}

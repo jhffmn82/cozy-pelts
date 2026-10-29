@@ -65,6 +65,14 @@ def vfx_frames(name):
         r = f["frame"]
         out.append(sheet.crop((r["x"], r["y"], r["x"] + r["w"], r["y"] + r["h"])))
         durs.append(f.get("duration", 83))
+    if name == "vfx_flamejet":   # it came with a black smoke ball on the end that reads as a cannonball; burn it off
+        for im in out:
+            px = im.load()
+            for y in range(im.height):
+                for x in range(im.width):
+                    r, g, b, a = px[x, y]
+                    if a and r * .3 + g * .59 + b * .11 < 90:
+                        px[x, y] = (0, 0, 0, 0)
     piv = meta["frames"][0].get("pivot", {"x": 0.5, "y": 0.5})
     return out, (round(piv["x"] * out[0].width), round(piv["y"] * out[0].height)), durs
 
@@ -86,7 +94,8 @@ ANIMS = {
     "drone": ("drone_fly", (24, 40)),
     # the mutants and the two bosses stand on their feet (None: the bottom centre of the first frame)
     "mut_frog": ("a_frog", None), "mut_bat": ("a_bat", None), "mut_bloat": ("a_bloat", None),
-    "mut_kraken": ("a_kraken", None), "mut_mama": ("a_mama", None), "mut_thulu": ("a_thulu", None),
+    "mut_kraken": ("a_kraken", None), "mut_mama": ("a_mama2", None), "mut_thulu": ("a_thulu", None),
+    "hunter_idle_empty": ("hw_empty_idle", (35, 77)), "hunter_walk_empty": ("hw_empty_walk", (35, 77)),   # hands free for a gun that turns
 }
 for w in ("salmon", "bone", "anchor", "tusk"):   # the hunter with each club, cut from 80x80 crops of the 96x84 frames
     ANIMS[f"hunter_idle_{w}"] = (f"hw_{w}_idle", (35, 77))
@@ -102,13 +111,15 @@ STILLS = {
     "ball_red": "ball_red", "ball_cream": "ball_cream", "nozzle": "nozzle", "sludge": "sludge", "deadfish": "deadfish",
     "barrel": "barrel", "heart_full": "heart_full", "heart_empty": "heart_empty", "harpoon": "harpoon_bolt",
     "orb": "boss_orb", "tongue": "tongue2", "gundrone": "gundrone",
+    "gun_harpoon": "gun_harpoon", "gun_flamer": "gun_flamer", "wreck": "wreck",
 }
 # where each machine stands or hangs from: the factory and chipper by their feet, the hook by its eye
-ANCHOR = {"factory": (48, 89), "chipper": (30, 59), "hook": (8, 1), "contraption1": (48, 90), "contraption2": (48, 90), "contraption3": (48, 90)}
+ANCHOR = {"factory": (48, 89), "chipper": (30, 59), "hook": (8, 1), "contraption1": (48, 90), "contraption2": (48, 90), "contraption3": (48, 90),
+          "gun_harpoon": (10, 18), "gun_flamer": (11, 19)}   # each gun turns about its grip
 ICONS = ["icon_seal", "icon_club", "icon_sled2", "icon_decoy3", "icon_bucket", "icon_sun", "icon_moon", "icon_fish",
          "icon_coin", "icon_drone", "icon_factory3", "icon_husky", "icon_salmon", "icon_bone2", "icon_anchor", "icon_tusk2",
-         "icon_harpoon", "icon_flamer", "icon_gundrone", "icon_heartup", "icon_parka"]
-VFX = ["vfx_blood", "vfx_bonk", "vfx_splash", "vfx_poof", "vfx_sparkle", "vfx_flame", "vfx_toxic", "vfx_acid"]
+         "icon_harpoon", "icon_flamer", "icon_gundrone", "icon_heartup", "icon_parka", "icon_goo"]
+VFX = ["vfx_blood", "vfx_bonk", "vfx_splash", "vfx_poof", "vfx_sparkle", "vfx_flame", "vfx_toxic", "vfx_acid", "vfx_flamejet"]
 
 
 def main():
@@ -130,7 +141,7 @@ def main():
         im = fr[0]
         b = im.getbbox()
         k = SHRINK.get(folder, 1)
-        anchor = tuple(round(v * k) for v in ANCHOR[name]) if name in ANCHOR else (bottom_center(im) if name in ("sled", "husky", "gull", "decoy", "nozzle", "barrel", "gundrone") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2))
+        anchor = tuple(round(v * k) for v in ANCHOR[name]) if name in ANCHOR else (bottom_center(im) if name in ("sled", "husky", "gull", "decoy", "nozzle", "barrel", "gundrone", "wreck") else ((b[0] + b[2]) // 2, (b[1] + b[3]) // 2))
         entries[name] = ([(im, anchor)], {})
     for name in ICONS:
         fr = frames_of(name)[:1]

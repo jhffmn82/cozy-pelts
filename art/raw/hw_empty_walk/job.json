@@ -1,0 +1,13 @@
+{
+ "endpoint": "/edit-animation-v2",
+ "body": "art/bodies/hw_empty_walk.json",
+ "response": {
+  "usage": null,
+  "background_job_id": "d747e5f3-e70c-4d50-8866-dcec8ab25950",
+  "status": "processing"
+ },
+ "usage": {
+  "type": "generations",
+  "generations": 10.0
+ }
+}
