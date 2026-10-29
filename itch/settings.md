@@ -1,5 +1,8 @@
 # itch.io page settings
 
+The page: https://jhffmn82.itch.io/cozy-pelts (made 2026-10-29, public the same day; its edit page is
+https://itch.io/game/edit/5258996).
+
 Everything the "Create new project" form and the theme editor ask for. `python tools/itch.py` builds the files it names
 in `out/itch/` (from `docs/index.html`, so build first), and `itch/description.html` is the description.
 
@@ -37,8 +40,10 @@ The game's own palette: a dusky arctic evening outside, the parchment ledger ins
 | Inner background | `#f7e9d2` |
 | Text | `#4b2a2b` |
 | Links | `#8c1e2a` |
-| Buttons | `#c9333f` |
-| Fonts | Pixelify Sans for headers if the list has it (the game's font), otherwise a pixel font such as Silkscreen; body text left as it is |
+| Headers (under More options) | `#8c1e2a` |
+| Buttons (under More options) | `#c9333f` |
+| Header font (under the text More options) | Pixelify Sans, the game's font: "Select Google Font..." and search for it; body text stays Lato |
+| Layout → Screenshots | **Sidebar**. Auto hides them when the embed is 1200 wide |
 
 ## Later updates
 

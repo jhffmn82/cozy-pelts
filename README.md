@@ -4,7 +4,7 @@ A cozy pixel-art clicker on the arctic ice, and a wholesome family business. Sea
 tap one and your hunter runs over and bonks it. Knocked-out seals go on the sled as pelts, and the sled has to be sent
 up the road to the hut, where the trader pays in coins and asks no questions.
 
-**Play:** https://jhffmn82.github.io/cozy-pelts/
+**Play:** https://jhffmn82.github.io/cozy-pelts/, or [on itch.io](https://jhffmn82.itch.io/cozy-pelts)
 
 Tap or click a seal to bonk it, tap the ice to walk, tap the sled (or `S`) to send it up to the hut, `F` tosses a
 fish, `Space` bonks the nearest seal.

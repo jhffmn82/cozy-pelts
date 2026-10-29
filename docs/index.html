@@ -1824,12 +1824,12 @@ function drawContraption() {
 // hearts instead of a sled, guns instead of gear, Big Mama on waves 5 and 10 and Sealthulu after wave 10. Killing
 // Sealthulu wins. The score is the waves cleared, times a bonus for getting there in few days.
 const MUT = {
-  frog:   { sprite: 'mut_frog', hp: 24, value: 15, r: 11, top: 26 },
-  bat:    { sprite: 'mut_bat', hp: 18, value: 18, r: 12, top: 30, flies: true },
-  bloat:  { sprite: 'mut_bloat', hp: 32, value: 20, r: 13, top: 30 },
-  kraken: { sprite: 'mut_kraken', hp: 28, value: 22, r: 13, top: 24, swims: true },
-  mama:   { sprite: 'mut_mama', hp: 520, value: 160, r: 36, top: 72, boss: true },
-  thulu:  { sprite: 'mut_thulu', hp: 6000, value: 3000, r: 34, top: 100, boss: true, flies: true },
+  frog:   { sprite: 'mut_frog', hp: 12, value: 15, r: 11, top: 26 },
+  bat:    { sprite: 'mut_bat', hp: 9, value: 18, r: 12, top: 30, flies: true },
+  bloat:  { sprite: 'mut_bloat', hp: 16, value: 20, r: 13, top: 30 },
+  kraken: { sprite: 'mut_kraken', hp: 14, value: 22, r: 13, top: 24, swims: true },
+  mama:   { sprite: 'mut_mama', hp: 260, value: 160, r: 36, top: 72, boss: true },
+  thulu:  { sprite: 'mut_thulu', hp: 2500, value: 3000, r: 34, top: 100, boss: true, flies: true },
 };
 const LAST_WAVE = 11;                    // wave 11 is Sealthulu
 const APOC_UPG = [
@@ -1927,8 +1927,8 @@ function startWave() {
   dirtyPanel = true;
 }
 function spawnMutant(kind) {
-  const T = MUT[kind], hpK = 1 + .25 * (S.wave - 1);
-  const m = { kind, T, hp: T.hp * (T.boss ? (kind === 'mama' && S.wave >= 10 ? 1.8 : 1) : hpK), x: 0, y: 0, z: 0, st: 'in', t: 0, at: Math.random() * 5, dir: -1, cd: rnd(1, 2.5), flash: 0, burn: 0, id: ++sid };
+  const T = MUT[kind], hpK = 1 + .1 * (S.wave - 1);   // tougher each wave, gently (Justin: "a lot less hp")
+  const m = { kind, T, hp: T.hp * (T.boss ? (kind === 'mama' && S.wave >= 10 ? 1.3 : 1) : hpK), x: 0, y: 0, z: 0, st: 'in', t: 0, at: Math.random() * 5, dir: -1, cd: rnd(1, 2.5), flash: 0, burn: 0, id: ++sid };
   m.maxHp = m.hp;
   if (kind === 'bat') { m.x = Math.random() < .5 ? -16 : W + 16; m.y = rnd(120, 190); m.z = 30; m.ang = Math.random() * 6; }
   else if (kind === 'thulu') { m.x = W / 2; m.y = 70; m.z = 170; m.phase = 1; m.ang = 0; }
