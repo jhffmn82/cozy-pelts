@@ -1839,9 +1839,9 @@ const APOC_UPG = [
     ds: () => 'Two hearts back. Mostly duct tape.' },
 ];
 const harpoonDmg = lv => 6 + 3 * (lv - 1);
-const maxHp = () => 10 + 2 * S.lv.hearts;         // in half hearts: five to start, since every hit takes a whole one
+const maxHp = () => 10 + 2 * S.lv.hearts;         // in half hearts: five to start
 const hurtMult = () => Math.pow(.85, S.lv.parka);
-const mutantPower = () => 2 * (1 + .08 * Math.max(0, S.wave - 1));   // a heart a hit on wave 1, and more every wave
+const mutantPower = () => 1 + .08 * Math.max(0, S.wave - 1);   // half a heart a hit on wave 1, and more every wave (Justin: halved)
 let mutants = [], shots = [], orbs = [], acids = [], rings = [], tongues = [], flames = [], pickups = [], bullets = [];
 // A bullet crosses the ice at a height: low ones (slime, ink) can be jumped, head-high ones (bat spray) have to be
 // stepped round. Aimed in ground terms, where up the screen is a little shorter than across it.
