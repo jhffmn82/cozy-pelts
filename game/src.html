@@ -1886,7 +1886,7 @@ function hitMutant(m, n, opts = {}) {
 }
 function killMutant(m) {
   m.dead = true; S.stats.kills = (S.stats.kills || 0) + 1;
-  const v = Math.round(m.T.value * (1 + .12 * S.wave));
+  const v = Math.round(m.T.value * 4 * (1 + .15 * S.wave));   // mutants are very full of goo
   earnGoo(v, m.x, m.y - (m.z || 0) - m.T.top);
   if (!Snd.play('goo', { vol: .5, rate: rnd(.9, 1.15) })) Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
@@ -2120,7 +2120,8 @@ function updateApoc(dt) {
     if (!apoc.queue.length && !alive && !apoc.dead) {
       if (S.wave >= LAST_WAVE) return;
       apoc.st = 'break'; apoc.t = 0; S.inWave = 0; S.hp = Math.min(maxHp(), S.hp + 2);
-      toast(`Wave ${S.wave} cleared. A heart back, and a breather.`, 3000); Snd.voice('cleared', 2); dirtyPanel = true; save();
+      const bonus = 60 * S.wave; earnGoo(bonus, hunter.x, hunter.y - 44);   // and clearing a wave pays out
+      toast(`Wave ${S.wave} cleared. +${fmt(bonus)} goo, a heart back, and a breather.`, 3200); Snd.voice('cleared', 2); dirtyPanel = true; save();
     }
   }
   for (const m of mutants) updateMutant(m, dt);
