@@ -91,7 +91,7 @@ body {
 #fishBtn:focus-visible, #sledBtn:focus-visible, #waveBtn:focus-visible, #fireBtn:focus-visible, #jumpBtn:focus-visible, #weaponBar button:focus-visible, #againBtn:focus-visible, .card:focus-visible, #factBtn:focus-visible, .tog:focus-visible, #startBtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 #toast {
   position: absolute; left: 50%; top: 11cqw; transform: translateX(-50%); pointer-events: none;
-  padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); white-space: nowrap;
+  padding: 1.2cqw 2.6cqw; font-weight: 600; font-size: 3.4cqw; color: var(--ink); width: max-content; max-width: 88cqw; text-align: center; text-wrap: balance;
   background: var(--parch); border: .6cqw solid var(--wood); border-radius: 1.2cqw; box-shadow: 0 0 0 .4cqw var(--wood-dark);
   transition: opacity .25s, transform .25s; opacity: 0;
 }
@@ -220,7 +220,7 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
 #weaponBar button span { position: absolute; right: .2cqw; bottom: -.2cqw; font: 700 2cqw var(--font); color: #b6ff7a; }
 #weaponBar button.on { border-color: var(--gold); box-shadow: 0 0 0 .4cqw #10170c, 0 0 1.6cqw rgba(244, 198, 79, .7); }
 #fireBtn {
-  position: absolute; right: 2.4cqw; bottom: 2.4cqw; width: 17cqw; height: 17cqw; border-radius: 50%; cursor: pointer;
+  position: absolute; right: 2.4cqw; bottom: 2.4cqw; width: 15cqw; height: 15cqw; border-radius: 50%; cursor: pointer;
   display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none;
   font: 700 3.8cqw var(--font); letter-spacing: .08em; color: #fffaf3; text-shadow: 0 .4cqw 0 #5d1119;
   background: radial-gradient(circle at 38% 32%, #ff8a5c, var(--berry) 55%, var(--berry-dark));
@@ -228,7 +228,7 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
 }
 #fireBtn.on { transform: translateY(.6cqw); box-shadow: 0 0 0 .5cqw #10170c, 0 .2cqw 0 #3a0a10, 0 0 3cqw rgba(255, 138, 92, .8); }
 #jumpBtn {
-  position: absolute; right: 22cqw; bottom: 3cqw; width: 13cqw; height: 13cqw; border-radius: 50%; cursor: pointer;
+  position: absolute; right: 19.5cqw; bottom: 2.8cqw; width: 11.5cqw; height: 11.5cqw; border-radius: 50%; cursor: pointer;
   display: grid; place-items: center; touch-action: none; user-select: none; -webkit-user-select: none;
   font: 700 3.2cqw var(--font); letter-spacing: .06em; color: #fffaf3; text-shadow: 0 .4cqw 0 #1d2a6a;
   background: radial-gradient(circle at 38% 32%, #8fd0ff, #3f6fd8 55%, #24408f);
@@ -303,7 +303,7 @@ body.apoc { background: radial-gradient(120% 90% at 20% 0%, #24401f, #0f1a0c 70%
         <ul>
           <li>Knocked-out seals go on the sled as pelts. Send the sled up to the hut and the trader pays in coins.</li>
           <li>Hurt seals scoot for the water. Napping seals take sneak bonks: double damage, double pelts.</li>
-          <li>Save up for drones, a wood chipper and, one day, the factory.</li>
+          <li>Save up for drones, a wood chipper and, one day, the contraption.</li>
           <li>Mind the gull. It steals off the sled.</li>
         </ul>
         <button id="startBtn" type="button">Start</button>
@@ -654,16 +654,35 @@ const Snd = {
     this.dayAmb.gain.setTargetAtTime(.5 * (1 - n) + .08, t, .5);
     this.nightAmb.gain.setTargetAtTime(.55 * n, t, .5);
   },
-  voice(name, prio = 1) {                 // one speaker at a time; the narrator outranks the hunter
+  // One speaker at a time. Chatter (priority 1) is dropped when someone is talking; story lines (2 and up) wait in
+  // a short queue and go stale after a few seconds; only the biggest moments (3) may cut off chatter, never a story line.
+  queue: [],
+  voice(name, prio = 1, ttl = 7) {
     if (!this.c || !S.sound.voice) return false;
     if (!this.loaded) { if (!this.pending || prio >= this.pending[1]) this.pending = [name, prio]; return false; }
     const t = this.c.currentTime, sp = this.speaking;
-    if (sp && t < sp.end) { if (prio <= sp.prio) return false; try { sp.src.stop(); } catch (e) {} }
+    if (sp && t < sp.end + .2) {
+      if (prio >= 3 && sp.prio <= 1) { try { sp.src.stop(); } catch (e) {} }
+      else {
+        if (prio >= 2 && !this.queue.some(q => q.name === name)) { this.queue.push({ name, prio, until: t + ttl }); this.queue.sort((a, b) => b.prio - a.prio); }
+        return false;
+      }
+    }
+    return this.speak(name, prio);
+  },
+  speak(name, prio) {
     const src = this.play(name, { bus: this.vox }); if (!src) return false;
-    const end = t + src.buffer.duration;
+    const t = this.c.currentTime, end = t + src.buffer.duration;
     this.speaking = { src, prio, end };
     if (S.sound.music) { this.mus.gain.setTargetAtTime(.22, t, .08); this.mus.gain.setTargetAtTime(.55, end, .4); }
     return true;
+  },
+  tick() {                                // the next waiting line, after a breath
+    if (!this.c || !this.queue.length || !S.sound.voice) return;
+    const t = this.c.currentTime;
+    if (this.speaking && t < this.speaking.end + .35) return;
+    this.queue = this.queue.filter(q => q.until > t);
+    const q = this.queue.shift(); if (q) this.speak(q.name, q.prio);
   },
   env(node, t, a, peak, hold, rel) {
     const gn = this.c.createGain(); gn.gain.setValueAtTime(.0001, t);
@@ -1190,7 +1209,7 @@ function inReach(s) {
 function jump() {                         // up, a somersault, and down; ground attacks pass underneath
   if (!S.apoc || apoc.dead || hunter.jump || hunter.swing >= 0 || apoc.st === 'intro') return;
   hunter.jump = { t: 0, dur: .62 }; hunter.path = null; hunter.target = null;
-  Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2);
+  Snd.whiff(); addFx('fx_poof', hunter.x, hunter.y - 2); if (Math.random() < .2) quip('hup', 1);
 }
 function updateHunter(dt) {
   hunter.at += dt; hunter.cheer = Math.max(0, hunter.cheer - dt);
@@ -1780,13 +1799,14 @@ function startApocalypse() {
   $('#banner').hidden = false; $('#banner').classList.remove('go'); void $('#banner').offsetWidth; $('#banner').classList.add('go');
   Snd.play('sting', { vol: 1 }); setTimeout(() => Snd.voice('apoc', 3), 900);
   preys = []; tube.lumps = []; coinFx = [];
+  if (S.lv.decoy) { addFx('fx_splash', DECOY.x, DECOY.y); addFx('fx_poof', DECOY.x, DECOY.y - 6); }
   boom(CONTRAPTION.x, CONTRAPTION.y - 40, 46, 250); if (S.lv.drones) boom(CHIPPER.x, CHIPPER.y - 26, 30, 900);
-  setTimeout(() => toast('Your coins are worthless now. Mutants are full of goo, and goo buys guns.', 4200), 5600);
+
   enterApocUI(); save();
 }
 function boom(x, y, r, delay) {           // a machine goes up: fire, green muck, bits of pipe, then a smoking wreck
   setTimeout(() => {
-    apoc.wrecked = true; shake = Math.max(shake, .9); Snd.play('pop', { vol: 1, rate: .7 }); Snd.play('clank', { vol: .9, rate: .8 });
+    apoc.wrecked = true; shake = Math.max(shake, .9); if (!Snd.play('boom', { vol: 1, rate: rnd(.92, 1.05) })) Snd.play('pop', { vol: 1, rate: .7 }); Snd.play('clank', { vol: .7, rate: .8 });
     for (let i = 0; i < 9; i++) setTimeout(() => { addFx('fx_toxic', x + rnd(-r, r) * .7, y + rnd(-r, r) * .6, { fps: 13 }); addFx('fx_flame', x + rnd(-r, r) * .5, y + rnd(-r, r) * .5, { fps: 16 }); }, i * 70);
     for (let i = 0; i < 26; i++) drops.push({ x, y: y + r * .8, z: r * .6, vx: rnd(-90, 90), vy: rnd(-30, 30), vz: rnd(30, 110), c: pick(['#7bd84a', '#3a3f5c', '#e8384b', '#c9cfe0', '#ffb347']), s: 2, any: true });
   }, delay);
@@ -1808,12 +1828,13 @@ function rosterFor(w) {
   return out;
 }
 function showHowTo(ms) {                  // the controls, for whichever device this is
-  $('#howtoText').innerHTML = TOUCH
+  $('#howtoText').innerHTML = (S.wave === 0 ? 'Coins are worthless now. Mutants are full of <kbd>GOO</kbd>, and goo buys guns.<br>' : '') + (TOUCH
     ? 'Tap the ice to move · hold <kbd>FIRE</kbd> to shoot the nearest mutant · <kbd>JUMP</kbd> to spin over trouble'
-    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest';
+    : '<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>SPACE</kbd> jump · <kbd>CLICK</kbd> shoots where you point, hold to keep firing<br><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> weapons · right-click walks there · hold <kbd>J</kbd> to shoot the nearest');
   const el = $('#howto'); el.classList.add('show'); clearTimeout(showHowTo.t); showHowTo.t = setTimeout(() => el.classList.remove('show'), ms);
 }
 function startWave() {
+  $('#howto').classList.remove('show');
   S.wave++; S.inWave = 1; apoc.queue = rosterFor(S.wave); apoc.st = 'wave'; apoc.t = 0; apoc.spawnT = 1;
   toast(S.wave === LAST_WAVE ? 'SEALTHULU RISES' : `Wave ${S.wave}`, 2400);
   Snd.play('horn', { vol: .8 });
@@ -1856,7 +1877,8 @@ function hurtHunter(n, x, y) {
 function hitMutant(m, n, opts = {}) {
   if (m.dead || (m.kind === 'kraken' && m.st === 'under')) return false;
   if (m.kind === 'thulu' && m.st === 'in') return false;
-  m.hp -= n; m.flash = .08;
+  m.hp -= n;
+  if (!opts.quiet && now - (m.flashT || -9) > .18) { m.flash = .07; m.flashT = now; }
   if (opts.burn) m.burn = Math.max(m.burn, 2.2);
   if (!opts.quiet) { Snd.play('splat', { vol: .5, rate: rnd(.9, 1.2) }); bleed(m.x, m.y - (m.z || 0) - 10, 4); }
   if (m.hp <= 0) killMutant(m);
@@ -1866,7 +1888,7 @@ function killMutant(m) {
   m.dead = true; S.stats.kills = (S.stats.kills || 0) + 1;
   const v = Math.round(m.T.value * (1 + .12 * S.wave));
   earnGoo(v, m.x, m.y - (m.z || 0) - m.T.top);
-  Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
+  if (!Snd.play('goo', { vol: .5, rate: rnd(.9, 1.15) })) Snd.play('coins', { vol: .35 }); Snd.squeal(.7, .5, .3, true);
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
   for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
   if (m.kind === 'bloat') blast(m.x, m.y, 26, false);
@@ -2156,7 +2178,7 @@ function win() { shake = 1.5; Snd.play('win', { vol: 1 }); setTimeout(() => Snd.
 function drawFlashy(name, fi, x, y, flip, flash, k = 1) {   // a sprite that flashes white when hit
   if (flash <= 0) return sprK(g, name, fi, x, y, flip, k);
   bg2.clearRect(0, 0, 180, 180); sprK(bg2, name, fi, 90, 150, flip, k);
-  bg2.globalCompositeOperation = 'source-atop'; bg2.fillStyle = 'rgba(255,255,255,.85)'; bg2.fillRect(0, 0, 180, 180); bg2.globalCompositeOperation = 'source-over';
+  bg2.globalCompositeOperation = 'source-atop'; bg2.fillStyle = 'rgba(255,255,255,.6)'; bg2.fillRect(0, 0, 180, 180); bg2.globalCompositeOperation = 'source-over';
   g.drawImage(bigTmp, Math.round(x) - 90, Math.round(y) - 150);
 }
 function drawMutant(m) {
@@ -2260,6 +2282,7 @@ function cozyUpdate(dt) {
   S.fishCd = Math.max(0, S.fishCd - dt);
 }
 function commonUpdate(dt) {
+  Snd.tick();
   // bundles fly onto the sled, or onto the heap beside where it stands
   for (const b of bundles) {
     b.t += dt; const p = Math.min(1, b.t / b.dur);
@@ -2352,7 +2375,7 @@ function render() {
   for (const m of mutants) list.push([m.y + (m.T.flies ? 80 : 0), () => drawMutant(m)]);
   if (heapN() > 0) list.push([SLED.y + 6, drawHeap]);
   if (S.lv.drones) list.push([CHIPPER.y, S.apoc && apoc.wrecked ? () => drawWreck(CHIPPER.x + 4, CHIPPER.y + 1, .75) : drawChipper]);
-  if (S.lv.decoy) list.push([DECOY.y, () => spr(g, 'decoy', 0, DECOY.x, DECOY.y, false)]);
+  if (S.lv.decoy && !S.apoc) list.push([DECOY.y, () => spr(g, 'decoy', 0, DECOY.x, DECOY.y, false)]);
   if (S.factory) list.push([CONTRAPTION.y, S.apoc && apoc.wrecked ? () => drawWreck(CONTRAPTION.x, CONTRAPTION.y, 1.1) : drawContraption]);
   if (gull.state === 'perch' && !S.apoc) list.push([gull.y, drawGull]);
   list.sort((a, b) => a[0] - b[0]);
@@ -2456,7 +2479,7 @@ function buyFactory() {                  // the big button: the contraption's ti
   S.coins -= c; S.factory++; syncMachines(); pollute(); Snd.hum(); hunter.cheer = .75; tube.shake = .4;
   for (let i = 0; i < 6; i++) addFx('fx_poof', CONTRAPTION.x + rnd(-34, 34), CONTRAPTION.y - rnd(4, 70), { fps: 7 });
   if (S.factory === 1) { Snd.chime(); Snd.voice('factory', 2); toast('The contraption is running. It drinks the sea, and the sea is mostly seals.', 4200); }
-  else if (S.factory === 2) { Snd.buy(); toast('Tier 2. Twice the slurp. The sea is a funny colour now.', 3600); }
+  else if (S.factory === 2) { Snd.buy(); Snd.voice('tier2', 2); toast('Tier 2. Twice the slurp. The sea is a funny colour now.', 3600); }
   else startApocalypse();
   dirtyPanel = true; save();
 }
@@ -2483,10 +2506,11 @@ function buyApoc(u) {
   const c = apocCost(u);
   if ((S.lv[u.id] || 0) >= u.max || (S.goo || 0) < c || (u.id === 'aid' && S.hp >= maxHp())) return;
   S.goo -= c; Snd.buy();
-  if (u.id === 'aid') S.hp = Math.min(maxHp(), S.hp + 4);
+  if (u.id === 'aid') { S.hp = Math.min(maxHp(), S.hp + 4); quip('buyaid', 1, true); }
   else {
     S.lv[u.id]++;
-    if (u.id === 'hearts') S.hp = maxHp();
+    if (u.id === 'hearts') { S.hp = maxHp(); quip('buyheart', 1, true); }
+    if (u.id === 'parka') quip('buyparka', 1, true);
     if (S.lv[u.id] === 1 && { harpoon: 1, flamer: 1, gundrone: 1 }[u.id]) Snd.voice({ harpoon: 'buyharpoon', flamer: 'buyflamer', gundrone: 'buydrone' }[u.id], 2);
     if ((u.id === 'harpoon' || u.id === 'flamer') && S.lv[u.id] === 1) { S.weapon = u.id; toast(TOUCH ? `${u.name()} ready. Hold FIRE to shoot the nearest mutant.` : `${u.name()} ready. Click to shoot where you point.`, 3800); }
   }

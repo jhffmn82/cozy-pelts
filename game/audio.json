@@ -231,6 +231,18 @@
   "kind": "sfx",
   "secs": 2.27
  },
+ "goo_1": {
+  "kind": "sfx",
+  "secs": 0.44
+ },
+ "goo_2": {
+  "kind": "sfx",
+  "secs": 0.39
+ },
+ "boom": {
+  "kind": "sfx",
+  "secs": 1.35
+ },
  "ko_1": {
   "kind": "voice",
   "secs": 1.06
@@ -510,6 +522,30 @@
  "buydrone": {
   "kind": "voice",
   "secs": 1.29
+ },
+ "buyheart": {
+  "kind": "voice",
+  "secs": 1.45
+ },
+ "buyparka": {
+  "kind": "voice",
+  "secs": 2.61
+ },
+ "buyaid": {
+  "kind": "voice",
+  "secs": 3.17
+ },
+ "hup_1": {
+  "kind": "voice",
+  "secs": 1.09
+ },
+ "hup_2": {
+  "kind": "voice",
+  "secs": 0.48
+ },
+ "tier2": {
+  "kind": "voice",
+  "secs": 5.94
  },
  "sold_1": {
   "kind": "voice",

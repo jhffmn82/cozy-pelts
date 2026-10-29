@@ -63,6 +63,8 @@ SFX = {
     'gun': (2, 'a quick small machine gun burst of three shots, tinny', .5, False),
     'dead': (1, 'a sad slide whistle down and a cartoon thud, game over', 1.6, False),
     'win': (1, 'a triumphant heroic orchestral fanfare with timpani and cymbals, victory', 3.5, False),
+    'goo': (2, 'a wet squelchy pop of picking up a blob of slime, short and gooey', .5, False),
+    'boom': (1, 'a big cartoon explosion with a deep boom and metal debris clattering down', 2.0, False),
 }
 LOOPS = {n for n, (_, _, _, loop) in SFX.items() if loop}
 # name: (voice, [lines]); words in [brackets] direct the voice and are not spoken
@@ -121,6 +123,11 @@ LINES = {
     'buyharpoon': (HUNTER, ['[excited] Harpoon time!']),
     'buyflamer': (HUNTER, ['[maniacal giggle] Who wants a barbecue?']),
     'buydrone': (HUNTER, ['[cheerful] Get them, little buddy!']),
+    'buyheart': (HUNTER, ["[relieved] Ooh, that's better."]),
+    'buyparka': (HUNTER, ['[smugly] Bits of factory. Very fashionable.']),
+    'buyaid': (HUNTER, ['[wincing] Ow. Duct tape. Ow.']),
+    'hup': (HUNTER, ['[effort] Hup!', '[effort] Hyah!']),
+    'tier2': (NARRATOR, ["[uneasy] Twice the slurp. The sea has gone a funny colour. That's probably fine."]),
     'sold': (NARRATOR, ['[warmly] The trader paid up. He never asks where they come from.', '[pleased] Sold. Cozy money.']),
     'full': (NARRATOR, ['[politely] The sled is full. The dogs are waiting.']),
     'mush': (HUNTER, ['[shouting cheerfully] Mush! Mush!', '[sing-song] Off to market!']),
