@@ -384,6 +384,9 @@ function inPoly(x, y, p) {
 }
 const at = (m, x, y) => (x < 0 || y < 0 || x >= W || y >= H) ? 0 : m[(y | 0) * W + (x | 0)];
 const onIce = (x, y) => at(walk, x, y) > 0;
+// The west floe is the contraption's once it stands (wreck and all): nowhere the hunter walks, hops, jumps or is thrown to
+const offLimits = (x, y) => S.factory > 0 && at(walk, x, y) === 1;
+const footing = (x, y) => onIce(x, y) && !offLimits(x, y);
 const isWater = (x, y) => at(water, x, y) === 1;
 
 function buildMaps(bgPixels) {
@@ -435,14 +438,15 @@ function buildMaps(bgPixels) {
     FLOES[f - 1].deepest = Math.max(FLOES[f - 1].deepest, d);
   }
 }
-function nearestIce(x, y) {
-  if (onIce(x, y)) return [x, y];
+function nearestIce(x, y, ok = onIce) {
+  if (ok(x, y)) return [x, y];
   for (let r = 1; r < 60; r++) for (let a = 0; a < 24; a++) {
     const px = x + Math.cos(a / 24 * Math.PI * 2) * r, py = y + Math.sin(a / 24 * Math.PI * 2) * r * .7;
-    if (onIce(px, py)) return [px, py];
+    if (ok(px, py)) return [px, py];
   }
   return [110, 170];
 }
+const nearestFooting = (x, y) => nearestIce(x, y, footing);
 function roomy(x, y, fi) {
   return at(walk, x - 13, y) === fi && at(walk, x + 13, y) === fi && at(walk, x, y - 3) === fi && at(walk, x, y + 2) === fi;
 }
@@ -1226,7 +1230,7 @@ function planPath(tx, ty) {
   const gaps = []; let open = -1;
   for (let s = 0; s <= len; s += 2) {
     const x = ax + (tx - ax) * s / len, y = ay + (ty - ay) * s / len;
-    const ice = onIce(x, y);
+    const ice = footing(x, y);
     if (!ice && open < 0) open = Math.max(0, s - 2);
     if (ice && open >= 0) { gaps.push([open, s]); open = -1; }
   }
@@ -1238,9 +1242,9 @@ function standPoint(s) {                  // beside it on the near side if there
   const sx = s.state === 'hopIn' ? s.lx : s.x, sy = s.state === 'hopIn' ? s.ly : s.y;   // a seal still landing: where it will land
   for (const side of hunter.x <= sx ? [-1, 1] : [1, -1]) for (const off of [27, 22, 32, 18]) for (const oy of [.5, -3, 3]) {
     const px = sx + side * off, py = sy + oy;
-    if (onIce(px, py)) return [px, py];
+    if (footing(px, py)) return [px, py];
   }
-  return nearestIce(sx - 27, sy);
+  return nearestFooting(sx - 27, sy);
 }
 const clubbable = t => t.kind ? !t.dead && !(t.kind === 'kraken' && t.st === 'under') && (t.z || 0) < 12 : t.state !== 'gone' && t.state !== 'ko' && ON_ICE[t.state];
 function inReach(s, loose) {              // squared up to swing; loose is the club's whole arc, which a seal can shuffle about in
@@ -1262,7 +1266,7 @@ function updateHunter(dt) {
     hunter.z = Math.sin(Math.PI * Math.min(1, j.t / j.dur)) * JUMP_H;
     if (j.t >= j.dur) {                    // down again, on the ice; a jump over water lands on the nearest floe
       hunter.jump = null; hunter.z = 0;
-      if (!hunter.hop && !onIce(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestIce(hunter.x, hunter.y);
+      if (!hunter.hop && !footing(hunter.x, hunter.y)) [hunter.x, hunter.y] = nearestFooting(hunter.x, hunter.y);
       addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop();
       if (apoc.jumpQ && now - apoc.jumpQ < .25) { apoc.jumpQ = 0; jump(); }
     }
@@ -1273,6 +1277,7 @@ function updateHunter(dt) {
     hunter.z = Math.max(hunter.jump ? hunter.z : 0, Math.sin(Math.PI * p) * h.h);
     if (p >= 1) { hunter.hop = null; if (!hunter.jump) hunter.z = 0; addFx('fx_poof', hunter.x, hunter.y - 2); Snd.plop(); }
   }
+  if (!hunter.path && !hunter.hop && !hunter.jump && offLimits(hunter.x, hunter.y)) { const [x, y] = nearestFooting(hunter.x, hunter.y); planPath(x, y); }   // stood there when it went up: off he hops
   const tgt = hunter.target;
   if (tgt && !clubbable(tgt) && !(!tgt.kind && tgt.state === 'hopIn')) { hunter.target = null; hunter.pending = 0; }   // a seal still landing is worth waiting for
   if (hunter.swing >= 0) {
@@ -1282,7 +1287,7 @@ function updateHunter(dt) {
       hunter.dir = v.x > hunter.x ? 1 : -1;
       const px = v.x - hunter.dir * 26, py = v.y + .5, d = Math.hypot(px - hunter.x, py - hunter.y), st = Math.min(d, 90 * dt);
       const nx = hunter.x + (px - hunter.x) / (d || 1) * st, ny = hunter.y + (py - hunter.y) / (d || 1) * st;
-      if (d > 1 && onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; }
+      if (d > 1 && footing(nx, ny)) { hunter.x = nx; hunter.y = ny; }
     }
     if (!hunter.struck && hunter.swing >= T * .3) {
       hunter.struck = true;
@@ -1947,7 +1952,7 @@ function hurtHunter(n, x, y, push = 8) {
   S.hp -= n * mutantPower() * hurtMult(); apoc.inv = 1.2; apoc.flash = .25; shake = .2; dirtyPanel = true;
   Snd.play('hurt', { vol: .9 }); if (Math.random() < .3) quip('ow', 1, true);
   bleed(hunter.x, hunter.y - 14, 8);
-  if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestIce(hunter.x + (hunter.x - x) / d * push, hunter.y + (hunter.y - y) / d * push / 2); hunter.x = px; hunter.y = py; hunter.path = null; }
+  if (x != null) { const d = Math.hypot(hunter.x - x, hunter.y - y) || 1, [px, py] = nearestFooting(hunter.x + (hunter.x - x) / d * push, hunter.y + (hunter.y - y) / d * push / 2); hunter.x = px; hunter.y = py; hunter.path = null; }
   if (S.hp <= .01) die();
   else if (S.hp <= 2 && apoc.lowSaid !== S.wave) { apoc.lowSaid = S.wave; Snd.voice('lowhp', 2); Snd.voice('h_low', 2, 6); }
 }
@@ -1969,7 +1974,7 @@ function killMutant(m) {
   addFx('fx_toxic', m.x, m.y - (m.z || 0) - 10, { fps: 14 });
   for (let i = 0; i < 10; i++) drops.push({ x: m.x, y: m.y, z: (m.z || 0) + 8, vx: rnd(-50, 50), vy: rnd(-18, 18), vz: rnd(20, 70), c: Math.random() < .5 ? '#7bd84a' : pick(REDS), s: Math.random() < .3 ? 2 : 1, any: true });
   if (m.kind === 'bloat') blast(m.x, m.y, 26, false);
-  if (!m.T.boss && !m.T.swims && Math.random() < .08 && S.hp < maxHp()) { const [px, py] = nearestIce(m.x, m.y); pickups.push({ x: px, y: py, t: 0 }); }   // now and then a heart falls out
+  if (!m.T.boss && !m.T.swims && Math.random() < .08 && S.hp < maxHp()) { const [px, py] = nearestFooting(m.x, m.y); pickups.push({ x: px, y: py, t: 0 }); }   // now and then a heart falls out
   if (!m.T.boss && Math.random() < .18) quip('kill', 1);
   if (m.kind === 'mama') { shake = .8; toast('Big Mama is down.'); Snd.voice('mamadown', 3); for (let i = 0; i < 6; i++) setTimeout(() => addFx('fx_toxic', m.x + rnd(-24, 24), m.y - rnd(0, 50)), i * 120); }
   if (m.kind === 'thulu') win();
@@ -2262,19 +2267,23 @@ function steer(kx, ky, dt, boost = 1) {   // keys or a dragged thumb: straight t
   const ux = kx / l, uy = ky / l, sp = RUN * Math.min(1, l) * boost * (hunter.jump ? 1.2 : 1), nx = hunter.x + ux * sp * dt, ny = hunter.y + uy * sp * .8 * dt;
   hunter.path = null; hunter.target = null; hunter.pending = 0; hunter.walking = .1; hunter.mx = ux; hunter.my = uy;
   if (!aiming() && Math.abs(ux) > .2) hunter.dir = ux < 0 ? -1 : 1;   // with a gun out he faces where it points, so he can back off shooting
-  if (hunter.z > 4) { if (nx > 6 && nx < W - 6 && ny > 96 && ny < H - 4) { hunter.x = nx; hunter.y = ny; } return; }   // in the air, water is no obstacle
-  if (onIce(nx, ny)) { hunter.x = nx; hunter.y = ny; return; }
+  if (hunter.z > 4) {                    // in the air, water is no obstacle, but the contraption's floe still is
+    const free = (x, y) => x > 6 && x < W - 6 && y > 96 && y < H - 4 && !offLimits(x, y);
+    if (free(nx, ny)) { hunter.x = nx; hunter.y = ny; } else if (free(nx, hunter.y)) hunter.x = nx; else if (free(hunter.x, ny)) hunter.y = ny;
+    return;
+  }
+  if (footing(nx, ny)) { hunter.x = nx; hunter.y = ny; return; }
   if (hopOver(ux, uy)) return;
-  if (onIce(nx, hunter.y)) hunter.x = nx; else if (onIce(hunter.x, ny)) hunter.y = ny;   // else along the edge
+  if (footing(nx, hunter.y)) hunter.x = nx; else if (footing(hunter.x, ny)) hunter.y = ny;   // else along the edge
 }
 function hopOver(ux, uy) {                // the next ice along, if a strip of water is all that is in the way
   let wet = false;
   for (let s = 2; s <= 40; s += 2) {
     const x = hunter.x + ux * s, y = hunter.y + uy * s * .8;
     if (x < 6 || x > W - 6 || y < 96 || y > H - 4) return false;
-    if (!onIce(x, y)) { wet = true; continue; }
+    if (!footing(x, y)) { wet = true; continue; }
     const bx = x + ux * 3, by = y + uy * 2.4;
-    if (!wet || !onIce(bx, by)) continue;
+    if (!wet || !footing(bx, by)) continue;
     hunter.hop = { ax: hunter.x, ay: hunter.y, bx, by, t: 0, dur: clamp(s / (RUN * 1.3), .14, .3), h: Math.min(13, 4 + s * .35) };
     Snd.whiff(); return true;
   }
@@ -2864,7 +2873,7 @@ function apocTap(x, y) {
     return;
   }
   hunter.target = null; hunter.pending = 0;
-  const [tx, ty] = nearestIce(x, y); planPath(tx, ty);
+  const [tx, ty] = nearestFooting(x, y); planPath(tx, ty);
 }
 function sealAt(x, y) {                   // the seal under a click, or failing that one close by: fingers are not pixels
   const live = seals.filter(s => s.state !== 'gone' && s.state !== 'ko' && s.state !== 'hooked' && s.state !== 'drop');
@@ -2899,7 +2908,7 @@ function tap(x, y) {
   }
   if (sled.st === 'home' && sledN() > 0 && x > SLED.x - 40 && x < SLED.x + 40 && y > SLED.y - 32 && y < SLED.y + 3) { sendSled(); return; }
   hunter.target = null; hunter.pending = 0;
-  const [tx, ty] = nearestIce(x, y);
+  const [tx, ty] = nearestFooting(x, y);
   planPath(tx, ty);
 }
 function tossFish() {
@@ -3040,7 +3049,7 @@ async function start(data) {
       if (e.pointerType === 'mouse') {     // the mouse is the gun: left fires where it points, right walks there
         apoc.mouseAt = [x, y];
         if (apoc.dead || apoc.st === 'intro') return;
-        if (e.button === 2) { hunter.target = null; hunter.pending = 0; const [tx, ty] = nearestIce(x, y); planPath(tx, ty); return; }
+        if (e.button === 2) { hunter.target = null; hunter.pending = 0; const [tx, ty] = nearestFooting(x, y); planPath(tx, ty); return; }
         if (GUN[S.weapon]) { apoc.hold = [x, y]; fireAt(x, y, true); return; }
         return tap(x, y);
       }
